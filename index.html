@@ -1,66 +1,70 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CIBORG347 | Presupuesto PDF (Lite)</title>
-  <meta name="description" content="Generador de presupuesto PDF liviano para celular. Completar datos, generar, descargar y compartir PDF." />
+  <title>CIBORG347 | Presupuesto PDF</title>
+  <meta name="description" content="Generador de presupuesto PDF para celular. Completar datos, generar, descargar y compartir PDF." />
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <style>
     :root{
-      --bg:#0a0d14;
-      --panel:#111724;
-      --line:#273247;
+      --bg:#070b12;
+      --panel:#0f1624;
+      --line:#243149;
       --text:#eef4ff;
-      --muted:#a0b0c7;
+      --muted:#9eb0c9;
       --accent:#00d4ff;
       --accent2:#7c3aed;
       --ok:#22c55e;
       --warn:#f59e0b;
-      --radius:14px;
+      --err:#ef4444;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     body{
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:var(--bg);
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 700px at 10% -10%, rgba(0,212,255,.12), transparent 55%),
+        radial-gradient(900px 600px at 100% 0%, rgba(124,58,237,.14), transparent 55%),
+        #070b12;
       color:var(--text);
       padding:10px;
     }
     .app{
-      max-width:760px;
+      max-width:820px;
       margin:0 auto;
       display:grid;
-      gap:10px;
+      gap:12px;
     }
     .card{
-      background:var(--panel);
-      border:1px solid #1f2937;
+      background:linear-gradient(180deg, rgba(17,23,36,.92), rgba(12,17,28,.92));
+      border:1px solid rgba(38,52,76,.9);
       border-radius:16px;
       overflow:hidden;
-      box-shadow:0 10px 28px rgba(0,0,0,.25);
+      box-shadow:0 12px 32px rgba(0,0,0,.28);
+      backdrop-filter: blur(6px);
     }
     .head{
       display:flex;
       align-items:center;
       gap:10px;
       padding:12px;
-      border-bottom:1px solid #1f2937;
+      border-bottom:1px solid rgba(38,52,76,.8);
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
     }
     .head img{
-      width:42px;height:42px;border-radius:10px;object-fit:cover;border:1px solid #29364d;background:#0b111d
+      width:44px;height:44px;border-radius:10px;object-fit:cover;border:1px solid #2b3a55;background:#0b111d
     }
-    .head .t strong{display:block;font-size:.95rem;line-height:1.1}
+    .head .t strong{display:block;font-size:.96rem;line-height:1.15}
     .head .t span{display:block;font-size:.78rem;color:var(--muted);margin-top:2px}
 
     .body{padding:12px;display:grid;gap:10px}
-    .grid{display:grid;gap:10px}
     .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .field{display:grid;gap:6px}
     .field label{
       font-size:.78rem;
       font-weight:700;
       color:#d8e4f6;
+      letter-spacing:.2px;
     }
     .field input,.field textarea{
       width:100%;
@@ -72,6 +76,7 @@
       outline:none;
       font:inherit;
       font-size:.95rem;
+      transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
     }
     .field textarea{
       min-height:95px;
@@ -81,6 +86,7 @@
     .field input:focus,.field textarea:focus{
       border-color:#3b82f6;
       box-shadow:0 0 0 3px rgba(59,130,246,.14);
+      background:#0d1421;
     }
     .help{
       font-size:.74rem;
@@ -107,9 +113,10 @@
       font-weight:800;
       font-size:.84rem;
       cursor:pointer;
-      transition:transform .12s ease, opacity .12s ease, filter .12s ease;
+      transition:transform .12s ease, opacity .12s ease, filter .12s ease, border-color .12s ease;
+      letter-spacing:.2px;
     }
-    .btn:hover{filter:brightness(1.04)}
+    .btn:hover{filter:brightness(1.05)}
     .btn:active{transform:scale(.985)}
     .btn:disabled{opacity:.6;cursor:not-allowed}
     .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent2))}
@@ -117,29 +124,36 @@
     .btn-dark{background:#0f1625;border:1px solid #2a3550;color:#e6efff}
 
     .status{
-      border-top:1px solid #1f2937;
+      border-top:1px solid rgba(38,52,76,.8);
       padding:10px 12px;
       font-size:.82rem;
       color:#d8e4f6;
       min-height:41px;
       display:flex;
       align-items:center;
+      background:rgba(255,255,255,.01);
     }
     .status.ok{color:#bbf7d0}
     .status.warn{color:#fde68a}
     .status.err{color:#fecaca}
 
-    /* preview opcional, muy liviana */
+    .brand-site{
+      margin-top:2px;
+      font-size:.78rem;
+      color:#b9c9e1;
+      word-break:break-word;
+    }
+
     .preview{display:none}
     .preview.show{display:block}
     .preview .pbody{
       padding:10px;
-      background:#0c111c;
+      background:#0b111b;
     }
     .sheet{
       border:1px solid #263148;
       border-radius:12px;
-      background:#0f1625;
+      background:#0d1522;
       padding:12px;
       display:grid;
       gap:8px;
@@ -149,10 +163,16 @@
     .sheet::before{
       content:"";
       position:absolute;inset:0;
-      background:url("https://iili.io/qFQyNae.png") center/55% no-repeat;
-      opacity:.08;
+      background:url("https://iili.io/qFQyNae.png") center/58% no-repeat;
+      opacity:.11;
       pointer-events:none;
-      filter:saturate(1.15);
+      filter:saturate(1.15) contrast(1.05);
+    }
+    .sheet::after{
+      content:"";
+      position:absolute; inset:0;
+      background:linear-gradient(180deg, rgba(5,9,16,.18), rgba(5,9,16,.08));
+      pointer-events:none;
     }
     .sheet > *{position:relative}
     .s-top{
@@ -173,8 +193,7 @@
     .box{
       border:1px solid rgba(38,49,72,.75);
       border-radius:10px;
-      background:rgba(12,19,34,.58);
-      backdrop-filter: blur(1px);
+      background:rgba(10,16,28,.42);
       padding:10px;
     }
     .box .lab{
@@ -200,11 +219,10 @@
     }
     .foot-note{
       border-top:1px solid rgba(38,49,72,.9);
-      padding-top:8px;
       color:#c7d6e8;
       font-size:.75rem;
       line-height:1.35;
-      background:rgba(9,14,24,.28);
+      background:rgba(9,14,24,.22);
       border-radius:8px;
       padding:8px;
     }
@@ -227,7 +245,7 @@
       text-align:center;
       color:#95a9c4;
       font-size:.72rem;
-      letter-spacing:.4px;
+      letter-spacing:.35px;
       text-transform:uppercase;
     }
 
@@ -243,8 +261,9 @@
       <div class="head">
         <img src="https://iili.io/qFQyNae.png" alt="CIBORG347">
         <div class="t">
-          <strong>CIBORG347 | Presupuesto PDF (Lite)</strong>
-          <span>Version liviana para celular: generar, descargar y compartir PDF</span>
+          <strong>CIBORG347 | Presupuesto PDF</strong>
+          <span>Generar, descargar y compartir PDF</span>
+          <div class="brand-site">CIBORG347OFICIAL.ONRENDER.COM</div>
         </div>
       </div>
 
@@ -255,51 +274,46 @@
             <input id="fecha" type="text" value="23/02/2026">
           </div>
           <div class="field">
-            <label for="numero">Numero de presupuesto</label>
+            <label for="numero">Número de presupuesto</label>
             <input id="numero" type="text" value="C347-001">
           </div>
         </div>
 
         <div class="field">
           <label for="cliente">Nombre del cliente</label>
-          <input id="cliente" type="text" placeholder="Ej: Esther Trenzas Africanas">
-        </div>
-
-        <div class="field">
-          <label for="direccion">Direccion (opcional)</label>
-          <input id="direccion" type="text" placeholder="Ej: Almagro, CABA / Calle y altura">
+          <input id="cliente" type="text" placeholder="Ej: Nombre del cliente">
         </div>
 
         <div class="field">
           <label for="servicio">Servicio / Presupuesto</label>
-          <input id="servicio" type="text" value="Creacion de sitio web profesional full responsive">
+          <input id="servicio" type="text" value="Creación de sitio web profesional full responsive">
         </div>
 
         <div class="grid-2">
           <div class="field">
-            <label for="precio">Precio final</label>
+            <label for="precio">Inversión</label>
             <input id="precio" type="text" value="$ 120.000 ARS">
           </div>
           <div class="field">
             <label for="entrega">Tiempo estimado (opcional)</label>
-            <input id="entrega" type="text" value="A coordinar segun contenido final">
+            <input id="entrega" type="text" value="A coordinar según contenido final">
           </div>
         </div>
 
         <div class="field">
-          <label for="incluye">Que incluye (1 item por linea)</label>
+          <label for="incluye">Qué incluye (1 ítem por línea)</label>
           <textarea id="incluye">Diseño personalizado
-Version responsive (celular y PC)
-Boton WhatsApp
+Versión responsive (celular y PC)
+Botón WhatsApp
 Carga inicial de contenido
 Ajustes finales
 Entrega lista para usar</textarea>
-          <div class="help">Escribi una linea por item. El PDF se arma con estos puntos.</div>
+          <div class="help">Escribí una línea por ítem. El PDF se arma con estos puntos.</div>
         </div>
 
         <div class="field">
           <label for="detalle">Detalle / observaciones</label>
-          <textarea id="detalle">Se abona una vez entregado el sitio / transferencia o MP. Esta propuesta puede ajustarse segun cambios de alcance, contenido o funcionalidades solicitadas.</textarea>
+          <textarea id="detalle">Se abona una vez entregado el sitio / transferencia o MP. Esta propuesta puede ajustarse según cambios de alcance, contenido o funcionalidades solicitadas.</textarea>
         </div>
 
         <div class="actions">
@@ -314,17 +328,10 @@ Entrega lista para usar</textarea>
         </div>
       </div>
 
-      <div id="status" class="status">Listo. Completa los datos y toca Generar PDF.</div>
+      <div id="status" class="status">Listo. Completá los datos y tocá Generar PDF.</div>
     </section>
 
     <section id="preview" class="card preview">
-      <div class="head">
-        <img src="https://iili.io/qFQyNae.png" alt="Preview">
-        <div class="t">
-          <strong>Vista previa (liviana)</strong>
-          <span>Solo se muestra si la activas</span>
-        </div>
-      </div>
       <div class="pbody">
         <div class="sheet">
           <div class="s-top">
@@ -340,13 +347,8 @@ Entrega lista para usar</textarea>
           </div>
 
           <div class="box">
-            <div class="lab mono">Cliente</div>
+            <div class="lab mono">Nombre</div>
             <div class="val mono" id="pvCliente">-</div>
-          </div>
-
-          <div class="box">
-            <div class="lab mono">Direccion</div>
-            <div class="val mono" id="pvDireccion">-</div>
           </div>
 
           <div class="box">
@@ -355,12 +357,12 @@ Entrega lista para usar</textarea>
           </div>
 
           <div class="box">
-            <div class="lab mono">Precio final</div>
+            <div class="lab mono">Inversión</div>
             <div class="val total mono" id="pvPrecio">-</div>
           </div>
 
           <div class="box">
-            <div class="lab mono">Incluye</div>
+            <div class="lab mono">Qué incluye</div>
             <ul id="pvIncluye" class="preview-list mono"></ul>
           </div>
 
@@ -370,11 +372,13 @@ Entrega lista para usar</textarea>
           </div>
 
           <div class="foot-note mono">
-            <div><b>Modalidad:</b> Se abona una vez entregado el sitio / transferencia o MP</div>
+            <div><b>Modalidad de pago:</b> Se abona una vez entregado el sitio / transferencia o MP</div>
+            <div><b>Modalidad de pago:</b> Pago contra entrega del sitio final</div>
             <div class="contact-row"><span class="ico"><img src="https://cdn.simpleicons.org/whatsapp/25D366" alt="WhatsApp"></span><span><b>WhatsApp:</b> <span id="pvWa">1164499481</span></span></div>
             <div class="contact-row"><span class="ico"><img src="https://cdn.simpleicons.org/instagram/E4405F" alt="Instagram"></span><span><b>Instagram:</b> <span id="pvIg">@ciborg347</span></span></div>
             <div class="contact-row"><span class="ico"><img src="https://cdn.simpleicons.org/gmail/EA4335" alt="Email"></span><span><b>Email:</b> <span id="pvMail">ciborg347@gmail.com</span></span></div>
-            <div class="signature">CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES</div>
+            <div class="contact-row"><span class="ico"><img src="https://cdn.simpleicons.org/googlechrome/4285F4" alt="Web"></span><span><b>Web:</b> <span id="pvWeb">CIBORG347OFICIAL.ONRENDER.COM</span></span></div>
+            <div class="signature">CIBORG347 // DISEÑO QUE CONVIERTE VISITAS EN CLIENTES</div>
           </div>
         </div>
       </div>
@@ -384,14 +388,12 @@ Entrega lista para usar</textarea>
   <script>
     (function () {
       const { jsPDF } = window.jspdf;
-
       const $ = (id) => document.getElementById(id);
 
       const els = {
         fecha: $("fecha"),
         numero: $("numero"),
         cliente: $("cliente"),
-        direccion: $("direccion"),
         servicio: $("servicio"),
         precio: $("precio"),
         entrega: $("entrega"),
@@ -407,26 +409,27 @@ Entrega lista para usar</textarea>
         pvFecha: $("pvFecha"),
         pvNumero: $("pvNumero"),
         pvCliente: $("pvCliente"),
-        pvDireccion: $("pvDireccion"),
         pvServicio: $("pvServicio"),
         pvPrecio: $("pvPrecio"),
         pvIncluye: $("pvIncluye"),
         pvDetalle: $("pvDetalle"),
         pvWa: $("pvWa"),
         pvIg: $("pvIg"),
-        pvMail: $("pvMail")
+        pvMail: $("pvMail"),
+        pvWeb: $("pvWeb")
       };
 
       const BRAND_LOGO = "https://iili.io/qFQyNae.png";
       const BRAND_WA = "1164499481";
       const BRAND_IG = "@ciborg347";
       const BRAND_MAIL = "ciborg347@gmail.com";
-      const BRAND_FIRMA = "CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES";
+      const BRAND_WEB = "CIBORG347OFICIAL.ONRENDER.COM";
+      const BRAND_FIRMA = "CIBORG347 // DISEÑO QUE CONVIERTE VISITAS EN CLIENTES";
 
-      // Iconos oficiales (simpleicons PNG por CDN)
       const ICON_WA = "https://cdn.simpleicons.org/whatsapp/25D366";
       const ICON_IG = "https://cdn.simpleicons.org/instagram/E4405F";
       const ICON_MAIL = "https://cdn.simpleicons.org/gmail/EA4335";
+      const ICON_WEB = "https://cdn.simpleicons.org/googlechrome/4285F4";
 
       let previewVisible = false;
       let pdfBlobCache = null;
@@ -436,6 +439,7 @@ Entrega lista para usar</textarea>
       let iconWaDataUrlCache = null;
       let iconIgDataUrlCache = null;
       let iconMailDataUrlCache = null;
+      let iconWebDataUrlCache = null;
 
       function setStatus(msg, type) {
         els.status.className = "status" + (type ? " " + type : "");
@@ -459,7 +463,6 @@ Entrega lista para usar</textarea>
           fecha: safe(els.fecha.value, "DD/MM/AAAA"),
           numero: safe(els.numero.value, "C347-001"),
           cliente: safe(els.cliente.value, "Nombre del cliente"),
-          direccion: safe(els.direccion.value, "-"),
           servicio: safe(els.servicio.value, "Servicio"),
           precio: safe(els.precio.value, "$ 0"),
           entrega: safe(els.entrega.value, "-"),
@@ -476,14 +479,14 @@ Entrega lista para usar</textarea>
         const d = getData();
         els.pvFecha.textContent = d.fecha;
         els.pvNumero.textContent = d.numero;
-        els.pvCliente.textContent = d.cliente.toUpperCase();
-        els.pvDireccion.textContent = d.direccion;
+        els.pvCliente.textContent = d.cliente;
         els.pvServicio.textContent = d.servicio;
         els.pvPrecio.textContent = d.precio;
         els.pvDetalle.textContent = d.detalle;
         if (els.pvWa) els.pvWa.textContent = BRAND_WA;
         if (els.pvIg) els.pvIg.textContent = BRAND_IG;
         if (els.pvMail) els.pvMail.textContent = BRAND_MAIL;
+        if (els.pvWeb) els.pvWeb.textContent = BRAND_WEB;
 
         els.pvIncluye.innerHTML = "";
         const items = d.incluye.length ? d.incluye : ["Detalle a definir"];
@@ -516,12 +519,14 @@ Entrega lista para usar</textarea>
         if (!iconWaDataUrlCache) iconWaDataUrlCache = await fetchAsDataUrl(ICON_WA);
         if (!iconIgDataUrlCache) iconIgDataUrlCache = await fetchAsDataUrl(ICON_IG);
         if (!iconMailDataUrlCache) iconMailDataUrlCache = await fetchAsDataUrl(ICON_MAIL);
+        if (!iconWebDataUrlCache) iconWebDataUrlCache = await fetchAsDataUrl(ICON_WEB);
 
         return {
           logo: logoDataUrlCache,
           wa: iconWaDataUrlCache,
           ig: iconIgDataUrlCache,
-          mail: iconMailDataUrlCache
+          mail: iconMailDataUrlCache,
+          web: iconWebDataUrlCache
         };
       }
 
@@ -531,8 +536,8 @@ Entrega lista para usar</textarea>
           valueColor = [238,244,251],
           boldValue = false,
           maxLines = 2,
-          fillColor = [12,19,34],
-          fillOpacity = 0.45,
+          fillColor = [11,16,32],
+          fillOpacity = 0.28,
           borderColor = [39,49,73]
         } = opts;
 
@@ -544,7 +549,6 @@ Entrega lista para usar</textarea>
           doc.roundedRect(x, y, w, h, 3, 3, "FD");
           doc.restoreGraphicsState();
         } catch (_) {
-          // Fallback sin opacidad si algún viewer no soporta bien gstate en la generación
           doc.setFillColor(...fillColor);
           doc.setDrawColor(...borderColor);
           doc.roundedRect(x, y, w, h, 3, 3, "FD");
@@ -567,34 +571,40 @@ Entrega lista para usar</textarea>
         });
       }
 
-      function drawIconTextRow(doc, x, y, iconDataUrl, fallbackGlyph, label, value, colorArr) {
-        const iconSize = 4.4;
+      function drawIconTextRow(doc, x, y, iconDataUrl, fallbackGlyph, label, value, columnsWidth) {
+        const iconSize = 4.2;
         let textX = x;
 
         if (iconDataUrl) {
           try {
             const format = iconDataUrl.includes("image/png") ? "PNG" : "JPEG";
-            doc.addImage(iconDataUrl, format, x, y - 3.7, iconSize, iconSize, undefined, "FAST");
-            textX = x + 6;
+            doc.addImage(iconDataUrl, format, x, y - 3.5, iconSize, iconSize, undefined, "FAST");
+            textX = x + 5.5;
           } catch (_) {
             doc.setFont("helvetica", "bold");
             doc.setFontSize(8);
-            doc.setTextColor(...(colorArr || [198,214,232]));
+            doc.setTextColor(198,214,232);
             doc.text(fallbackGlyph, x, y);
-            textX = x + 5;
+            textX = x + 4.5;
           }
         } else {
           doc.setFont("helvetica", "bold");
           doc.setFontSize(8);
-          doc.setTextColor(...(colorArr || [198,214,232]));
+          doc.setTextColor(198,214,232);
           doc.text(fallbackGlyph, x, y);
-          textX = x + 5;
+          textX = x + 4.5;
         }
 
         doc.setFont("courier", "normal");
-        doc.setFontSize(7.2);
+        doc.setFontSize(6.8);
         doc.setTextColor(198,214,232);
-        doc.text(`${label}: ${value}`, textX, y);
+        const text = `${label}: ${value}`;
+        const lines = doc.splitTextToSize(text, columnsWidth || 52).slice(0, 2);
+        let ty = y;
+        lines.forEach(line => {
+          doc.text(line, textX, ty);
+          ty += 3.7;
+        });
       }
 
       async function buildPdfBlob() {
@@ -604,29 +614,30 @@ Entrega lista para usar</textarea>
         const doc = new jsPDF({ unit: "mm", format: "a4", compress: true });
         const assets = await loadBrandAssetsOnce();
 
-        // Fondo base
-        doc.setFillColor(10, 13, 20);
+        doc.setFillColor(8, 11, 18);
         doc.rect(0, 0, 210, 297, "F");
 
-        // Barra superior
         doc.setFillColor(0, 212, 255); doc.rect(0, 0, 70, 3, "F");
         doc.setFillColor(124, 58, 237); doc.rect(70, 0, 70, 3, "F");
         doc.setFillColor(236, 72, 153); doc.rect(140, 0, 70, 3, "F");
 
-        // Overlay / watermark más visible (fondo)
         if (assets.logo) {
           try {
             doc.saveGraphicsState();
-            doc.setGState(new doc.GState({ opacity: 0.14 }));
-            doc.addImage(assets.logo, "PNG", 24, 72, 162, 162, undefined, "FAST");
+            doc.setGState(new doc.GState({ opacity: 0.20 }));
+            doc.addImage(assets.logo, "PNG", 23, 66, 164, 164, undefined, "FAST");
+            doc.restoreGraphicsState();
+
+            doc.saveGraphicsState();
+            doc.setGState(new doc.GState({ opacity: 0.08 }));
+            doc.addImage(assets.logo, "PNG", 78, 6, 54, 54, undefined, "FAST");
             doc.restoreGraphicsState();
           } catch (_) {}
         }
 
-        // Glow suave detrás del contenido (simulado con rect translúcido)
         try {
           doc.saveGraphicsState();
-          doc.setGState(new doc.GState({ opacity: 0.18 }));
+          doc.setGState(new doc.GState({ opacity: 0.16 }));
           doc.setFillColor(9, 14, 24);
           doc.roundedRect(8, 8, 194, 281, 6, 6, "F");
           doc.restoreGraphicsState();
@@ -635,74 +646,77 @@ Entrega lista para usar</textarea>
         const m = 12;
         let y = 10;
 
-        // Header (semi transparente para dejar ver overlay)
         try {
           doc.saveGraphicsState();
-          doc.setGState(new doc.GState({ opacity: 0.34 }));
+          doc.setGState(new doc.GState({ opacity: 0.20 }));
           doc.setFillColor(11,16,32);
           doc.setDrawColor(39,49,73);
-          doc.roundedRect(m, y, 22, 22, 3, 3, "FD");
+          doc.roundedRect(m, y, 186, 24, 3, 3, "FD");
           doc.restoreGraphicsState();
-        } catch (_) {
+        } catch (_) {}
+
+        const logoBoxX = 81;
+        const logoBoxW = 48;
+        try {
+          doc.saveGraphicsState();
+          doc.setGState(new doc.GState({ opacity: 0.28 }));
           doc.setFillColor(11,16,32);
           doc.setDrawColor(39,49,73);
-          doc.roundedRect(m, y, 22, 22, 3, 3, "FD");
-        }
+          doc.roundedRect(logoBoxX, y + 1, logoBoxW, 22, 3, 3, "FD");
+          doc.restoreGraphicsState();
+        } catch (_) {}
 
         if (assets.logo) {
-          try { doc.addImage(assets.logo, "PNG", m + 1.5, y + 1.5, 19, 19, undefined, "FAST"); } catch (_) {}
+          try { doc.addImage(assets.logo, "PNG", logoBoxX + 10, y + 2.2, 28, 19, undefined, "FAST"); } catch (_) {}
         }
 
         doc.setFont("courier", "normal");
         doc.setFontSize(8);
         doc.setTextColor(147,167,194);
-        doc.text("PRESUPUESTO FORMAL", 38, y + 6);
-
-        doc.setFont("courier", "bold");
-        doc.setFontSize(17);
-        doc.setTextColor(140,231,255);
-        doc.text("CIBORG347", 38, y + 14);
+        doc.text("PRESUPUESTO FORMAL", 12, y + 7);
 
         doc.setFont("courier", "normal");
         doc.setFontSize(8);
         doc.setTextColor(191,208,226);
-        doc.text(`FECHA: ${d.fecha}`, 38, y + 20);
-        doc.text(`NRO: ${d.numero}`, 90, y + 20);
+        doc.text(`FECHA: ${d.fecha}`, 12, y + 13);
+        doc.text(`NRO: ${d.numero}`, 12, y + 19);
 
-        y += 28;
+        doc.setFont("courier", "bold");
+        doc.setFontSize(10.5);
+        doc.setTextColor(140,231,255);
+        doc.text("CIBORG347", 198, y + 9, { align: "right" });
+
+        doc.setFont("courier", "normal");
+        doc.setFontSize(6.9);
+        doc.setTextColor(185,206,231);
+        doc.text(BRAND_WEB, 198, y + 16.3, { align: "right" });
+
+        y += 30;
         doc.setDrawColor(39,49,73);
         doc.line(m, y, 210 - m, y);
         y += 4;
 
-        // Cliente + Precio (cajas visibles pero transparentes)
         const gap = 4;
         const half = (210 - m * 2 - gap) / 2;
-        mmTextBox(doc, m, y, half, 17, "Cliente", d.cliente.toUpperCase(), { maxLines: 2, fillOpacity: 0.34 });
-        mmTextBox(doc, m + half + gap, y, half, 17, "Precio final", d.precio, {
+        mmTextBox(doc, m, y, half, 17, "Nombre", d.cliente, { maxLines: 2, fillOpacity: 0.26 });
+        mmTextBox(doc, m + half + gap, y, half, 17, "Inversión", d.precio, {
           valueColor: [152,245,178],
           boldValue: true,
           maxLines: 2,
-          fillOpacity: 0.34
+          fillOpacity: 0.26
         });
         y += 20;
 
-        // Dirección
-        mmTextBox(doc, m, y, 210 - m * 2, 15, "Direccion", d.direccion, { maxLines: 2, fillOpacity: 0.22 });
-        y += 18;
-
-        // Servicio
-        mmTextBox(doc, m, y, 210 - m * 2, 17, "Servicio / Presupuesto", d.servicio, { maxLines: 2, fillOpacity: 0.24 });
+        mmTextBox(doc, m, y, 210 - m * 2, 17, "Servicio / Presupuesto", d.servicio, { maxLines: 2, fillOpacity: 0.22 });
         y += 20;
 
-        // Tiempo
-        mmTextBox(doc, m, y, 210 - m * 2, 15, "Tiempo estimado", d.entrega, { maxLines: 2, fillOpacity: 0.20 });
+        mmTextBox(doc, m, y, 210 - m * 2, 15, "Tiempo estimado", d.entrega, { maxLines: 2, fillOpacity: 0.18 });
         y += 18;
 
-        // Incluye (más liviano para que se vea el overlay)
         const incluyeH = 48;
         try {
           doc.saveGraphicsState();
-          doc.setGState(new doc.GState({ opacity: 0.20 }));
+          doc.setGState(new doc.GState({ opacity: 0.16 }));
           doc.setFillColor(11,16,32);
           doc.setDrawColor(39,49,73);
           doc.roundedRect(m, y, 210 - m * 2, incluyeH, 3, 3, "FD");
@@ -716,11 +730,11 @@ Entrega lista para usar</textarea>
         doc.setFont("courier", "bold");
         doc.setFontSize(7);
         doc.setTextColor(196,155,255);
-        doc.text("QUE INCLUYE", m + 3, y + 5);
+        doc.text("QUÉ INCLUYE", m + 3, y + 5);
 
         doc.setFont("courier", "normal");
         doc.setFontSize(7.7);
-        doc.setTextColor(220,232,246);
+        doc.setTextColor(221,233,247);
         const bullets = d.incluye.length ? d.incluye : ["Detalle a definir"];
         let by = y + 11;
         const maxBulletLines = 7;
@@ -737,16 +751,14 @@ Entrega lista para usar</textarea>
         }
         y += incluyeH + 4;
 
-        // Detalle / observaciones (sin tarjeta pesada, solo banda suave + texto encima)
         const detH = 28;
         try {
           doc.saveGraphicsState();
-          doc.setGState(new doc.GState({ opacity: 0.12 }));
+          doc.setGState(new doc.GState({ opacity: 0.10 }));
           doc.setFillColor(11,16,32);
           doc.roundedRect(m, y, 210 - m * 2, detH, 3, 3, "F");
           doc.restoreGraphicsState();
         } catch (_) {}
-
         doc.setDrawColor(39,49,73);
         doc.roundedRect(m, y, 210 - m * 2, detH, 3, 3, "S");
 
@@ -766,30 +778,45 @@ Entrega lista para usar</textarea>
         });
         y += detH + 5;
 
-        // Footer final + contacto con iconos oficiales
         doc.setDrawColor(39,49,73);
         doc.line(m, y, 210 - m, y);
 
-        doc.setFont("courier", "normal");
+        doc.setFont("courier", "bold");
         doc.setFontSize(7.1);
         doc.setTextColor(198,214,232);
-        doc.text("MODALIDAD: Se abona una vez entregado el sitio / transferencia o MP", m, y + 5);
+        doc.text("MODALIDAD DE PAGO: Se abona una vez entregado el sitio / transferencia o MP", m, y + 5);
+        doc.text("MODALIDAD DE PAGO: Pago contra entrega del sitio final", m, y + 9.6);
 
-        // Bloque de contacto sin caja pesada (texto sobre overlay)
-        drawIconTextRow(doc, m, y + 11, assets.wa, "W", "WHATSAPP", BRAND_WA, [37,211,102]);
-        drawIconTextRow(doc, m + 63, y + 11, assets.ig, "I", "INSTAGRAM", BRAND_IG, [228,64,95]);
-        drawIconTextRow(doc, m + 126, y + 11, assets.mail, "M", "EMAIL", BRAND_MAIL, [234,67,53]);
+        const footerY = y + 15;
+
+        try {
+          doc.saveGraphicsState();
+          doc.setGState(new doc.GState({ opacity: 0.12 }));
+          doc.setFillColor(11,16,32);
+          doc.setDrawColor(39,49,73);
+          doc.roundedRect(m, footerY - 4.5, 210 - (m * 2), 17.5, 3, 3, "FD");
+          doc.restoreGraphicsState();
+        } catch (_) {}
+
+        const totalW = 210 - (m * 2);
+        const colW = totalW / 4;
+
+        drawIconTextRow(doc, m + 2,            footerY, assets.wa,   "W", "WHATSAPP", BRAND_WA,   colW - 7);
+        drawIconTextRow(doc, m + colW + 2,     footerY, assets.ig,   "I", "INSTAGRAM", BRAND_IG,  colW - 7);
+        drawIconTextRow(doc, m + colW * 2 + 2, footerY, assets.mail, "M", "EMAIL", BRAND_MAIL,    colW - 7);
+        drawIconTextRow(doc, m + colW * 3 + 2, footerY, assets.web,  "W", "WEB", BRAND_WEB,       colW - 7);
 
         doc.setDrawColor(39,49,73);
-        doc.line(m, y + 14, 210 - m, y + 14);
+        doc.line(m, footerY + 14.5, 210 - m, footerY + 14.5);
 
         doc.setFont("courier", "normal");
         doc.setFontSize(6.8);
         doc.setTextColor(143,165,191);
-        doc.text(BRAND_FIRMA, 105, y + 18.5, { align: "center" });
+        doc.text(BRAND_FIRMA, 105, footerY + 19.2, { align: "center" });
 
         const cleanClient = d.cliente
           .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          .replace(/ñ/gi, "n")
           .replace(/[^\w\s-]/g, "")
           .trim()
           .replace(/\s+/g, "-")
@@ -798,7 +825,7 @@ Entrega lista para usar</textarea>
         pdfNameCache = `presupuesto-ciborg347-${cleanClient}.pdf`;
         pdfBlobCache = doc.output("blob");
 
-        setStatus("PDF generado correctamente (overlay + contacto con iconos).", "ok");
+        setStatus("PDF generado correctamente.", "ok");
         return pdfBlobCache;
       }
 
@@ -850,7 +877,7 @@ Entrega lista para usar</textarea>
           const blob = await ensurePdf();
 
           if (!navigator.share || typeof File === "undefined") {
-            setStatus("Este dispositivo no soporta compartir archivos. Usa Descargar PDF.", "warn");
+            setStatus("Este dispositivo no soporta compartir archivos. Usá Descargar PDF.", "warn");
             setBusy(false);
             return;
           }
@@ -858,7 +885,7 @@ Entrega lista para usar</textarea>
           const file = new File([blob], pdfNameCache || "presupuesto-ciborg347.pdf", { type: "application/pdf" });
 
           if (navigator.canShare && !navigator.canShare({ files: [file] })) {
-            setStatus("Tu celu no permite compartir PDF directo. Usa Descargar PDF.", "warn");
+            setStatus("Tu celu no permite compartir PDF directo. Usá Descargar PDF.", "warn");
             setBusy(false);
             return;
           }
@@ -890,7 +917,7 @@ Entrega lista para usar</textarea>
           updatePreview();
           setStatus("Vista previa activada.", "ok");
         } else {
-          setStatus("Vista previa oculta para mejor rendimiento.", "ok");
+          setStatus("Vista previa oculta.", "ok");
         }
       });
 
@@ -898,15 +925,13 @@ Entrega lista para usar</textarea>
         updatePreview();
       });
 
-      // invalidar cache cuando cambia cualquier campo
-      ["fecha","numero","cliente","direccion","servicio","precio","entrega","incluye","detalle"].forEach(id => {
+      ["fecha","numero","cliente","servicio","precio","entrega","incluye","detalle"].forEach(id => {
         $(id).addEventListener("input", invalidatePdf);
         $(id).addEventListener("change", invalidatePdf);
       });
 
-      // init
       updatePreview();
-      setStatus("Listo. Version optimizada, overlay visible y contacto de marca integrado.", "ok");
+      setStatus("Listo. Diseño actualizado y PDF con formato tipo factura.", "ok");
     })();
   </script>
 </body>
