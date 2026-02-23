@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -149,8 +150,9 @@
       content:"";
       position:absolute;inset:0;
       background:url("https://iili.io/qFQyNae.png") center/55% no-repeat;
-      opacity:.045;
+      opacity:.08;
       pointer-events:none;
+      filter:saturate(1.15);
     }
     .sheet > *{position:relative}
     .s-top{
@@ -158,7 +160,7 @@
       grid-template-columns:56px 1fr;
       gap:10px;
       align-items:center;
-      border-bottom:1px solid #253147;
+      border-bottom:1px solid rgba(37,49,71,.85);
       padding-bottom:8px;
     }
     .s-top img{
@@ -169,9 +171,10 @@
     .s-top .v{font-size:1.05rem;color:#8feaff;font-weight:900;line-height:1.05}
     .s-meta{font-size:.72rem;color:#c1d1e8;display:flex;flex-wrap:wrap;gap:8px}
     .box{
-      border:1px solid #263148;
+      border:1px solid rgba(38,49,72,.75);
       border-radius:10px;
-      background:#0c1322;
+      background:rgba(12,19,34,.58);
+      backdrop-filter: blur(1px);
       padding:10px;
     }
     .box .lab{
@@ -196,11 +199,28 @@
       font-size:.8rem;
     }
     .foot-note{
-      border-top:1px solid #263148;
+      border-top:1px solid rgba(38,49,72,.9);
       padding-top:8px;
       color:#c7d6e8;
       font-size:.75rem;
       line-height:1.35;
+      background:rgba(9,14,24,.28);
+      border-radius:8px;
+      padding:8px;
+    }
+    .contact-row{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      margin-top:4px;
+      flex-wrap:wrap;
+    }
+    .contact-row .ico{
+      width:15px;height:15px;display:inline-flex;align-items:center;justify-content:center;
+      opacity:.95; flex:0 0 auto;
+    }
+    .contact-row img{
+      width:15px;height:15px;object-fit:contain;display:block;
     }
     .signature{
       margin-top:6px;
@@ -351,7 +371,9 @@ Entrega lista para usar</textarea>
 
           <div class="foot-note mono">
             <div><b>Modalidad:</b> Se abona una vez entregado el sitio / transferencia o MP</div>
-            <div><b>WhatsApp:</b> 11 6449-9481 | <b>IG:</b> @ciborg347</div>
+            <div class="contact-row"><span class="ico"><img src="https://cdn.simpleicons.org/whatsapp/25D366" alt="WhatsApp"></span><span><b>WhatsApp:</b> <span id="pvWa">1164499481</span></span></div>
+            <div class="contact-row"><span class="ico"><img src="https://cdn.simpleicons.org/instagram/E4405F" alt="Instagram"></span><span><b>Instagram:</b> <span id="pvIg">@ciborg347</span></span></div>
+            <div class="contact-row"><span class="ico"><img src="https://cdn.simpleicons.org/gmail/EA4335" alt="Email"></span><span><b>Email:</b> <span id="pvMail">ciborg347@gmail.com</span></span></div>
             <div class="signature">CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES</div>
           </div>
         </div>
@@ -389,18 +411,31 @@ Entrega lista para usar</textarea>
         pvServicio: $("pvServicio"),
         pvPrecio: $("pvPrecio"),
         pvIncluye: $("pvIncluye"),
-        pvDetalle: $("pvDetalle")
+        pvDetalle: $("pvDetalle"),
+        pvWa: $("pvWa"),
+        pvIg: $("pvIg"),
+        pvMail: $("pvMail")
       };
 
       const BRAND_LOGO = "https://iili.io/qFQyNae.png";
-      const BRAND_WA = "11 6449-9481";
+      const BRAND_WA = "1164499481";
       const BRAND_IG = "@ciborg347";
+      const BRAND_MAIL = "ciborg347@gmail.com";
       const BRAND_FIRMA = "CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES";
+
+      // Iconos oficiales (simpleicons PNG por CDN)
+      const ICON_WA = "https://cdn.simpleicons.org/whatsapp/25D366";
+      const ICON_IG = "https://cdn.simpleicons.org/instagram/E4405F";
+      const ICON_MAIL = "https://cdn.simpleicons.org/gmail/EA4335";
 
       let previewVisible = false;
       let pdfBlobCache = null;
       let pdfNameCache = "presupuesto-ciborg347.pdf";
+
       let logoDataUrlCache = null;
+      let iconWaDataUrlCache = null;
+      let iconIgDataUrlCache = null;
+      let iconMailDataUrlCache = null;
 
       function setStatus(msg, type) {
         els.status.className = "status" + (type ? " " + type : "");
@@ -446,6 +481,10 @@ Entrega lista para usar</textarea>
         els.pvServicio.textContent = d.servicio;
         els.pvPrecio.textContent = d.precio;
         els.pvDetalle.textContent = d.detalle;
+        if (els.pvWa) els.pvWa.textContent = BRAND_WA;
+        if (els.pvIg) els.pvIg.textContent = BRAND_IG;
+        if (els.pvMail) els.pvMail.textContent = BRAND_MAIL;
+
         els.pvIncluye.innerHTML = "";
         const items = d.incluye.length ? d.incluye : ["Detalle a definir"];
         items.slice(0, 8).forEach(item => {
@@ -456,29 +495,60 @@ Entrega lista para usar</textarea>
         if (previewVisible) setStatus("Vista previa actualizada.", "ok");
       }
 
-      async function loadLogoDataUrlOnce() {
-        if (logoDataUrlCache) return logoDataUrlCache;
+      async function fetchAsDataUrl(url) {
         try {
-          const res = await fetch(BRAND_LOGO, { mode: "cors" });
-          if (!res.ok) throw new Error("No se pudo cargar logo");
+          const res = await fetch(url, { mode: "cors" });
+          if (!res.ok) throw new Error("No se pudo cargar recurso");
           const blob = await res.blob();
-          logoDataUrlCache = await new Promise((resolve, reject) => {
+          return await new Promise((resolve, reject) => {
             const fr = new FileReader();
             fr.onload = () => resolve(fr.result);
             fr.onerror = reject;
             fr.readAsDataURL(blob);
           });
-          return logoDataUrlCache;
         } catch (e) {
           return null;
         }
       }
 
+      async function loadBrandAssetsOnce() {
+        if (!logoDataUrlCache) logoDataUrlCache = await fetchAsDataUrl(BRAND_LOGO);
+        if (!iconWaDataUrlCache) iconWaDataUrlCache = await fetchAsDataUrl(ICON_WA);
+        if (!iconIgDataUrlCache) iconIgDataUrlCache = await fetchAsDataUrl(ICON_IG);
+        if (!iconMailDataUrlCache) iconMailDataUrlCache = await fetchAsDataUrl(ICON_MAIL);
+
+        return {
+          logo: logoDataUrlCache,
+          wa: iconWaDataUrlCache,
+          ig: iconIgDataUrlCache,
+          mail: iconMailDataUrlCache
+        };
+      }
+
       function mmTextBox(doc, x, y, w, h, label, value, opts = {}) {
-        const { labelColor = [196,155,255], valueColor = [238,244,251], boldValue = false, maxLines = 2 } = opts;
-        doc.setFillColor(11,16,32);
-        doc.setDrawColor(39,49,73);
-        doc.roundedRect(x, y, w, h, 3, 3, "FD");
+        const {
+          labelColor = [196,155,255],
+          valueColor = [238,244,251],
+          boldValue = false,
+          maxLines = 2,
+          fillColor = [12,19,34],
+          fillOpacity = 0.45,
+          borderColor = [39,49,73]
+        } = opts;
+
+        try {
+          doc.saveGraphicsState();
+          doc.setGState(new doc.GState({ opacity: fillOpacity }));
+          doc.setFillColor(...fillColor);
+          doc.setDrawColor(...borderColor);
+          doc.roundedRect(x, y, w, h, 3, 3, "FD");
+          doc.restoreGraphicsState();
+        } catch (_) {
+          // Fallback sin opacidad si algún viewer no soporta bien gstate en la generación
+          doc.setFillColor(...fillColor);
+          doc.setDrawColor(...borderColor);
+          doc.roundedRect(x, y, w, h, 3, 3, "FD");
+        }
 
         doc.setFont("courier", "bold");
         doc.setFontSize(7);
@@ -497,14 +567,44 @@ Entrega lista para usar</textarea>
         });
       }
 
+      function drawIconTextRow(doc, x, y, iconDataUrl, fallbackGlyph, label, value, colorArr) {
+        const iconSize = 4.4;
+        let textX = x;
+
+        if (iconDataUrl) {
+          try {
+            const format = iconDataUrl.includes("image/png") ? "PNG" : "JPEG";
+            doc.addImage(iconDataUrl, format, x, y - 3.7, iconSize, iconSize, undefined, "FAST");
+            textX = x + 6;
+          } catch (_) {
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(8);
+            doc.setTextColor(...(colorArr || [198,214,232]));
+            doc.text(fallbackGlyph, x, y);
+            textX = x + 5;
+          }
+        } else {
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(8);
+          doc.setTextColor(...(colorArr || [198,214,232]));
+          doc.text(fallbackGlyph, x, y);
+          textX = x + 5;
+        }
+
+        doc.setFont("courier", "normal");
+        doc.setFontSize(7.2);
+        doc.setTextColor(198,214,232);
+        doc.text(`${label}: ${value}`, textX, y);
+      }
+
       async function buildPdfBlob() {
         const d = getData();
         setStatus("Generando PDF...", "warn");
 
         const doc = new jsPDF({ unit: "mm", format: "a4", compress: true });
-        const logoData = await loadLogoDataUrlOnce();
+        const assets = await loadBrandAssetsOnce();
 
-        // Fondo
+        // Fondo base
         doc.setFillColor(10, 13, 20);
         doc.rect(0, 0, 210, 297, "F");
 
@@ -513,25 +613,44 @@ Entrega lista para usar</textarea>
         doc.setFillColor(124, 58, 237); doc.rect(70, 0, 70, 3, "F");
         doc.setFillColor(236, 72, 153); doc.rect(140, 0, 70, 3, "F");
 
-        // Watermark (si carga logo)
-        if (logoData) {
+        // Overlay / watermark más visible (fondo)
+        if (assets.logo) {
           try {
             doc.saveGraphicsState();
-            doc.setGState(new doc.GState({ opacity: 0.06 }));
-            doc.addImage(logoData, "PNG", 40, 85, 130, 130, undefined, "FAST");
+            doc.setGState(new doc.GState({ opacity: 0.14 }));
+            doc.addImage(assets.logo, "PNG", 24, 72, 162, 162, undefined, "FAST");
             doc.restoreGraphicsState();
           } catch (_) {}
         }
 
+        // Glow suave detrás del contenido (simulado con rect translúcido)
+        try {
+          doc.saveGraphicsState();
+          doc.setGState(new doc.GState({ opacity: 0.18 }));
+          doc.setFillColor(9, 14, 24);
+          doc.roundedRect(8, 8, 194, 281, 6, 6, "F");
+          doc.restoreGraphicsState();
+        } catch (_) {}
+
         const m = 12;
         let y = 10;
 
-        // Header
-        doc.setFillColor(11,16,32);
-        doc.setDrawColor(39,49,73);
-        doc.roundedRect(m, y, 22, 22, 3, 3, "FD");
-        if (logoData) {
-          try { doc.addImage(logoData, "PNG", m + 1.5, y + 1.5, 19, 19, undefined, "FAST"); } catch (_) {}
+        // Header (semi transparente para dejar ver overlay)
+        try {
+          doc.saveGraphicsState();
+          doc.setGState(new doc.GState({ opacity: 0.34 }));
+          doc.setFillColor(11,16,32);
+          doc.setDrawColor(39,49,73);
+          doc.roundedRect(m, y, 22, 22, 3, 3, "FD");
+          doc.restoreGraphicsState();
+        } catch (_) {
+          doc.setFillColor(11,16,32);
+          doc.setDrawColor(39,49,73);
+          doc.roundedRect(m, y, 22, 22, 3, 3, "FD");
+        }
+
+        if (assets.logo) {
+          try { doc.addImage(assets.logo, "PNG", m + 1.5, y + 1.5, 19, 19, undefined, "FAST"); } catch (_) {}
         }
 
         doc.setFont("courier", "normal");
@@ -555,34 +674,45 @@ Entrega lista para usar</textarea>
         doc.line(m, y, 210 - m, y);
         y += 4;
 
-        // Cliente + Precio
+        // Cliente + Precio (cajas visibles pero transparentes)
         const gap = 4;
         const half = (210 - m * 2 - gap) / 2;
-        mmTextBox(doc, m, y, half, 17, "Cliente", d.cliente.toUpperCase(), { maxLines: 2 });
+        mmTextBox(doc, m, y, half, 17, "Cliente", d.cliente.toUpperCase(), { maxLines: 2, fillOpacity: 0.34 });
         mmTextBox(doc, m + half + gap, y, half, 17, "Precio final", d.precio, {
           valueColor: [152,245,178],
           boldValue: true,
-          maxLines: 2
+          maxLines: 2,
+          fillOpacity: 0.34
         });
         y += 20;
 
-        // Direccion
-        mmTextBox(doc, m, y, 210 - m * 2, 15, "Direccion", d.direccion, { maxLines: 2 });
+        // Dirección
+        mmTextBox(doc, m, y, 210 - m * 2, 15, "Direccion", d.direccion, { maxLines: 2, fillOpacity: 0.22 });
         y += 18;
 
         // Servicio
-        mmTextBox(doc, m, y, 210 - m * 2, 17, "Servicio / Presupuesto", d.servicio, { maxLines: 2 });
+        mmTextBox(doc, m, y, 210 - m * 2, 17, "Servicio / Presupuesto", d.servicio, { maxLines: 2, fillOpacity: 0.24 });
         y += 20;
 
         // Tiempo
-        mmTextBox(doc, m, y, 210 - m * 2, 15, "Tiempo estimado", d.entrega, { maxLines: 2 });
+        mmTextBox(doc, m, y, 210 - m * 2, 15, "Tiempo estimado", d.entrega, { maxLines: 2, fillOpacity: 0.20 });
         y += 18;
 
-        // Incluye
-        const incluyeH = 52;
-        doc.setFillColor(11,16,32);
-        doc.setDrawColor(39,49,73);
-        doc.roundedRect(m, y, 210 - m * 2, incluyeH, 3, 3, "FD");
+        // Incluye (más liviano para que se vea el overlay)
+        const incluyeH = 48;
+        try {
+          doc.saveGraphicsState();
+          doc.setGState(new doc.GState({ opacity: 0.20 }));
+          doc.setFillColor(11,16,32);
+          doc.setDrawColor(39,49,73);
+          doc.roundedRect(m, y, 210 - m * 2, incluyeH, 3, 3, "FD");
+          doc.restoreGraphicsState();
+        } catch (_) {
+          doc.setFillColor(11,16,32);
+          doc.setDrawColor(39,49,73);
+          doc.roundedRect(m, y, 210 - m * 2, incluyeH, 3, 3, "FD");
+        }
+
         doc.setFont("courier", "bold");
         doc.setFontSize(7);
         doc.setTextColor(196,155,255);
@@ -590,10 +720,10 @@ Entrega lista para usar</textarea>
 
         doc.setFont("courier", "normal");
         doc.setFontSize(7.7);
-        doc.setTextColor(205,221,240);
+        doc.setTextColor(220,232,246);
         const bullets = d.incluye.length ? d.incluye : ["Detalle a definir"];
         let by = y + 11;
-        const maxBulletLines = 8;
+        const maxBulletLines = 7;
         let used = 0;
         for (const item of bullets) {
           if (used >= maxBulletLines) break;
@@ -607,20 +737,28 @@ Entrega lista para usar</textarea>
         }
         y += incluyeH + 4;
 
-        // Detalle / observaciones
-        const detH = 34;
-        doc.setFillColor(11,16,32);
+        // Detalle / observaciones (sin tarjeta pesada, solo banda suave + texto encima)
+        const detH = 28;
+        try {
+          doc.saveGraphicsState();
+          doc.setGState(new doc.GState({ opacity: 0.12 }));
+          doc.setFillColor(11,16,32);
+          doc.roundedRect(m, y, 210 - m * 2, detH, 3, 3, "F");
+          doc.restoreGraphicsState();
+        } catch (_) {}
+
         doc.setDrawColor(39,49,73);
-        doc.roundedRect(m, y, 210 - m * 2, detH, 3, 3, "FD");
+        doc.roundedRect(m, y, 210 - m * 2, detH, 3, 3, "S");
+
         doc.setFont("courier", "bold");
         doc.setFontSize(7);
         doc.setTextColor(221,233,247);
         doc.text("DETALLE / OBSERVACIONES", m + 3, y + 5);
 
         doc.setFont("courier", "normal");
-        doc.setFontSize(7.4);
-        doc.setTextColor(198,214,232);
-        const detLines = doc.splitTextToSize(d.detalle, 210 - m * 2 - 6).slice(0, 5);
+        doc.setFontSize(7.3);
+        doc.setTextColor(214,227,242);
+        const detLines = doc.splitTextToSize(d.detalle, 210 - m * 2 - 6).slice(0, 4);
         let dy = y + 10;
         detLines.forEach(line => {
           doc.text(line, m + 3, dy);
@@ -628,7 +766,7 @@ Entrega lista para usar</textarea>
         });
         y += detH + 5;
 
-        // Footer final
+        // Footer final + contacto con iconos oficiales
         doc.setDrawColor(39,49,73);
         doc.line(m, y, 210 - m, y);
 
@@ -636,21 +774,31 @@ Entrega lista para usar</textarea>
         doc.setFontSize(7.1);
         doc.setTextColor(198,214,232);
         doc.text("MODALIDAD: Se abona una vez entregado el sitio / transferencia o MP", m, y + 5);
-        doc.text(`WHATSAPP: ${BRAND_WA} | IG: ${BRAND_IG}`, m, y + 10);
+
+        // Bloque de contacto sin caja pesada (texto sobre overlay)
+        drawIconTextRow(doc, m, y + 11, assets.wa, "W", "WHATSAPP", BRAND_WA, [37,211,102]);
+        drawIconTextRow(doc, m + 63, y + 11, assets.ig, "I", "INSTAGRAM", BRAND_IG, [228,64,95]);
+        drawIconTextRow(doc, m + 126, y + 11, assets.mail, "M", "EMAIL", BRAND_MAIL, [234,67,53]);
 
         doc.setDrawColor(39,49,73);
-        doc.line(m, y + 13, 210 - m, y + 13);
+        doc.line(m, y + 14, 210 - m, y + 14);
 
         doc.setFont("courier", "normal");
         doc.setFontSize(6.8);
         doc.setTextColor(143,165,191);
-        doc.text(BRAND_FIRMA, 105, y + 17.5, { align: "center" });
+        doc.text(BRAND_FIRMA, 105, y + 18.5, { align: "center" });
 
-        const cleanClient = d.cliente.replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-").toLowerCase() || "cliente";
+        const cleanClient = d.cliente
+          .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^\w\s-]/g, "")
+          .trim()
+          .replace(/\s+/g, "-")
+          .toLowerCase() || "cliente";
+
         pdfNameCache = `presupuesto-ciborg347-${cleanClient}.pdf`;
         pdfBlobCache = doc.output("blob");
 
-        setStatus("PDF generado correctamente.", "ok");
+        setStatus("PDF generado correctamente (overlay + contacto con iconos).", "ok");
         return pdfBlobCache;
       }
 
@@ -686,7 +834,7 @@ Entrega lista para usar</textarea>
           document.body.appendChild(a);
           a.click();
           a.remove();
-          URL.revokeObjectURL(url);
+          setTimeout(() => URL.revokeObjectURL(url), 1200);
           setStatus("PDF descargado.", "ok");
         } catch (e) {
           console.error(e);
@@ -756,9 +904,9 @@ Entrega lista para usar</textarea>
         $(id).addEventListener("change", invalidatePdf);
       });
 
-      // init (sin preview activa, mas liviano)
+      // init
       updatePreview();
-      setStatus("Listo. Version optimizada y liviana. La vista previa esta oculta por defecto.", "ok");
+      setStatus("Listo. Version optimizada, overlay visible y contacto de marca integrado.", "ok");
     })();
   </script>
 </body>
