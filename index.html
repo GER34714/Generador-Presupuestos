@@ -1,234 +1,90 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CIBORG347 | Generador de Presupuestos PDF</title>
-  <meta name="description" content="Generador de presupuestos y boletas PDF Modo CIBORG. Intuitivo, responsive y listo para usar en celular." />
+  <title>CIBORG347 | Presupuesto PDF (Lite)</title>
+  <meta name="description" content="Generador de presupuesto PDF liviano para celular. Completar datos, generar, descargar y compartir PDF." />
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <style>
     :root{
-      --bg:#07090f;
-      --bg2:#0b1020;
-      --panel:#0e1320;
-      --panel-2:#121a2b;
-      --line:#273149;
-      --line-soft:#1c253b;
-      --text:#edf3fc;
-      --muted:#9fb0c8;
-      --c1:#00d4ff;
-      --c2:#7c3aed;
-      --c3:#ec4899;
+      --bg:#0a0d14;
+      --panel:#111724;
+      --line:#273247;
+      --text:#eef4ff;
+      --muted:#a0b0c7;
+      --accent:#00d4ff;
+      --accent2:#7c3aed;
       --ok:#22c55e;
       --warn:#f59e0b;
-      --danger:#ef4444;
-      --chip:#ffffff;
-      --chip-text:#0f172a;
-
       --radius:14px;
-      --radius-lg:18px;
-
-      --a4w:210mm;
-      --a4h:297mm;
-
-      --shadow-lg:0 16px 34px rgba(0,0,0,.28);
-      --shadow-md:0 8px 18px rgba(0,0,0,.22);
-
-      --sans: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
     }
-
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{min-height:100%}
-    html{scroll-behavior:smooth}
     body{
-      font-family:var(--sans);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:var(--bg);
       color:var(--text);
-      background:
-        radial-gradient(circle at 0% 0%, rgba(0,212,255,.08), transparent 25%),
-        radial-gradient(circle at 100% 0%, rgba(124,58,237,.08), transparent 28%),
-        linear-gradient(180deg, #05070d 0%, #07090f 100%);
-      padding:12px;
-      overflow-x:hidden;
+      padding:10px;
     }
-
-    a{color:inherit;text-decoration:none}
-    button,input,select,textarea{font:inherit}
-    img{display:block;max-width:100%}
-
-    .shell{
-      max-width:1500px;
+    .app{
+      max-width:760px;
       margin:0 auto;
       display:grid;
-      grid-template-columns: 390px minmax(0,1fr);
-      gap:14px;
-      align-items:start;
+      gap:10px;
     }
-
-    /* ===== LEFT PANEL / APP UI ===== */
-    .side{
-      position:sticky;
-      top:10px;
-      display:grid;
-      gap:12px;
-    }
-
-    .card-ui{
-      background:linear-gradient(180deg,var(--panel-2),var(--panel));
-      border:1px solid var(--line-soft);
+    .card{
+      background:var(--panel);
+      border:1px solid #1f2937;
       border-radius:16px;
-      box-shadow:var(--shadow-md);
       overflow:hidden;
+      box-shadow:0 10px 28px rgba(0,0,0,.25);
     }
-
-    .hero-ui{
-      padding:12px;
-      display:grid;
-      gap:10px;
-    }
-
-    .brand{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      padding:8px 10px;
-      border:1px solid #202a43;
-      border-radius:12px;
-      background:#0b1020;
-    }
-    .brand img{
-      width:42px;
-      height:42px;
-      border-radius:11px;
-      object-fit:cover;
-      border:1px solid #28344f;
-      background:#09101d;
-      flex-shrink:0;
-    }
-    .brand-text{
-      min-width:0;
-    }
-    .brand-text strong{
-      display:block;
-      font-weight:800;
-      font-size:.92rem;
-      letter-spacing:.2px;
-      color:#f3f8ff;
-    }
-    .brand-text span{
-      display:block;
-      color:var(--muted);
-      font-size:.76rem;
-      margin-top:1px;
-    }
-
-    .app-title{
-      display:grid;
-      gap:4px;
-    }
-    .app-title h1{
-      font-size:1.02rem;
-      line-height:1.2;
-      font-weight:800;
-      letter-spacing:.2px;
-    }
-    .app-title p{
-      color:var(--muted);
-      font-size:.82rem;
-      line-height:1.35;
-    }
-
-    .tabs{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:8px;
-    }
-    .tab-btn{
-      border:1px solid #2a3552;
-      background:#0c1220;
-      color:#d9e6f5;
-      border-radius:10px;
-      padding:9px 10px;
-      font-weight:700;
-      font-size:.83rem;
-      cursor:pointer;
-      transition:.15s ease;
-    }
-    .tab-btn.active{
-      color:#fff;
-      border-color:transparent;
-      background:linear-gradient(90deg,var(--c1),var(--c2));
-      box-shadow:0 6px 15px rgba(124,58,237,.22);
-    }
-
-    .section-block{
-      border-top:1px solid #1a2338;
-      padding:12px;
-      display:grid;
-      gap:10px;
-    }
-
-    .section-head{
+    .head{
       display:flex;
       align-items:center;
-      justify-content:space-between;
-      gap:8px;
+      gap:10px;
+      padding:12px;
+      border-bottom:1px solid #1f2937;
     }
-    .section-head h2{
-      font-size:.9rem;
-      font-weight:800;
-      letter-spacing:.25px;
+    .head img{
+      width:42px;height:42px;border-radius:10px;object-fit:cover;border:1px solid #29364d;background:#0b111d
     }
-    .hint{
-      color:var(--muted);
-      font-size:.75rem;
-      line-height:1.25;
-    }
+    .head .t strong{display:block;font-size:.95rem;line-height:1.1}
+    .head .t span{display:block;font-size:.78rem;color:var(--muted);margin-top:2px}
 
-    .grid{display:grid;gap:8px}
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-
-    .field{
-      display:grid;
-      gap:5px;
-    }
+    .body{padding:12px;display:grid;gap:10px}
+    .grid{display:grid;gap:10px}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .field{display:grid;gap:6px}
     .field label{
-      font-size:.74rem;
-      color:#c7d6e8;
+      font-size:.78rem;
       font-weight:700;
-      letter-spacing:.25px;
+      color:#d8e4f6;
     }
-    .field input,
-    .field select,
-    .field textarea{
+    .field input,.field textarea{
       width:100%;
       border-radius:10px;
-      border:1px solid #2a3450;
-      background:#09101d;
-      color:#edf3fc;
-      padding:10px 11px;
+      border:1px solid #2b3850;
+      background:#0b111d;
+      color:var(--text);
+      padding:11px 12px;
       outline:none;
-      transition:border-color .15s ease, box-shadow .15s ease;
-      font-size:.9rem;
+      font:inherit;
+      font-size:.95rem;
     }
     .field textarea{
-      min-height:84px;
+      min-height:95px;
       resize:vertical;
-      line-height:1.34;
+      line-height:1.35;
     }
-    .field input:focus,
-    .field select:focus,
-    .field textarea:focus{
+    .field input:focus,.field textarea:focus{
       border-color:#3b82f6;
       box-shadow:0 0 0 3px rgba(59,130,246,.14);
     }
-
-    .mini-help{
-      color:#93a7c2;
-      font-size:.72rem;
-      line-height:1.2;
-      margin-top:-2px;
+    .help{
+      font-size:.74rem;
+      color:var(--muted);
+      line-height:1.25;
     }
 
     .actions{
@@ -244,1585 +100,665 @@
     .btn{
       border:none;
       border-radius:10px;
-      padding:10px 10px;
+      min-height:44px;
+      padding:10px;
+      color:white;
       font-weight:800;
       font-size:.84rem;
       cursor:pointer;
       transition:transform .12s ease, opacity .12s ease, filter .12s ease;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      min-height:42px;
     }
-    .btn:hover{filter:brightness(1.03)}
+    .btn:hover{filter:brightness(1.04)}
     .btn:active{transform:scale(.985)}
-    .btn-primary{
-      color:#fff;
-      background:linear-gradient(90deg,var(--c1),var(--c2));
-      box-shadow:0 8px 18px rgba(124,58,237,.22);
-    }
-    .btn-dark{
-      color:#dce8f7;
-      background:#11192a;
-      border:1px solid #2a3550;
-    }
-    .btn-green{
-      color:#fff;
-      background:linear-gradient(90deg,#16a34a,#22c55e);
-      box-shadow:0 8px 18px rgba(34,197,94,.22);
-    }
-    .btn-orange{
-      color:#1f2937;
-      background:linear-gradient(90deg,#fbbf24,#f59e0b);
-      box-shadow:0 8px 18px rgba(245,158,11,.22);
-    }
-
-    details.advanced{
-      border:1px solid #1f2942;
-      border-radius:12px;
-      background:#0b1020;
-      overflow:hidden;
-    }
-    details.advanced summary{
-      list-style:none;
-      cursor:pointer;
-      padding:10px 12px;
-      font-weight:800;
-      font-size:.86rem;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:8px;
-      background:linear-gradient(180deg,#101829,#0c1220);
-      color:#edf4fd;
-      user-select:none;
-      border-bottom:1px solid transparent;
-    }
-    details.advanced[open] summary{
-      border-bottom-color:#1d2740;
-    }
-    details.advanced summary::-webkit-details-marker{display:none}
-    .adv-content{
-      padding:10px;
-      display:grid;
-      gap:8px;
-    }
-    .badge-soft{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      border:1px solid #293552;
-      background:#0b1220;
-      color:#dce8f7;
-      border-radius:999px;
-      padding:4px 8px;
-      font-size:.7rem;
-      font-weight:700;
-      white-space:nowrap;
-    }
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent2))}
+    .btn-green{background:linear-gradient(90deg,#16a34a,#22c55e)}
+    .btn-dark{background:#0f1625;border:1px solid #2a3550;color:#e6efff}
 
     .status{
+      border-top:1px solid #1f2937;
       padding:10px 12px;
-      border-top:1px solid #1a2338;
-      color:#d3e1f3;
       font-size:.82rem;
-      min-height:40px;
-      line-height:1.25;
+      color:#d8e4f6;
+      min-height:41px;
       display:flex;
       align-items:center;
     }
-    .status.ok{color:#b8f6ce}
+    .status.ok{color:#bbf7d0}
     .status.warn{color:#fde68a}
     .status.err{color:#fecaca}
 
-    /* ===== RIGHT / PREVIEW AREA ===== */
-    .main{
-      display:grid;
-      gap:12px;
+    /* preview opcional, muy liviana */
+    .preview{display:none}
+    .preview.show{display:block}
+    .preview .pbody{
+      padding:10px;
+      background:#0c111c;
     }
-
-    .top-tools{
-      background:linear-gradient(180deg,var(--panel-2),var(--panel));
-      border:1px solid var(--line-soft);
-      border-radius:16px;
-      box-shadow:var(--shadow-md);
-      padding:10px 12px;
-      display:flex;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-
-    .top-tools-left{
-      display:flex;
-      flex-wrap:wrap;
-      align-items:center;
-      gap:8px;
-      min-width:0;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      border:1px solid #2a3552;
-      background:#0b1220;
-      border-radius:999px;
-      color:#dbe7f6;
-      padding:5px 9px;
-      font-size:.75rem;
-      font-weight:700;
-      white-space:nowrap;
-    }
-
-    .dot{
-      width:8px;
-      height:8px;
-      border-radius:50%;
-      background:var(--ok);
-      box-shadow:0 0 0 4px rgba(34,197,94,.15);
-    }
-
-    .top-tools small{
-      color:var(--muted);
-      font-size:.75rem;
-      line-height:1.2;
-    }
-
-    .preview-panel{
-      background:linear-gradient(180deg,var(--panel-2),var(--panel));
-      border:1px solid var(--line-soft);
-      border-radius:16px;
-      box-shadow:var(--shadow-lg);
-      padding:12px;
-      overflow:auto;
-    }
-
-    .doc-wrap{
-      display:grid;
-      justify-items:center;
-      gap:12px;
-    }
-
-    /* ===== A4 SHEET ===== */
     .sheet{
-      width:var(--a4w);
-      min-height:var(--a4h);
-      background:#070b14;
-      border:1px solid #13203a;
+      border:1px solid #263148;
+      border-radius:12px;
+      background:#0f1625;
+      padding:12px;
+      display:grid;
+      gap:8px;
       position:relative;
       overflow:hidden;
-      isolation:isolate;
-      box-shadow:0 18px 40px rgba(0,0,0,.32);
-      color:#edf4fd;
-      page-break-inside:avoid;
-      break-inside:avoid;
     }
-
     .sheet::before{
       content:"";
-      position:absolute;
-      inset:0;
-      z-index:0;
+      position:absolute;inset:0;
+      background:url("https://iili.io/qFQyNae.png") center/55% no-repeat;
+      opacity:.045;
       pointer-events:none;
-      background:
-        radial-gradient(circle at 10% 0%, rgba(0,212,255,.12), transparent 34%),
-        radial-gradient(circle at 100% 0%, rgba(124,58,237,.1), transparent 34%),
-        radial-gradient(circle at 100% 100%, rgba(236,72,153,.06), transparent 30%),
-        linear-gradient(180deg, rgba(255,255,255,.015), rgba(255,255,255,0));
     }
-
-    .topbar{
-      height:4px;
-      background:linear-gradient(90deg,var(--c1),#2563eb,var(--c2),var(--c3));
-      position:relative;
-      z-index:2;
-    }
-
-    .watermark{
-      position:absolute;
-      inset:0;
-      z-index:1;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      pointer-events:none;
-      opacity:.085;
-      transform:rotate(-14deg) scale(1.02);
-      filter:grayscale(100%) contrast(115%);
-    }
-    .watermark img{
-      width:72%;
-      max-width:560px;
-      height:auto;
-      object-fit:contain;
-    }
-
-    .sheet-inner{
-      position:relative;
-      z-index:2;
-      min-height:calc(var(--a4h) - 4px);
-      padding:8mm 8mm 7mm;
-      display:flex;
-      flex-direction:column;
-      gap:7px;
-    }
-
-    .header{
+    .sheet > *{position:relative}
+    .s-top{
       display:grid;
-      grid-template-columns:88px 1fr;
+      grid-template-columns:56px 1fr;
       gap:10px;
-      border-bottom:1px solid rgba(39,49,73,.95);
-      padding-bottom:7px;
-      align-items:start;
-      page-break-inside:avoid;
-      break-inside:avoid;
-    }
-
-    .logoBox{
-      width:88px;
-      height:88px;
-      border-radius:11px;
-      border:1px solid #273149;
-      background:#0b1020;
-      overflow:hidden;
-    }
-    .logoBox img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-    }
-
-    .headerText{
-      min-height:88px;
-      display:flex;
-      flex-direction:column;
-      justify-content:flex-end;
-      gap:4px;
-    }
-
-    .micro{
-      color:#92a7c0;
-      font-family:var(--mono);
-      font-size:10px;
-      letter-spacing:.9px;
-      text-transform:uppercase;
-      line-height:1.1;
-    }
-
-    .title{
-      font-family:var(--mono);
-      font-weight:900;
-      font-size:27px;
-      line-height:1;
-      color:#8ce7ff;
-      text-transform:uppercase;
-      letter-spacing:.7px;
-      text-shadow:0 0 14px rgba(0,212,255,.15);
-    }
-
-    .metaRow{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px 14px;
-      color:#b6c8dd;
-      font-family:var(--mono);
-      font-size:11px;
-      text-transform:uppercase;
-      line-height:1.15;
-    }
-    .metaRow strong{color:#fff}
-
-    .cards2{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:7px;
-      page-break-inside:avoid;
-      break-inside:avoid;
-    }
-
-    .card{
-      border:1px solid #273149;
-      border-radius:12px;
-      background:linear-gradient(180deg,rgba(10,16,32,.96),rgba(7,12,23,.96));
-      padding:9px 11px;
-    }
-
-    .card .lab{
-      color:#c49bff;
-      font-family:var(--mono);
-      font-size:10px;
-      letter-spacing:1px;
-      text-transform:uppercase;
-      font-weight:800;
-      margin-bottom:5px;
-    }
-
-    .card .val{
-      color:#f1f6fc;
-      font-family:var(--mono);
-      font-size:16px;
-      line-height:1.15;
-      text-transform:uppercase;
-      word-break:break-word;
-    }
-
-    .card .val.total{
-      color:#98f5b2;
-      font-weight:900;
-      font-size:20px;
-    }
-
-    .serviceBox{
-      border:1px solid #273149;
-      border-radius:12px;
-      overflow:hidden;
-      background:linear-gradient(180deg,rgba(9,15,28,.96),rgba(6,10,20,.96));
-      page-break-inside:avoid;
-      break-inside:avoid;
-    }
-
-    .serviceHead{
-      display:grid;
-      grid-template-columns:1fr 110px;
-      gap:8px;
-      padding:8px 11px;
-      border-bottom:1px solid #273149;
-      color:#97acc4;
-      font-family:var(--mono);
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:1px;
-    }
-
-    .serviceRow{
-      display:grid;
-      grid-template-columns:1fr 110px;
-      align-items:start;
-    }
-
-    .serviceMain{
-      padding:8px 11px 7px;
-      border-right:1px solid #273149;
-    }
-
-    .serviceTitle{
-      color:#86e8ff;
-      font-family:var(--mono);
-      font-size:13px;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.35px;
-      line-height:1.15;
-      margin-bottom:5px;
-    }
-
-    .bullets{
-      padding-left:15px;
-      color:#c7d5e6;
-      font-family:var(--mono);
-      font-size:10.6px;
-      line-height:1.16;
-    }
-    .bullets li{margin:1px 0}
-
-    .servicePrice{
-      padding:9px 10px;
-      text-align:right;
-      color:#eef4fb;
-      font-family:var(--mono);
-      font-size:12px;
-      font-weight:800;
-      white-space:nowrap;
-    }
-
-    .miniGrid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:7px;
-      page-break-inside:avoid;
-      break-inside:avoid;
-    }
-
-    .mini{
-      border:1px solid #273149;
-      border-radius:12px;
-      padding:8px 10px;
-      background:linear-gradient(180deg,rgba(10,16,32,.96),rgba(7,12,23,.96));
-    }
-
-    .mini .mLab{
-      color:#dde9f7;
-      font-family:var(--mono);
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:1px;
-      font-weight:800;
-      margin-bottom:5px;
-    }
-
-    .mini .mVal{
-      color:#becfe2;
-      font-family:var(--mono);
-      font-size:10.6px;
-      line-height:1.15;
-      word-break:break-word;
-    }
-
-    .obsBox{
-      border:1px solid #273149;
-      border-radius:12px;
-      padding:8px 10px;
-      background:linear-gradient(180deg,rgba(9,15,28,.96),rgba(7,11,21,.96));
-      page-break-inside:avoid;
-      break-inside:avoid;
-    }
-
-    .obsTitle{
-      color:#dde9f7;
-      font-family:var(--mono);
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:1px;
-      font-weight:800;
-      margin-bottom:5px;
-    }
-
-    .obsLines{display:grid;gap:3px}
-
-    .obsLine{
-      min-height:15px;
-      border-bottom:1px dashed rgba(159,176,198,.33);
-      color:#b9c9da;
-      font-family:var(--mono);
-      font-size:10px;
-      line-height:1.1;
-      display:flex;
-      align-items:flex-end;
-      padding-bottom:1px;
-      word-break:break-word;
-    }
-
-    .footerClose{
-      margin-top:auto;
-      border-top:1px solid #273149;
-      padding-top:6px;
-      display:grid;
-      gap:5px;
-      page-break-inside:avoid;
-      break-inside:avoid;
-    }
-
-    .fRow{
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:8px;
       align-items:center;
+      border-bottom:1px solid #253147;
+      padding-bottom:8px;
     }
-
-    .fText{
-      color:#c4d4e5;
-      font-family:var(--mono);
-      font-size:10px;
-      line-height:1.12;
-      word-break:break-word;
+    .s-top img{
+      width:56px;height:56px;border-radius:10px;object-fit:cover;border:1px solid #27344b;background:#0b111d;
     }
-    .fText .tag{
-      color:#c49bff;
-      font-weight:900;
-      text-transform:uppercase;
-    }
-
-    .chips{
-      display:flex;
-      flex-wrap:wrap;
-      gap:5px;
-      justify-content:flex-end;
-      max-width:42%;
-    }
-
-    .chip{
-      border:1px solid #dbe6f6;
-      background:var(--chip);
-      color:var(--chip-text);
-      border-radius:999px;
-      padding:3px 7px;
-      font-size:10px;
-      font-weight:800;
-      display:inline-flex;
-      align-items:center;
-      gap:5px;
-      min-height:22px;
-      white-space:nowrap;
-    }
-
-    .chipDot{
-      width:12px;
-      height:12px;
-      border-radius:50%;
-      display:grid;
-      place-items:center;
-      color:#fff;
-      font-size:8px;
-      font-weight:900;
-    }
-    .chipDot.wa{background:#22c55e}
-    .chipDot.ig{background:#ec4899}
-
-    .legal{
-      color:#8fa5bf;
-      font-family:var(--mono);
-      font-size:9px;
-      line-height:1.12;
-    }
-
-    .signature{
-      border-top:1px solid rgba(39,49,73,.55);
-      padding-top:4px;
-      text-align:center;
-      color:#8ea3bc;
-      font-family:var(--mono);
-      font-size:9.4px;
-      letter-spacing:.8px;
-      text-transform:uppercase;
-      line-height:1.1;
-    }
-
-    /* Segunda hoja */
-    .sheet.extended .title::after{
-      content:" / CONTINUACION";
-      font-size:13px;
-      color:#d0c2ff;
-    }
-
-    .ext-block{
-      border:1px solid #273149;
-      border-radius:12px;
-      overflow:hidden;
-      background:linear-gradient(180deg,rgba(9,15,28,.96),rgba(6,10,20,.96));
-    }
-
-    .ext-head{
-      padding:8px 10px;
-      border-bottom:1px solid #273149;
-      color:#97acc4;
-      font-family:var(--mono);
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:1px;
-    }
-
-    .ext-body{
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .s-top .k{font-size:.68rem;color:#9ab0cd}
+    .s-top .v{font-size:1.05rem;color:#8feaff;font-weight:900;line-height:1.05}
+    .s-meta{font-size:.72rem;color:#c1d1e8;display:flex;flex-wrap:wrap;gap:8px}
+    .box{
+      border:1px solid #263148;
+      border-radius:10px;
+      background:#0c1322;
       padding:10px;
-      color:#c8d6e8;
-      font-family:var(--mono);
-      font-size:11px;
-      line-height:1.3;
-      white-space:pre-wrap;
+    }
+    .box .lab{
+      font-size:.68rem;
+      color:#cba1ff;
+      font-weight:800;
+      margin-bottom:4px;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+    }
+    .box .val{
+      font-size:.9rem;
+      color:#edf4ff;
       word-break:break-word;
-      min-height:120px;
+    }
+    .box .total{color:#9df3bb;font-weight:900}
+    .preview-list{
+      padding-left:16px;
+      display:grid;
+      gap:3px;
+      color:#cfddf0;
+      font-size:.8rem;
+    }
+    .foot-note{
+      border-top:1px solid #263148;
+      padding-top:8px;
+      color:#c7d6e8;
+      font-size:.75rem;
+      line-height:1.35;
+    }
+    .signature{
+      margin-top:6px;
+      text-align:center;
+      color:#95a9c4;
+      font-size:.72rem;
+      letter-spacing:.4px;
+      text-transform:uppercase;
     }
 
-    /* ===== MOBILE / INTUITIVA ===== */
-    @media (max-width: 1180px){
-      .shell{
-        grid-template-columns:1fr;
-      }
-      .side{
-        position:static;
-      }
-    }
-
-    @media (max-width: 768px){
-      body{padding:8px}
-
-      .card-ui,
-      .top-tools,
-      .preview-panel{
-        border-radius:14px;
-      }
-
-      .section-block{
-        padding:10px;
-      }
-
-      .grid-2,
-      .grid-3,
-      .actions,
-      .actions-3{
-        grid-template-columns:1fr;
-      }
-
-      .tabs{
-        grid-template-columns:1fr;
-      }
-
-      .tab-btn{
-        min-height:42px;
-      }
-
-      .field input,
-      .field select,
-      .field textarea{
-        font-size:16px; /* evita zoom en iPhone */
-      }
-
-      .top-tools{
-        padding:10px;
-      }
-      .top-tools-left{
-        width:100%;
-      }
-      .top-tools small{
-        width:100%;
-      }
-
-      .preview-panel{
-        padding:8px;
-      }
-
-      /* Vista previa escalada para mobile */
-      .doc-wrap{
-        align-items:start;
-        justify-items:start;
-      }
-      .sheet{
-        transform-origin: top left;
-        box-shadow:0 14px 28px rgba(0,0,0,.28);
-      }
-      .preview-panel{
-        overflow:auto;
-      }
-    }
-
-    /* PRINT */
-    @page{
-      size:A4 portrait;
-      margin:6mm;
-    }
-
-    @media print{
-      html,body{
-        background:#fff !important;
-        margin:0 !important;
-        padding:0 !important;
-      }
-      .shell{
-        display:block !important;
-        max-width:none !important;
-      }
-      .side,
-      .top-tools{
-        display:none !important;
-      }
-      .main{
-        display:block !important;
-      }
-      .preview-panel{
-        background:transparent !important;
-        border:none !important;
-        box-shadow:none !important;
-        padding:0 !important;
-        overflow:visible !important;
-      }
-      .doc-wrap{
-        gap:8mm !important;
-        justify-items:center !important;
-      }
-      .sheet{
-        width:198mm !important;
-        min-height:285mm !important;
-        box-shadow:none !important;
-        margin:0 auto !important;
-        transform:none !important;
-      }
-      .sheet-inner{
-        min-height:calc(285mm - 4px) !important;
-        padding:7.5mm 7.5mm 6.5mm !important;
-      }
-      .sheet,
-      .header,
-      .cards2,
-      .serviceBox,
-      .miniGrid,
-      .obsBox,
-      .footerClose{
-        page-break-inside:avoid !important;
-        break-inside:avoid !important;
-      }
-      .watermark{opacity:.07 !important}
+    @media (max-width:700px){
+      .grid-2,.actions,.actions-3{grid-template-columns:1fr}
+      .field input,.field textarea{font-size:16px}
     }
   </style>
 </head>
 <body>
-  <div class="shell">
-    <!-- PANEL IZQUIERDO -->
-    <aside class="side">
-      <section class="card-ui">
-        <div class="hero-ui">
-          <div class="brand">
-            <img id="miniBrandLogo" src="https://iili.io/qFQyNae.png" alt="CIBORG347" />
-            <div class="brand-text">
-              <strong>CIBORG347 | Generador PDF</strong>
-              <span>Modo CIBORG (simple + pro)</span>
-            </div>
-          </div>
+  <div class="app">
+    <section class="card">
+      <div class="head">
+        <img src="https://iili.io/qFQyNae.png" alt="CIBORG347">
+        <div class="t">
+          <strong>CIBORG347 | Presupuesto PDF (Lite)</strong>
+          <span>Version liviana para celular: generar, descargar y compartir PDF</span>
+        </div>
+      </div>
 
-          <div class="app-title">
-            <h1>Presupuesto / boleta PDF (super rapido)</h1>
-            <p>
-              Carga datos, mira la vista previa y genera el PDF. Si queres mas control, abri <strong>Opciones avanzadas</strong>.
-            </p>
+      <div class="body">
+        <div class="grid-2">
+          <div class="field">
+            <label for="fecha">Fecha</label>
+            <input id="fecha" type="text" value="23/02/2026">
           </div>
-
-          <div class="tabs" aria-label="Tipo de documento">
-            <button class="tab-btn active" id="tabSimple" type="button">Presupuesto simple</button>
-            <button class="tab-btn" id="tabTecnico" type="button">Boleta tecnica / detallada</button>
+          <div class="field">
+            <label for="numero">Numero de presupuesto</label>
+            <input id="numero" type="text" value="C347-001">
           </div>
         </div>
 
-        <div class="section-block">
-          <div class="section-head">
-            <h2>Datos principales</h2>
-            <span class="badge-soft">Uso diario</span>
+        <div class="field">
+          <label for="cliente">Nombre del cliente</label>
+          <input id="cliente" type="text" placeholder="Ej: Esther Trenzas Africanas">
+        </div>
+
+        <div class="field">
+          <label for="direccion">Direccion (opcional)</label>
+          <input id="direccion" type="text" placeholder="Ej: Almagro, CABA / Calle y altura">
+        </div>
+
+        <div class="field">
+          <label for="servicio">Servicio / Presupuesto</label>
+          <input id="servicio" type="text" value="Creacion de sitio web profesional full responsive">
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="precio">Precio final</label>
+            <input id="precio" type="text" value="$ 120.000 ARS">
           </div>
+          <div class="field">
+            <label for="entrega">Tiempo estimado (opcional)</label>
+            <input id="entrega" type="text" value="A coordinar segun contenido final">
+          </div>
+        </div>
 
-          <div class="grid">
-            <div class="grid-2">
-              <div class="field">
-                <label for="fecha">Fecha</label>
-                <input id="fecha" type="text" value="23/02/2026" />
-              </div>
-              <div class="field">
-                <label for="nro">Nro de presupuesto</label>
-                <input id="nro" type="text" value="C347-001" />
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="cliente">Cliente</label>
-              <input id="cliente" type="text" value="Nombre del cliente" />
-            </div>
-
-            <div class="field">
-              <label for="servicioTitulo">Servicio / trabajo</label>
-              <input id="servicioTitulo" type="text" value="Creacion de sitio web full responsive" />
-            </div>
-
-            <div class="grid-2">
-              <div class="field">
-                <label for="inversion">Inversion final</label>
-                <input id="inversion" type="text" value="$ 120.000 ARS" />
-              </div>
-              <div class="field">
-                <label for="valorServicio">Valor del servicio</label>
-                <input id="valorServicio" type="text" value="$ 120.000 ARS" />
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="bullets">Que incluye (1 linea por item)</label>
-              <textarea id="bullets">Diseño personalizado de la web
+        <div class="field">
+          <label for="incluye">Que incluye (1 item por linea)</label>
+          <textarea id="incluye">Diseño personalizado
 Version responsive (celular y PC)
-Boton flotante de WhatsApp
-Carga inicial de textos e imagenes
-Ajustes finales de presentacion
+Boton WhatsApp
+Carga inicial de contenido
+Ajustes finales
 Entrega lista para usar</textarea>
-            </div>
-
-            <div class="field">
-              <label for="obsResumen">Observaciones (resumen corto)</label>
-              <textarea id="obsResumen">Se abona una vez entregado el sitio. Se puede ajustar contenido o secciones segun necesidad final.</textarea>
-              <div class="mini-help">Tip: si escribis mucho, te avisa y podes usar 2 paginas desde opciones avanzadas.</div>
-            </div>
-          </div>
+          <div class="help">Escribi una linea por item. El PDF se arma con estos puntos.</div>
         </div>
 
-        <div class="section-block">
-          <div class="section-head">
-            <h2>Acciones</h2>
-            <span class="badge-soft">PDF / compartir</span>
-          </div>
-
-          <div class="actions">
-            <button class="btn btn-primary" id="btnPrint" type="button">Imprimir / Guardar PDF</button>
-            <button class="btn btn-dark" id="btnShare" type="button">Compartir</button>
-          </div>
-
-          <div class="actions-3">
-            <button class="btn btn-dark" id="btnDownloadHtml" type="button">Descargar HTML</button>
-            <button class="btn btn-dark" id="btnReset" type="button">Reset</button>
-            <button class="btn btn-orange" id="btnLoadCiborg" type="button">Modo CIBORG</button>
-          </div>
+        <div class="field">
+          <label for="detalle">Detalle / observaciones</label>
+          <textarea id="detalle">Se abona una vez entregado el sitio / transferencia o MP. Esta propuesta puede ajustarse segun cambios de alcance, contenido o funcionalidades solicitadas.</textarea>
         </div>
 
-        <div class="section-block">
-          <details class="advanced" id="advPanel">
-            <summary>
-              <span>Opciones avanzadas</span>
-              <span id="advLabel">abrir</span>
-            </summary>
-
-            <div class="adv-content">
-              <div class="hint">
-                Para boletas mas tecnicas: hojas, marca de agua, datos de cierre, logo, detalle extendido, etc.
-              </div>
-
-              <div class="field">
-                <label for="logoUrl">Imagen CIBORG / logo (marca de agua)</label>
-                <input id="logoUrl" type="text" value="https://iili.io/qFQyNae.png" />
-              </div>
-
-              <div class="grid-2">
-                <div class="field">
-                  <label for="tituloDoc">Titulo visible</label>
-                  <input id="tituloDoc" type="text" value="Presupuesto" />
-                </div>
-                <div class="field">
-                  <label for="sheetMode">Modo de hojas</label>
-                  <select id="sheetMode">
-                    <option value="auto" selected>Auto (1 pagina si entra)</option>
-                    <option value="one">Forzar 1 pagina</option>
-                    <option value="two">Permitir 2 paginas</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="grid-2">
-                <div class="field">
-                  <label for="compactMode">Compactacion</label>
-                  <select id="compactMode">
-                    <option value="smart" selected>Inteligente (recomendado)</option>
-                    <option value="compact">Mas compacta</option>
-                    <option value="normal">Normal</option>
-                  </select>
-                </div>
-                <div class="field">
-                  <label for="watermarkToggle">Marca de agua</label>
-                  <select id="watermarkToggle">
-                    <option value="on" selected>Mostrar</option>
-                    <option value="off">Ocultar</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="grid-2">
-                <div class="field">
-                  <label for="tiempo">Tiempo estimado</label>
-                  <input id="tiempo" type="text" value="A coordinar segun contenido final" />
-                </div>
-                <div class="field">
-                  <label for="vigencia">Vigencia</label>
-                  <input id="vigencia" type="text" value="7 dias" />
-                </div>
-              </div>
-
-              <div class="field">
-                <label for="modalidad">Modalidad de pago</label>
-                <input id="modalidad" type="text" value="Se abona una vez entregado el sitio / transferencia o MP" />
-              </div>
-
-              <div class="grid-2">
-                <div class="field">
-                  <label for="whatsapp">WhatsApp</label>
-                  <input id="whatsapp" type="text" value="11 6449-9481" />
-                </div>
-                <div class="field">
-                  <label for="instagram">Instagram</label>
-                  <input id="instagram" type="text" value="@ciborg347" />
-                </div>
-              </div>
-
-              <div class="field">
-                <label for="legal">Texto legal</label>
-                <input id="legal" type="text" value="Esta propuesta puede ajustarse segun cambios de alcance, contenido o funcionalidades solicitadas." />
-              </div>
-
-              <div class="field">
-                <label for="firma">Firma de cierre</label>
-                <input id="firma" type="text" value="CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES" />
-              </div>
-
-              <div class="grid-3">
-                <div class="field">
-                  <label for="obs1">Observacion 1</label>
-                  <input id="obs1" type="text" value="" />
-                </div>
-                <div class="field">
-                  <label for="obs2">Observacion 2</label>
-                  <input id="obs2" type="text" value="" />
-                </div>
-                <div class="field">
-                  <label for="obs3">Observacion 3</label>
-                  <input id="obs3" type="text" value="" />
-                </div>
-              </div>
-
-              <div class="field">
-                <label for="extraDetalle">Detalle tecnico extra (2da hoja si hace falta)</label>
-                <textarea id="extraDetalle" placeholder="Aca podes poner detalle largo, condiciones, direccion de envio, quien recibe, lista de productos, extras, etc."></textarea>
-              </div>
-            </div>
-          </details>
+        <div class="actions">
+          <button id="btnGenerar" class="btn btn-primary">Generar PDF</button>
+          <button id="btnCompartir" class="btn btn-green">Compartir PDF</button>
         </div>
 
-        <div id="status" class="status">Listo. Genera PDF cuando quieras.</div>
-      </section>
-    </aside>
-
-    <!-- AREA DERECHA -->
-    <main class="main">
-      <section class="top-tools">
-        <div class="top-tools-left">
-          <div class="pill">
-            <span class="dot" id="dotMode"></span>
-            <span id="badgeMode">1 pagina (auto)</span>
-          </div>
-          <div class="pill" id="docTypeBadge">Presupuesto simple</div>
+        <div class="actions-3">
+          <button id="btnDescargar" class="btn btn-dark">Descargar PDF</button>
+          <button id="btnPreview" class="btn btn-dark">Mostrar vista previa</button>
+          <button id="btnActualizar" class="btn btn-dark">Actualizar vista</button>
         </div>
-        <small id="previewMeta">Vista previa A4 | Modo CIBORG | Se adapta a celular</small>
-      </section>
+      </div>
 
-      <section class="preview-panel" id="previewPanel">
-        <div class="doc-wrap" id="docWrap">
-          <!-- HOJA 1 -->
-          <div class="sheet" id="sheet1">
-            <div class="topbar"></div>
+      <div id="status" class="status">Listo. Completa los datos y toca Generar PDF.</div>
+    </section>
 
-            <div class="watermark" id="watermark1">
-              <img id="wmImg1" src="https://iili.io/qFQyNae.png" alt="" />
-            </div>
-
-            <div class="sheet-inner" id="sheetInner1">
-              <header class="header">
-                <div class="logoBox">
-                  <img id="pvLogo1" src="https://iili.io/qFQyNae.png" alt="Logo" />
-                </div>
-
-                <div class="headerText">
-                  <div class="micro" id="pvMicro">PROPUESTA COMERCIAL / PRESUPUESTO FORMAL</div>
-                  <div class="title" id="pvTituloDoc">PRESUPUESTO</div>
-                  <div class="metaRow">
-                    <span>FECHA: <strong id="pvFecha">23/02/2026</strong></span>
-                    <span>NRO: <strong id="pvNro">C347-001</strong></span>
-                  </div>
-                </div>
-              </header>
-
-              <section class="cards2">
-                <div class="card">
-                  <div class="lab">Cliente</div>
-                  <div class="val" id="pvCliente">NOMBRE DEL CLIENTE</div>
-                </div>
-                <div class="card">
-                  <div class="lab">Inversion final</div>
-                  <div class="val total" id="pvInversion">$ 120.000 ARS</div>
-                </div>
-              </section>
-
-              <section class="serviceBox">
-                <div class="serviceHead">
-                  <div id="serviceHeadText">DETALLE DEL SERVICIO / ALCANCE</div>
-                  <div style="text-align:right">VALOR</div>
-                </div>
-
-                <div class="serviceRow">
-                  <div class="serviceMain">
-                    <div class="serviceTitle" id="pvServicioTitulo">CREACION DE SITIO WEB FULL RESPONSIVE</div>
-                    <ul class="bullets" id="pvBullets"></ul>
-                  </div>
-                  <div class="servicePrice" id="pvValorServicio">$ 120.000 ARS</div>
-                </div>
-              </section>
-
-              <section class="miniGrid">
-                <div class="mini">
-                  <div class="mLab">Tiempo estimado</div>
-                  <div class="mVal" id="pvTiempo">A coordinar segun contenido final</div>
-                </div>
-                <div class="mini">
-                  <div class="mLab">Vigencia</div>
-                  <div class="mVal" id="pvVigencia">7 dias</div>
-                </div>
-              </section>
-
-              <section class="obsBox">
-                <div class="obsTitle">OBSERVACIONES / DETALLES</div>
-                <div class="obsLines">
-                  <div class="obsLine" id="pvObsLine1"></div>
-                  <div class="obsLine" id="pvObsLine2"></div>
-                  <div class="obsLine" id="pvObsLine3"></div>
-                </div>
-              </section>
-
-              <footer class="footerClose" id="footerClose1">
-                <div class="fRow">
-                  <div class="fText">
-                    <span class="tag">MODALIDAD:</span>
-                    <span id="pvModalidad">Se abona una vez entregado el sitio / transferencia o MP</span>
-                  </div>
-
-                  <div class="chips">
-                    <div class="chip">
-                      <span class="chipDot wa">W</span>
-                      <span id="pvWhatsapp">11 6449-9481</span>
-                    </div>
-                    <div class="chip">
-                      <span class="chipDot ig">IG</span>
-                      <span id="pvInstagram">@ciborg347</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="legal" id="pvLegal">
-                  Esta propuesta puede ajustarse segun cambios de alcance, contenido o funcionalidades solicitadas.
-                </div>
-
-                <div class="signature" id="pvFirma">
-                  CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES
-                </div>
-              </footer>
+    <section id="preview" class="card preview">
+      <div class="head">
+        <img src="https://iili.io/qFQyNae.png" alt="Preview">
+        <div class="t">
+          <strong>Vista previa (liviana)</strong>
+          <span>Solo se muestra si la activas</span>
+        </div>
+      </div>
+      <div class="pbody">
+        <div class="sheet">
+          <div class="s-top">
+            <img src="https://iili.io/qFQyNae.png" alt="Logo">
+            <div>
+              <div class="k mono">PRESUPUESTO FORMAL</div>
+              <div class="v mono">CIBORG347</div>
+              <div class="s-meta mono">
+                <span>FECHA: <b id="pvFecha">-</b></span>
+                <span>NRO: <b id="pvNumero">-</b></span>
+              </div>
             </div>
           </div>
 
-          <!-- HOJA 2 -->
-          <div class="sheet extended" id="sheet2" style="display:none;">
-            <div class="topbar"></div>
+          <div class="box">
+            <div class="lab mono">Cliente</div>
+            <div class="val mono" id="pvCliente">-</div>
+          </div>
 
-            <div class="watermark" id="watermark2">
-              <img id="wmImg2" src="https://iili.io/qFQyNae.png" alt="" />
-            </div>
+          <div class="box">
+            <div class="lab mono">Direccion</div>
+            <div class="val mono" id="pvDireccion">-</div>
+          </div>
 
-            <div class="sheet-inner">
-              <header class="header">
-                <div class="logoBox">
-                  <img id="pvLogo2" src="https://iili.io/qFQyNae.png" alt="Logo" />
-                </div>
-                <div class="headerText">
-                  <div class="micro">DOCUMENTO COMPLEMENTARIO / DETALLE TECNICO</div>
-                  <div class="title" id="pvTituloDoc2">PRESUPUESTO</div>
-                  <div class="metaRow">
-                    <span>CLIENTE: <strong id="pvCliente2">NOMBRE DEL CLIENTE</strong></span>
-                    <span>NRO: <strong id="pvNro2">C347-001</strong></span>
-                  </div>
-                </div>
-              </header>
+          <div class="box">
+            <div class="lab mono">Servicio</div>
+            <div class="val mono" id="pvServicio">-</div>
+          </div>
 
-              <section class="ext-block">
-                <div class="ext-head">DETALLE TECNICO / CONDICIONES / CAMPOS ADICIONALES</div>
-                <div class="ext-body" id="pvExtraDetalle">Sin detalle extra.</div>
-              </section>
+          <div class="box">
+            <div class="lab mono">Precio final</div>
+            <div class="val total mono" id="pvPrecio">-</div>
+          </div>
 
-              <footer class="footerClose">
-                <div class="fRow">
-                  <div class="fText">
-                    <span class="tag">MODALIDAD:</span>
-                    <span id="pvModalidad2">Se abona una vez entregado el sitio / transferencia o MP</span>
-                  </div>
+          <div class="box">
+            <div class="lab mono">Incluye</div>
+            <ul id="pvIncluye" class="preview-list mono"></ul>
+          </div>
 
-                  <div class="chips">
-                    <div class="chip">
-                      <span class="chipDot wa">W</span>
-                      <span id="pvWhatsapp2">11 6449-9481</span>
-                    </div>
-                    <div class="chip">
-                      <span class="chipDot ig">IG</span>
-                      <span id="pvInstagram2">@ciborg347</span>
-                    </div>
-                  </div>
-                </div>
+          <div class="box">
+            <div class="lab mono">Detalle</div>
+            <div class="val mono" id="pvDetalle">-</div>
+          </div>
 
-                <div class="legal" id="pvLegal2">
-                  Esta propuesta puede ajustarse segun cambios de alcance, contenido o funcionalidades solicitadas.
-                </div>
-
-                <div class="signature" id="pvFirma2">
-                  CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES
-                </div>
-              </footer>
-            </div>
+          <div class="foot-note mono">
+            <div><b>Modalidad:</b> Se abona una vez entregado el sitio / transferencia o MP</div>
+            <div><b>WhatsApp:</b> 11 6449-9481 | <b>IG:</b> @ciborg347</div>
+            <div class="signature">CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES</div>
           </div>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
   </div>
 
   <script>
-    (() => {
+    (function () {
+      const { jsPDF } = window.jspdf;
+
       const $ = (id) => document.getElementById(id);
 
-      // ===== Campos =====
-      const fields = {
+      const els = {
         fecha: $("fecha"),
-        nro: $("nro"),
+        numero: $("numero"),
         cliente: $("cliente"),
-        servicioTitulo: $("servicioTitulo"),
-        inversion: $("inversion"),
-        valorServicio: $("valorServicio"),
-        bullets: $("bullets"),
-        obsResumen: $("obsResumen"),
-
-        logoUrl: $("logoUrl"),
-        tituloDoc: $("tituloDoc"),
-        sheetMode: $("sheetMode"),
-        compactMode: $("compactMode"),
-        watermarkToggle: $("watermarkToggle"),
-        tiempo: $("tiempo"),
-        vigencia: $("vigencia"),
-        modalidad: $("modalidad"),
-        whatsapp: $("whatsapp"),
-        instagram: $("instagram"),
-        legal: $("legal"),
-        firma: $("firma"),
-        obs1: $("obs1"),
-        obs2: $("obs2"),
-        obs3: $("obs3"),
-        extraDetalle: $("extraDetalle"),
-      };
-
-      const defaults = {};
-      Object.keys(fields).forEach(k => defaults[k] = fields[k].value);
-
-      // ===== Tabs / tipo doc =====
-      const tabSimple = $("tabSimple");
-      const tabTecnico = $("tabTecnico");
-      const docTypeBadge = $("docTypeBadge");
-
-      let docTypeFriendly = "simple"; // simple | tecnico
-
-      // ===== Preview refs =====
-      const pv = {
-        miniBrandLogo: $("miniBrandLogo"),
-        logo1: $("pvLogo1"),
-        logo2: $("pvLogo2"),
-        wm1: $("wmImg1"),
-        wm2: $("wmImg2"),
-        watermark1: $("watermark1"),
-        watermark2: $("watermark2"),
-
-        micro: $("pvMicro"),
-        titulo1: $("pvTituloDoc"),
-        titulo2: $("pvTituloDoc2"),
-        fecha: $("pvFecha"),
-        nro: $("pvNro"),
-        nro2: $("pvNro2"),
-        cliente: $("pvCliente"),
-        cliente2: $("pvCliente2"),
-        inversion: $("pvInversion"),
-        servicioTitulo: $("pvServicioTitulo"),
-        bullets: $("pvBullets"),
-        valorServicio: $("pvValorServicio"),
-        tiempo: $("pvTiempo"),
-        vigencia: $("pvVigencia"),
-
-        obs1: $("pvObsLine1"),
-        obs2: $("pvObsLine2"),
-        obs3: $("pvObsLine3"),
-
-        modalidad: $("pvModalidad"),
-        modalidad2: $("pvModalidad2"),
-        whatsapp: $("pvWhatsapp"),
-        whatsapp2: $("pvWhatsapp2"),
-        instagram: $("pvInstagram"),
-        instagram2: $("pvInstagram2"),
-        legal: $("pvLegal"),
-        legal2: $("pvLegal2"),
-        firma: $("pvFirma"),
-        firma2: $("pvFirma2"),
-
-        extraDetalle: $("pvExtraDetalle"),
-
-        serviceHeadText: $("serviceHeadText"),
-
-        sheet1: $("sheet1"),
-        sheet2: $("sheet2"),
-        sheetInner1: $("sheetInner1"),
-        footerClose1: $("footerClose1"),
-
-        badgeMode: $("badgeMode"),
-        dotMode: $("dotMode"),
-        previewMeta: $("previewMeta"),
-
+        direccion: $("direccion"),
+        servicio: $("servicio"),
+        precio: $("precio"),
+        entrega: $("entrega"),
+        incluye: $("incluye"),
+        detalle: $("detalle"),
+        btnGenerar: $("btnGenerar"),
+        btnCompartir: $("btnCompartir"),
+        btnDescargar: $("btnDescargar"),
+        btnPreview: $("btnPreview"),
+        btnActualizar: $("btnActualizar"),
         status: $("status"),
-        advPanel: $("advPanel"),
-        advLabel: $("advLabel"),
+        preview: $("preview"),
+        pvFecha: $("pvFecha"),
+        pvNumero: $("pvNumero"),
+        pvCliente: $("pvCliente"),
+        pvDireccion: $("pvDireccion"),
+        pvServicio: $("pvServicio"),
+        pvPrecio: $("pvPrecio"),
+        pvIncluye: $("pvIncluye"),
+        pvDetalle: $("pvDetalle")
       };
 
-      // ===== Botones =====
-      const btnPrint = $("btnPrint");
-      const btnShare = $("btnShare");
-      const btnDownloadHtml = $("btnDownloadHtml");
-      const btnReset = $("btnReset");
-      const btnLoadCiborg = $("btnLoadCiborg");
+      const BRAND_LOGO = "https://iili.io/qFQyNae.png";
+      const BRAND_WA = "11 6449-9481";
+      const BRAND_IG = "@ciborg347";
+      const BRAND_FIRMA = "CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES";
 
-      const previewPanel = $("previewPanel");
+      let previewVisible = false;
+      let pdfBlobCache = null;
+      let pdfNameCache = "presupuesto-ciborg347.pdf";
+      let logoDataUrlCache = null;
 
-      // ===== Helpers =====
-      function setStatus(msg, type = "") {
-        pv.status.className = "status" + (type ? " " + type : "");
-        pv.status.textContent = msg || "";
+      function setStatus(msg, type) {
+        els.status.className = "status" + (type ? " " + type : "");
+        els.status.textContent = msg;
       }
 
-      function safeText(v, fallback = "-") {
-        const s = String(v ?? "").trim();
+      function safe(v, fallback = "-") {
+        const s = String(v || "").trim();
         return s || fallback;
       }
 
-      function upperSafe(v) {
-        return String(v || "").toUpperCase();
-      }
-
-      function splitLines(txt) {
-        return String(txt || "")
+      function getBullets() {
+        return String(els.incluye.value || "")
           .split(/\n+/)
-          .map(s => s.trim())
+          .map(x => x.trim())
           .filter(Boolean);
       }
 
-      function escapeHtml(str) {
-        return String(str)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;");
+      function getData() {
+        return {
+          fecha: safe(els.fecha.value, "DD/MM/AAAA"),
+          numero: safe(els.numero.value, "C347-001"),
+          cliente: safe(els.cliente.value, "Nombre del cliente"),
+          direccion: safe(els.direccion.value, "-"),
+          servicio: safe(els.servicio.value, "Servicio"),
+          precio: safe(els.precio.value, "$ 0"),
+          entrega: safe(els.entrega.value, "-"),
+          incluye: getBullets(),
+          detalle: safe(els.detalle.value, "-")
+        };
       }
 
-      function setDocType(type) {
-        docTypeFriendly = type === "tecnico" ? "tecnico" : "simple";
-
-        tabSimple.classList.toggle("active", docTypeFriendly === "simple");
-        tabTecnico.classList.toggle("active", docTypeFriendly === "tecnico");
-
-        if (docTypeFriendly === "tecnico") {
-          docTypeBadge.textContent = "Boleta tecnica / detallada";
-          pv.micro.textContent = "PROPUESTA COMERCIAL / BOLETA TECNICA";
-          pv.serviceHeadText.textContent = "DETALLE TECNICO / ALCANCE / ITEMS";
-        } else {
-          docTypeBadge.textContent = "Presupuesto simple";
-          pv.micro.textContent = "PROPUESTA COMERCIAL / PRESUPUESTO FORMAL";
-          pv.serviceHeadText.textContent = "DETALLE DEL SERVICIO / ALCANCE";
-        }
-
-        renderAll();
+      function invalidatePdf() {
+        pdfBlobCache = null;
       }
 
-      function applyLogo(url) {
-        const finalUrl = String(url || "").trim() || "https://iili.io/qFQyNae.png";
-        [pv.miniBrandLogo, pv.logo1, pv.logo2, pv.wm1, pv.wm2].forEach((img) => {
-          img.src = finalUrl;
+      function updatePreview() {
+        const d = getData();
+        els.pvFecha.textContent = d.fecha;
+        els.pvNumero.textContent = d.numero;
+        els.pvCliente.textContent = d.cliente.toUpperCase();
+        els.pvDireccion.textContent = d.direccion;
+        els.pvServicio.textContent = d.servicio;
+        els.pvPrecio.textContent = d.precio;
+        els.pvDetalle.textContent = d.detalle;
+        els.pvIncluye.innerHTML = "";
+        const items = d.incluye.length ? d.incluye : ["Detalle a definir"];
+        items.slice(0, 8).forEach(item => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          els.pvIncluye.appendChild(li);
         });
+        if (previewVisible) setStatus("Vista previa actualizada.", "ok");
       }
 
-      function applyWatermark() {
-        const show = fields.watermarkToggle.value === "on";
-        pv.watermark1.style.display = show ? "flex" : "none";
-        pv.watermark2.style.display = show ? "flex" : "none";
-      }
-
-      function applyCompactVisual() {
-        const mode = fields.compactMode.value;
-        if (mode === "compact") {
-          pv.sheetInner1.style.gap = "5px";
-          pv.sheetInner1.style.padding = "7mm 7mm 6mm";
-          pv.footerClose1.style.gap = "4px";
-        } else if (mode === "normal") {
-          pv.sheetInner1.style.gap = "8px";
-          pv.sheetInner1.style.padding = "8.5mm 8.5mm 7.5mm";
-          pv.footerClose1.style.gap = "6px";
-        } else {
-          pv.sheetInner1.style.gap = "7px";
-          pv.sheetInner1.style.padding = "8mm 8mm 7mm";
-          pv.footerClose1.style.gap = "5px";
-        }
-      }
-
-      function applyBullets() {
-        const compact = fields.compactMode.value;
-        let maxItems = 6;
-        if (compact === "compact") maxItems = 5;
-        if (compact === "normal") maxItems = 8;
-        if (docTypeFriendly === "tecnico" && compact !== "compact") maxItems = 9;
-
-        let items = splitLines(fields.bullets.value);
-        if (!items.length) items = ["Detalle del servicio a definir"];
-
-        const visible = items.slice(0, maxItems);
-        pv.bullets.innerHTML = visible.map(i => `<li>${escapeHtml(i)}</li>`).join("");
-      }
-
-      function setObservations() {
-        const o1 = fields.obs1.value.trim();
-        const o2 = fields.obs2.value.trim();
-        const o3 = fields.obs3.value.trim();
-
-        if (o1 || o2 || o3) {
-          pv.obs1.textContent = o1;
-          pv.obs2.textContent = o2;
-          pv.obs3.textContent = o3;
-          return;
-        }
-
-        const lines = splitLines(fields.obsResumen.value);
-        pv.obs1.textContent = lines[0] || "";
-        pv.obs2.textContent = lines[1] || "";
-        pv.obs3.textContent = lines[2] || "";
-      }
-
-      function renderMainPreview() {
-        applyLogo(fields.logoUrl.value);
-        applyWatermark();
-        applyCompactVisual();
-        applyBullets();
-        setObservations();
-
-        const titulo = safeText(fields.tituloDoc.value, "Presupuesto");
-
-        pv.titulo1.textContent = upperSafe(titulo);
-        pv.titulo2.textContent = upperSafe(titulo);
-
-        pv.fecha.textContent = safeText(fields.fecha.value, "DD/MM/AAAA");
-        pv.nro.textContent = safeText(fields.nro.value, "-");
-        pv.nro2.textContent = safeText(fields.nro.value, "-");
-
-        pv.cliente.textContent = upperSafe(safeText(fields.cliente.value, "Cliente"));
-        pv.cliente2.textContent = upperSafe(safeText(fields.cliente.value, "Cliente"));
-
-        pv.inversion.textContent = safeText(fields.inversion.value, "$ 0");
-        pv.servicioTitulo.textContent = upperSafe(safeText(fields.servicioTitulo.value, "Servicio"));
-        pv.valorServicio.textContent = safeText(fields.valorServicio.value, "$ 0");
-
-        pv.tiempo.textContent = safeText(fields.tiempo.value, "-");
-        pv.vigencia.textContent = safeText(fields.vigencia.value, "-");
-
-        pv.modalidad.textContent = safeText(fields.modalidad.value, "-");
-        pv.modalidad2.textContent = safeText(fields.modalidad.value, "-");
-
-        pv.whatsapp.textContent = safeText(fields.whatsapp.value, "-");
-        pv.whatsapp2.textContent = safeText(fields.whatsapp.value, "-");
-
-        pv.instagram.textContent = safeText(fields.instagram.value, "-");
-        pv.instagram2.textContent = safeText(fields.instagram.value, "-");
-
-        pv.legal.textContent = safeText(fields.legal.value, "-");
-        pv.legal2.textContent = safeText(fields.legal.value, "-");
-
-        pv.firma.textContent = safeText(fields.firma.value, "");
-        pv.firma2.textContent = safeText(fields.firma.value, "");
-
-        pv.extraDetalle.textContent = fields.extraDetalle.value.trim() || "Sin detalle extra.";
-      }
-
-      function estimateOverflow1Page() {
-        const inner = pv.sheetInner1;
-        return inner.scrollHeight > inner.clientHeight + 2;
-      }
-
-      function updatePageMode() {
-        const mode = fields.sheetMode.value; // auto | one | two
-        const hasExtra = !!fields.extraDetalle.value.trim();
-        const overflow = estimateOverflow1Page();
-
-        let showSecond = false;
-        let badge = "1 pagina (auto)";
-        let msg = "Todo entra en 1 hoja correctamente.";
-        let msgType = "ok";
-
-        if (mode === "one") {
-          showSecond = false;
-          badge = "1 pagina (forzada)";
-          if (overflow) {
-            msg = "Atencion: el contenido excede 1 hoja. Resumi texto o cambia a 'Permitir 2 paginas'.";
-            msgType = "warn";
-          }
-        } else if (mode === "two") {
-          showSecond = hasExtra;
-          badge = showSecond ? "2 paginas (manual)" : "1 pagina (manual 2, sin detalle extra)";
-          msg = showSecond
-            ? "Modo 2 paginas activo. Hoja 2 habilitada para detalle tecnico."
-            : "Modo 2 paginas activo, pero no hay detalle extra. Solo sale 1 hoja.";
-          msgType = "ok";
-        } else {
-          // auto
-          if (overflow) {
-            if (hasExtra) {
-              showSecond = true;
-              badge = "2 paginas (auto)";
-              msg = "El contenido excede 1 hoja. Se habilito hoja 2 automaticamente.";
-              msgType = "warn";
-            } else {
-              showSecond = false;
-              badge = "1 pagina (auto, excedida)";
-              msg = "El contenido esta largo para 1 hoja. Resumi texto o agrega detalle extra y usa 2 paginas.";
-              msgType = "warn";
-            }
-          } else {
-            showSecond = false;
-            badge = "1 pagina (auto)";
-            msg = "Todo entra en 1 hoja correctamente.";
-            msgType = "ok";
-          }
-        }
-
-        pv.sheet2.style.display = showSecond ? "" : "none";
-        pv.badgeMode.textContent = badge;
-        pv.dotMode.style.background = msgType === "warn" ? "var(--warn)" : "var(--ok)";
-        pv.dotMode.style.boxShadow = msgType === "warn"
-          ? "0 0 0 4px rgba(245,158,11,.18)"
-          : "0 0 0 4px rgba(34,197,94,.15)";
-
-        setStatus(msg, msgType);
-      }
-
-      function scalePreviewForMobile() {
-        const isMobile = window.innerWidth <= 768;
-        const sheet1 = pv.sheet1;
-        if (!sheet1) return;
-
-        // reset desktop
-        pv.sheet1.style.transform = "";
-        if (pv.sheet2.style.display !== "none") pv.sheet2.style.transform = "";
-
-        if (!isMobile) return;
-
-        const panelWidth = previewPanel.clientWidth - 16; // padding aproximado
-        const sheetPx = sheet1.getBoundingClientRect().width;
-        if (!sheetPx || !panelWidth) return;
-
-        // al primer render el width puede venir ya escalado; usar offsetWidth como base real
-        const realWidth = sheet1.offsetWidth || sheetPx;
-        const scale = Math.min(1, (panelWidth / realWidth));
-        pv.sheet1.style.transform = `scale(${scale})`;
-
-        if (pv.sheet2.style.display !== "none") {
-          pv.sheet2.style.transform = `scale(${scale})`;
-        }
-
-        // compensar espacio vertical visual en mobile
-        const sheets = [pv.sheet1];
-        if (pv.sheet2.style.display !== "none") sheets.push(pv.sheet2);
-        sheets.forEach(s => {
-          s.style.marginBottom = `-${(1 - scale) * s.offsetHeight}px`;
-        });
-      }
-
-      function clearPreviewScaleMargins() {
-        [pv.sheet1, pv.sheet2].forEach(s => {
-          s.style.marginBottom = "";
-          if (window.innerWidth > 768) s.style.transform = "";
-        });
-      }
-
-      function renderAll() {
-        renderMainPreview();
-
-        requestAnimationFrame(() => {
-          updatePageMode();
-
-          requestAnimationFrame(() => {
-            clearPreviewScaleMargins();
-            scalePreviewForMobile();
-          });
-        });
-      }
-
-      // ===== Eventos =====
-      Object.values(fields).forEach(el => {
-        el.addEventListener("input", renderAll);
-        el.addEventListener("change", renderAll);
-      });
-
-      tabSimple.addEventListener("click", () => setDocType("simple"));
-      tabTecnico.addEventListener("click", () => setDocType("tecnico"));
-
-      pv.advPanel.addEventListener("toggle", () => {
-        pv.advLabel.textContent = pv.advPanel.open ? "cerrar" : "abrir";
-      });
-
-      btnPrint.addEventListener("click", () => {
-        renderAll();
-        setTimeout(() => window.print(), 120);
-      });
-
-      btnShare.addEventListener("click", async () => {
+      async function loadLogoDataUrlOnce() {
+        if (logoDataUrlCache) return logoDataUrlCache;
         try {
-          if (!navigator.share) {
-            setStatus("Tu navegador no soporta compartir directo. Usa 'Imprimir / Guardar PDF'.", "warn");
-            return;
-          }
-
-          await navigator.share({
-            title: "CIBORG347 | Generador de Presupuestos PDF",
-            text: "Te comparto el generador de presupuestos / boletas PDF Modo CIBORG."
+          const res = await fetch(BRAND_LOGO, { mode: "cors" });
+          if (!res.ok) throw new Error("No se pudo cargar logo");
+          const blob = await res.blob();
+          logoDataUrlCache = await new Promise((resolve, reject) => {
+            const fr = new FileReader();
+            fr.onload = () => resolve(fr.result);
+            fr.onerror = reject;
+            fr.readAsDataURL(blob);
           });
+          return logoDataUrlCache;
+        } catch (e) {
+          return null;
+        }
+      }
 
-          setStatus("Compartido correctamente.", "ok");
-        } catch (err) {
-          if (err && err.name === "AbortError") {
-            setStatus("Compartir cancelado.", "warn");
-          } else {
-            setStatus("No se pudo compartir desde este dispositivo.", "warn");
+      function mmTextBox(doc, x, y, w, h, label, value, opts = {}) {
+        const { labelColor = [196,155,255], valueColor = [238,244,251], boldValue = false, maxLines = 2 } = opts;
+        doc.setFillColor(11,16,32);
+        doc.setDrawColor(39,49,73);
+        doc.roundedRect(x, y, w, h, 3, 3, "FD");
+
+        doc.setFont("courier", "bold");
+        doc.setFontSize(7);
+        doc.setTextColor(...labelColor);
+        doc.text(label.toUpperCase(), x + 3, y + 5);
+
+        doc.setFont("courier", boldValue ? "bold" : "normal");
+        doc.setFontSize(8.2);
+        doc.setTextColor(...valueColor);
+
+        const lines = doc.splitTextToSize(String(value || "-"), w - 6).slice(0, maxLines);
+        let yy = y + 10;
+        lines.forEach(line => {
+          doc.text(line, x + 3, yy);
+          yy += 4.4;
+        });
+      }
+
+      async function buildPdfBlob() {
+        const d = getData();
+        setStatus("Generando PDF...", "warn");
+
+        const doc = new jsPDF({ unit: "mm", format: "a4", compress: true });
+        const logoData = await loadLogoDataUrlOnce();
+
+        // Fondo
+        doc.setFillColor(10, 13, 20);
+        doc.rect(0, 0, 210, 297, "F");
+
+        // Barra superior
+        doc.setFillColor(0, 212, 255); doc.rect(0, 0, 70, 3, "F");
+        doc.setFillColor(124, 58, 237); doc.rect(70, 0, 70, 3, "F");
+        doc.setFillColor(236, 72, 153); doc.rect(140, 0, 70, 3, "F");
+
+        // Watermark (si carga logo)
+        if (logoData) {
+          try {
+            doc.saveGraphicsState();
+            doc.setGState(new doc.GState({ opacity: 0.06 }));
+            doc.addImage(logoData, "PNG", 40, 85, 130, 130, undefined, "FAST");
+            doc.restoreGraphicsState();
+          } catch (_) {}
+        }
+
+        const m = 12;
+        let y = 10;
+
+        // Header
+        doc.setFillColor(11,16,32);
+        doc.setDrawColor(39,49,73);
+        doc.roundedRect(m, y, 22, 22, 3, 3, "FD");
+        if (logoData) {
+          try { doc.addImage(logoData, "PNG", m + 1.5, y + 1.5, 19, 19, undefined, "FAST"); } catch (_) {}
+        }
+
+        doc.setFont("courier", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(147,167,194);
+        doc.text("PRESUPUESTO FORMAL", 38, y + 6);
+
+        doc.setFont("courier", "bold");
+        doc.setFontSize(17);
+        doc.setTextColor(140,231,255);
+        doc.text("CIBORG347", 38, y + 14);
+
+        doc.setFont("courier", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(191,208,226);
+        doc.text(`FECHA: ${d.fecha}`, 38, y + 20);
+        doc.text(`NRO: ${d.numero}`, 90, y + 20);
+
+        y += 28;
+        doc.setDrawColor(39,49,73);
+        doc.line(m, y, 210 - m, y);
+        y += 4;
+
+        // Cliente + Precio
+        const gap = 4;
+        const half = (210 - m * 2 - gap) / 2;
+        mmTextBox(doc, m, y, half, 17, "Cliente", d.cliente.toUpperCase(), { maxLines: 2 });
+        mmTextBox(doc, m + half + gap, y, half, 17, "Precio final", d.precio, {
+          valueColor: [152,245,178],
+          boldValue: true,
+          maxLines: 2
+        });
+        y += 20;
+
+        // Direccion
+        mmTextBox(doc, m, y, 210 - m * 2, 15, "Direccion", d.direccion, { maxLines: 2 });
+        y += 18;
+
+        // Servicio
+        mmTextBox(doc, m, y, 210 - m * 2, 17, "Servicio / Presupuesto", d.servicio, { maxLines: 2 });
+        y += 20;
+
+        // Tiempo
+        mmTextBox(doc, m, y, 210 - m * 2, 15, "Tiempo estimado", d.entrega, { maxLines: 2 });
+        y += 18;
+
+        // Incluye
+        const incluyeH = 52;
+        doc.setFillColor(11,16,32);
+        doc.setDrawColor(39,49,73);
+        doc.roundedRect(m, y, 210 - m * 2, incluyeH, 3, 3, "FD");
+        doc.setFont("courier", "bold");
+        doc.setFontSize(7);
+        doc.setTextColor(196,155,255);
+        doc.text("QUE INCLUYE", m + 3, y + 5);
+
+        doc.setFont("courier", "normal");
+        doc.setFontSize(7.7);
+        doc.setTextColor(205,221,240);
+        const bullets = d.incluye.length ? d.incluye : ["Detalle a definir"];
+        let by = y + 11;
+        const maxBulletLines = 8;
+        let used = 0;
+        for (const item of bullets) {
+          if (used >= maxBulletLines) break;
+          const lines = doc.splitTextToSize("• " + item, 210 - m * 2 - 8);
+          for (const line of lines) {
+            if (used >= maxBulletLines) break;
+            doc.text(line, m + 4, by);
+            by += 4.8;
+            used++;
           }
+        }
+        y += incluyeH + 4;
+
+        // Detalle / observaciones
+        const detH = 34;
+        doc.setFillColor(11,16,32);
+        doc.setDrawColor(39,49,73);
+        doc.roundedRect(m, y, 210 - m * 2, detH, 3, 3, "FD");
+        doc.setFont("courier", "bold");
+        doc.setFontSize(7);
+        doc.setTextColor(221,233,247);
+        doc.text("DETALLE / OBSERVACIONES", m + 3, y + 5);
+
+        doc.setFont("courier", "normal");
+        doc.setFontSize(7.4);
+        doc.setTextColor(198,214,232);
+        const detLines = doc.splitTextToSize(d.detalle, 210 - m * 2 - 6).slice(0, 5);
+        let dy = y + 10;
+        detLines.forEach(line => {
+          doc.text(line, m + 3, dy);
+          dy += 4.5;
+        });
+        y += detH + 5;
+
+        // Footer final
+        doc.setDrawColor(39,49,73);
+        doc.line(m, y, 210 - m, y);
+
+        doc.setFont("courier", "normal");
+        doc.setFontSize(7.1);
+        doc.setTextColor(198,214,232);
+        doc.text("MODALIDAD: Se abona una vez entregado el sitio / transferencia o MP", m, y + 5);
+        doc.text(`WHATSAPP: ${BRAND_WA} | IG: ${BRAND_IG}`, m, y + 10);
+
+        doc.setDrawColor(39,49,73);
+        doc.line(m, y + 13, 210 - m, y + 13);
+
+        doc.setFont("courier", "normal");
+        doc.setFontSize(6.8);
+        doc.setTextColor(143,165,191);
+        doc.text(BRAND_FIRMA, 105, y + 17.5, { align: "center" });
+
+        const cleanClient = d.cliente.replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-").toLowerCase() || "cliente";
+        pdfNameCache = `presupuesto-ciborg347-${cleanClient}.pdf`;
+        pdfBlobCache = doc.output("blob");
+
+        setStatus("PDF generado correctamente.", "ok");
+        return pdfBlobCache;
+      }
+
+      async function ensurePdf() {
+        if (pdfBlobCache) return pdfBlobCache;
+        return buildPdfBlob();
+      }
+
+      function setBusy(state) {
+        [els.btnGenerar, els.btnCompartir, els.btnDescargar].forEach(b => b.disabled = !!state);
+      }
+
+      els.btnGenerar.addEventListener("click", async () => {
+        setBusy(true);
+        try {
+          await buildPdfBlob();
+        } catch (e) {
+          console.error(e);
+          setStatus("Error al generar PDF.", "err");
+        } finally {
+          setBusy(false);
         }
       });
 
-      btnDownloadHtml.addEventListener("click", () => {
+      els.btnDescargar.addEventListener("click", async () => {
+        setBusy(true);
         try {
-          const html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-          const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+          const blob = await ensurePdf();
           const url = URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
-          a.download = "ciborg347-generador-presupuestos.html";
+          a.download = pdfNameCache || "presupuesto-ciborg347.pdf";
           document.body.appendChild(a);
           a.click();
           a.remove();
           URL.revokeObjectURL(url);
-          setStatus("HTML descargado.", "ok");
+          setStatus("PDF descargado.", "ok");
         } catch (e) {
-          setStatus("No se pudo descargar el HTML.", "err");
+          console.error(e);
+          setStatus("No se pudo descargar el PDF.", "err");
+        } finally {
+          setBusy(false);
         }
       });
 
-      btnReset.addEventListener("click", () => {
-        Object.keys(fields).forEach(k => fields[k].value = defaults[k]);
-        setDocType("simple");
-        setStatus("Campos restablecidos.", "ok");
+      els.btnCompartir.addEventListener("click", async () => {
+        setBusy(true);
+        try {
+          const blob = await ensurePdf();
+
+          if (!navigator.share || typeof File === "undefined") {
+            setStatus("Este dispositivo no soporta compartir archivos. Usa Descargar PDF.", "warn");
+            setBusy(false);
+            return;
+          }
+
+          const file = new File([blob], pdfNameCache || "presupuesto-ciborg347.pdf", { type: "application/pdf" });
+
+          if (navigator.canShare && !navigator.canShare({ files: [file] })) {
+            setStatus("Tu celu no permite compartir PDF directo. Usa Descargar PDF.", "warn");
+            setBusy(false);
+            return;
+          }
+
+          await navigator.share({
+            title: "Presupuesto CIBORG347",
+            text: "Te comparto el presupuesto en PDF.",
+            files: [file]
+          });
+
+          setStatus("PDF compartido correctamente.", "ok");
+        } catch (e) {
+          if (e && e.name === "AbortError") {
+            setStatus("Compartir cancelado.", "warn");
+          } else {
+            console.error(e);
+            setStatus("No se pudo compartir el PDF.", "err");
+          }
+        } finally {
+          setBusy(false);
+        }
       });
 
-      btnLoadCiborg.addEventListener("click", () => {
-        fields.logoUrl.value = "https://iili.io/qFQyNae.png";
-        fields.tituloDoc.value = "Presupuesto";
-        fields.sheetMode.value = "auto";
-        fields.compactMode.value = "smart";
-        fields.watermarkToggle.value = "on";
-        fields.modalidad.value = "Se abona una vez entregado el sitio / transferencia o MP";
-        fields.whatsapp.value = "11 6449-9481";
-        fields.instagram.value = "@ciborg347";
-        fields.legal.value = "Esta propuesta puede ajustarse segun cambios de alcance, contenido o funcionalidades solicitadas.";
-        fields.firma.value = "CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES";
-        setDocType("tecnico");
-        setStatus("Plantilla Modo CIBORG aplicada.", "ok");
+      els.btnPreview.addEventListener("click", () => {
+        previewVisible = !previewVisible;
+        els.preview.classList.toggle("show", previewVisible);
+        els.btnPreview.textContent = previewVisible ? "Ocultar vista previa" : "Mostrar vista previa";
+        if (previewVisible) {
+          updatePreview();
+          setStatus("Vista previa activada.", "ok");
+        } else {
+          setStatus("Vista previa oculta para mejor rendimiento.", "ok");
+        }
       });
 
-      [pv.miniBrandLogo, pv.logo1, pv.logo2, pv.wm1, pv.wm2].forEach(img => {
-        img.addEventListener("load", () => renderAll());
-        img.addEventListener("error", () => {
-          setStatus("No se pudo cargar la imagen/logo. Revisa la URL de imagen.", "warn");
-        });
+      els.btnActualizar.addEventListener("click", () => {
+        updatePreview();
       });
 
-      window.addEventListener("resize", () => {
-        clearTimeout(window.__rzTimer);
-        window.__rzTimer = setTimeout(() => {
-          renderAll();
-        }, 120);
+      // invalidar cache cuando cambia cualquier campo
+      ["fecha","numero","cliente","direccion","servicio","precio","entrega","incluye","detalle"].forEach(id => {
+        $(id).addEventListener("input", invalidatePdf);
+        $(id).addEventListener("change", invalidatePdf);
       });
 
-      // ===== Init =====
-      setDocType("simple");
-      renderAll();
-      setTimeout(renderAll, 450); // por fuentes/layout
+      // init (sin preview activa, mas liviano)
+      updatePreview();
+      setStatus("Listo. Version optimizada y liviana. La vista previa esta oculta por defecto.", "ok");
     })();
   </script>
 </body>
