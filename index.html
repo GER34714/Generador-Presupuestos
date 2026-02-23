@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -31,17 +30,8 @@
       --transition: 0.2s ease;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      min-width: 0;
-    }
-
-    html, body {
-      width: 100%;
-      overflow-x: hidden;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; min-width: 0; }
+    html, body { width: 100%; overflow-x: hidden; }
 
     body {
       background:
@@ -82,17 +72,11 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background:
-        linear-gradient(to bottom, rgba(255,255,255,0.02), transparent 120px);
+      background: linear-gradient(to bottom, rgba(255,255,255,0.02), transparent 120px);
       z-index: 0;
     }
 
-    .header,
-    .content,
-    .footer-notes {
-      position: relative;
-      z-index: 1;
-    }
+    .header, .content, .footer-notes { position: relative; z-index: 1; }
 
     .header {
       padding: 38px 40px 30px;
@@ -103,12 +87,7 @@
       border-bottom: 1px solid var(--line);
     }
 
-    .logo-area {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: flex-start;
-    }
+    .logo-area { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
 
     .logo-area img {
       width: 180px;
@@ -148,9 +127,7 @@
       color: var(--text-main);
     }
 
-    .content {
-      padding: 34px 40px 28px;
-    }
+    .content { padding: 34px 40px 24px; }
 
     .client-grid {
       display: grid;
@@ -187,8 +164,7 @@
       word-break: break-word;
     }
 
-    .editable:hover,
-    .editable:focus {
+    .editable:hover, .editable:focus {
       border-bottom-color: var(--neon-blue);
       background-color: rgba(0, 210, 255, 0.04);
     }
@@ -199,15 +175,8 @@
       min-height: 22px;
     }
 
-    .info-value {
-      font-size: 1rem;
-      color: var(--text-main);
-    }
-
-    .info-value.accent {
-      color: var(--accent);
-      font-weight: 700;
-    }
+    .info-value { font-size: 1rem; color: var(--text-main); }
+    .info-value.accent { color: var(--accent); font-weight: 700; }
 
     .tech-table-wrap {
       border: 1px solid var(--line);
@@ -233,10 +202,7 @@
       letter-spacing: 0.4px;
     }
 
-    .tech-table th:last-child {
-      width: 145px;
-      text-align: right;
-    }
+    .tech-table th:last-child { width: 145px; text-align: right; }
 
     .tech-table td {
       padding: 15px 14px;
@@ -244,14 +210,8 @@
       vertical-align: top;
     }
 
-    .tech-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    .tech-table td:last-child {
-      text-align: right;
-      white-space: nowrap;
-    }
+    .tech-table tr:last-child td { border-bottom: none; }
+    .tech-table td:last-child { text-align: right; white-space: nowrap; }
 
     .item-title {
       font-weight: 600;
@@ -267,9 +227,7 @@
     }
 
     .total-section {
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)),
-        var(--card-bg);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)), var(--card-bg);
       padding: 22px 24px;
       border-radius: var(--radius-sm);
       display: flex;
@@ -277,7 +235,7 @@
       align-items: center;
       gap: 18px;
       border: 1px solid var(--line);
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .total-label {
@@ -305,21 +263,49 @@
       color: var(--text-dim);
     }
 
-    .footer-notes p {
-      line-height: 1.5;
-      word-break: break-word;
+    .footer-notes p { line-height: 1.5; word-break: break-word; }
+    .footer-notes strong { color: var(--neon-purple); letter-spacing: 0.3px; }
+
+    .contact-strip {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line-soft);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 18px;
+      align-items: center;
+      justify-content: center;
     }
 
-    .footer-notes strong {
-      color: var(--neon-purple);
-      letter-spacing: 0.3px;
+    .contact-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 0.78rem;
+      line-height: 1.2;
+      border: 1px solid rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.015);
+      padding: 7px 10px;
+      border-radius: 999px;
     }
+
+    .contact-item svg {
+      width: 15px;
+      height: 15px;
+      flex: 0 0 15px;
+      display: block;
+    }
+
+    .contact-item.whatsapp svg { fill: #25D366; }
+    .contact-item.instagram svg { fill: #E1306C; }
 
     .footer-line {
-      margin-top: 18px;
+      margin-top: 16px;
       text-align: center;
       border-top: 1px solid var(--line-soft);
-      padding-top: 18px;
+      padding-top: 16px;
       font-size: 0.72rem;
       letter-spacing: 0.5px;
       color: #98a6b3;
@@ -339,55 +325,30 @@
       cursor: pointer;
       font-family: 'Orbitron', sans-serif;
       letter-spacing: 0.6px;
-      box-shadow:
-        0 8px 24px rgba(0, 210, 255, 0.28),
-        0 0 0 1px rgba(0, 210, 255, 0.15) inset;
+      box-shadow: 0 8px 24px rgba(0, 210, 255, 0.28), 0 0 0 1px rgba(0, 210, 255, 0.15) inset;
       transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
       -webkit-tap-highlight-color: transparent;
     }
 
     .btn-print:hover {
       transform: translateY(-2px);
-      box-shadow:
-        0 10px 28px rgba(0, 210, 255, 0.35),
-        0 0 0 1px rgba(0, 210, 255, 0.22) inset;
+      box-shadow: 0 10px 28px rgba(0, 210, 255, 0.35), 0 0 0 1px rgba(0, 210, 255, 0.22) inset;
     }
 
-    .btn-print:active {
-      transform: translateY(0);
-    }
+    .btn-print:active { transform: translateY(0); }
+    .btn-print:focus-visible { outline: 2px solid rgba(0, 210, 255, 0.7); outline-offset: 3px; }
 
-    .btn-print:focus-visible {
-      outline: 2px solid rgba(0, 210, 255, 0.7);
-      outline-offset: 3px;
-    }
-
-    [contenteditable="true"] {
-      cursor: text;
-    }
-
+    [contenteditable="true"] { cursor: text; }
     [contenteditable="true"]:empty::before {
       content: attr(data-placeholder);
       color: #6e7681;
       pointer-events: none;
     }
 
-    /* Responsive */
     @media (max-width: 760px) {
-      body {
-        padding: 18px 12px 88px;
-      }
-
-      .invoice-box {
-        border-radius: 8px;
-      }
-
-      .header,
-      .content,
-      .footer-notes {
-        padding-left: 14px;
-        padding-right: 14px;
-      }
+      body { padding: 18px 12px 88px; }
+      .invoice-box { border-radius: 8px; }
+      .header, .content, .footer-notes { padding-left: 14px; padding-right: 14px; }
 
       .header {
         padding-top: 18px;
@@ -397,24 +358,16 @@
         gap: 16px;
       }
 
-      .logo-area img {
-        width: 150px;
-      }
+      .logo-area img { width: 150px; }
 
       .header-info {
         text-align: left;
         align-items: flex-start;
       }
 
-      .header-info h1 {
-        font-size: 1rem;
-        letter-spacing: 1.4px;
-      }
+      .header-info h1 { font-size: 1rem; letter-spacing: 1.4px; }
 
-      .content {
-        padding-top: 18px;
-        padding-bottom: 18px;
-      }
+      .content { padding-top: 18px; padding-bottom: 18px; }
 
       .client-grid {
         grid-template-columns: 1fr;
@@ -422,24 +375,11 @@
         margin-bottom: 18px;
       }
 
-      .tech-table th,
-      .tech-table td {
-        padding: 10px 10px;
-      }
+      .tech-table th, .tech-table td { padding: 10px 10px; }
+      .tech-table th:last-child, .tech-table td:last-child { width: 100px; }
 
-      .tech-table th:last-child,
-      .tech-table td:last-child {
-        width: 100px;
-      }
-
-      .item-title {
-        font-size: 0.9rem;
-      }
-
-      .item-desc {
-        font-size: 0.78rem;
-        line-height: 1.45;
-      }
+      .item-title { font-size: 0.9rem; }
+      .item-desc { font-size: 0.78rem; line-height: 1.45; }
 
       .total-section {
         flex-direction: column;
@@ -454,17 +394,18 @@
         text-align: left;
       }
 
-      .total-label {
-        font-size: 0.8rem;
+      .total-label { font-size: 0.8rem; }
+      .footer-notes { padding-bottom: 22px; font-size: 0.76rem; }
+      .footer-line { font-size: 0.66rem; }
+
+      .contact-strip {
+        justify-content: flex-start;
+        gap: 10px;
       }
 
-      .footer-notes {
-        padding-bottom: 22px;
-        font-size: 0.76rem;
-      }
-
-      .footer-line {
-        font-size: 0.66rem;
+      .contact-item {
+        font-size: 0.72rem;
+        padding: 6px 9px;
       }
 
       .btn-print {
@@ -478,7 +419,6 @@
       }
     }
 
-    /* Print / PDF */
     @page {
       size: A4;
       margin: 12mm;
@@ -498,9 +438,7 @@
         print-color-adjust: exact;
       }
 
-      .btn-print {
-        display: none !important;
-      }
+      .btn-print { display: none !important; }
 
       .invoice-box {
         max-width: 100% !important;
@@ -514,9 +452,7 @@
         page-break-inside: avoid;
       }
 
-      .invoice-box::after {
-        display: none !important;
-      }
+      .invoice-box::after { display: none !important; }
 
       .header,
       .client-grid,
@@ -532,6 +468,12 @@
         background: transparent !important;
         border-bottom-color: transparent !important;
       }
+
+      .contact-item {
+        border-color: #d0d7de !important;
+        background: #fff !important;
+        color: #111 !important;
+      }
     }
   </style>
 </head>
@@ -545,7 +487,7 @@
     <header class="header">
       <div class="logo-area">
         <img
-          src="https://i.ibb.co/LST6m8m/CIBORG-LOGO.jpg"
+          src="https://iili.io/qFQyNae.png"
           alt="Logo CIBORG347"
           onerror="this.style.display='none'; this.nextElementSibling.textContent='CIBORG347 // LOGO NO DISPONIBLE';"
         />
@@ -555,7 +497,7 @@
       <div class="header-info">
         <h1>PRESUPUESTO</h1>
         <p class="meta-row">
-          <span class="editable" contenteditable="true" data-placeholder="FECHA: DD/MM/AAAA">FECHA: 23/02/2026</span>
+          <span class="editable" contenteditable="true" data-placeholder="FECHA: DD/MM/AAAA"></span>
         </p>
       </div>
     </header>
@@ -565,14 +507,14 @@
         <div class="info-block">
           <label>Cliente</label>
           <p class="info-value">
-            <span class="editable block" contenteditable="true" data-placeholder="Nombre del cliente">Esther (Trenzas Africanas)</span>
+            <span class="editable block" contenteditable="true" data-placeholder="Nombre del cliente"></span>
           </p>
         </div>
 
         <div class="info-block">
-          <label>Inversión Final</label>
+          <label>Inversion Final</label>
           <p class="info-value accent">
-            <span class="editable block" contenteditable="true" data-placeholder="ARS 0">ARS 120.000</span>
+            <span class="editable block" contenteditable="true" data-placeholder="ARS 0"></span>
           </p>
         </div>
       </div>
@@ -581,7 +523,7 @@
         <table class="tech-table" aria-label="Modulos del trabajo y valor">
           <thead>
             <tr>
-              <th>MÓDULOS DEL TRABAJO</th>
+              <th>MODULOS DEL TRABAJO</th>
               <th style="text-align: right;">VALOR</th>
             </tr>
           </thead>
@@ -589,19 +531,14 @@
             <tr>
               <td>
                 <div class="item-title">
-                  <span class="editable block" contenteditable="true" data-placeholder="Titulo del modulo">OPCIÓN A - LANDING PAGE COMPLETA</span>
+                  <span class="editable block" contenteditable="true" data-placeholder="Titulo del modulo"></span>
                 </div>
                 <div class="item-desc">
-                  <div class="editable block" contenteditable="true" data-placeholder="Descripcion del trabajo">
-                    • Diseño Nude/Bordó/Marrón adaptado a marca.<br />
-                    • Estructura: Hero, Galería, Prueba Social, FAQ, Footer.<br />
-                    • Integración de WhatsApp y Video Demostración.<br />
-                    • Carga de contenidos e imágenes iniciales.
-                  </div>
+                  <div class="editable block" contenteditable="true" data-placeholder="Descripcion del trabajo (podes usar Enter o pegar texto con saltos de linea)"></div>
                 </div>
               </td>
               <td>
-                <span class="editable" contenteditable="true" data-placeholder="Valor">INCLUIDO</span>
+                <span class="editable" contenteditable="true" data-placeholder="Valor"></span>
               </td>
             </tr>
           </tbody>
@@ -610,10 +547,10 @@
 
       <div class="total-section">
         <div class="total-label">
-          <span class="editable" contenteditable="true" data-placeholder="ESTADO">ESTADO: PENDIENTE_RESERVA</span>
+          <span class="editable" contenteditable="true" data-placeholder="ESTADO: PENDIENTE_RESERVA"></span>
         </div>
         <div class="total-amount">
-          <span class="editable" contenteditable="true" data-placeholder="$0">$120.000</span>
+          <span class="editable" contenteditable="true" data-placeholder="$0"></span>
         </div>
       </div>
     </section>
@@ -621,10 +558,24 @@
     <footer class="footer-notes">
       <p>
         <strong>MODALIDAD:</strong>
-        <span class="editable" contenteditable="true" data-placeholder="Detalle de modalidad de pago">
-          Contra entrega (Se abona al finalizar el sitio).
-        </span>
+        <span class="editable" contenteditable="true" data-placeholder="Detalle de modalidad de pago"></span>
       </p>
+
+      <div class="contact-strip" aria-label="Datos de contacto de CIBORG347">
+        <span class="contact-item whatsapp">
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M13.601 2.326A7.854 7.854 0 0 0 8.02 0C3.672 0 .137 3.534.137 7.883c0 1.39.363 2.747 1.052 3.944L0 16l4.296-1.125a7.84 7.84 0 0 0 3.723.949h.003c4.347 0 7.882-3.535 7.884-7.884a7.83 7.83 0 0 0-2.305-5.614zM8.022 14.49h-.002a6.5 6.5 0 0 1-3.31-.907l-.237-.14-2.55.668.681-2.488-.154-.255a6.49 6.49 0 0 1-.995-3.48c.002-3.588 2.922-6.508 6.516-6.508a6.47 6.47 0 0 1 4.634 1.92 6.47 6.47 0 0 1 1.905 4.64c-.002 3.59-2.922 6.51-6.508 6.51zm3.57-4.87c-.195-.098-1.152-.568-1.331-.633-.178-.065-.308-.098-.438.098-.13.195-.503.633-.617.763-.113.13-.227.146-.422.049-.195-.098-.825-.304-1.571-.97-.58-.517-.97-1.155-1.084-1.35-.113-.195-.012-.3.086-.397.088-.088.195-.227.292-.34.098-.114.13-.195.195-.325.065-.13.033-.244-.016-.341-.049-.098-.438-1.055-.6-1.445-.158-.38-.32-.328-.438-.334-.113-.006-.243-.007-.373-.007a.72.72 0 0 0-.52.243c-.178.195-.681.665-.681 1.62 0 .958.697 1.883.795 2.013.098.13 1.373 2.097 3.327 2.94.465.2.828.32 1.111.41.467.148.892.127 1.228.077.375-.056 1.152-.47 1.315-.925.163-.454.163-.844.114-.925-.049-.082-.179-.13-.373-.228z"/>
+          </svg>
+          <span>1164499481</span>
+        </span>
+
+        <span class="contact-item instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 2C4.239 2 2 4.239 2 7v10c0 2.761 2.239 5 5 5h10c2.761 0 5-2.239 5-5V7c0-2.761-2.239-5-5-5H7zm0 2h10c1.657 0 3 1.343 3 3v10c0 1.657-1.343 3-3 3H7c-1.657 0-3-1.343-3-3V7c0-1.657 1.343-3 3-3zm11.5 1.5a1.5 1.5 0 1 0 .001 3.001A1.5 1.5 0 0 0 18.5 5.5zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/>
+          </svg>
+          <span>@ciborg347</span>
+        </span>
+      </div>
 
       <p class="footer-line">
         CIBORG347 // DISEÑO QUE CONVIERTE VISITAS EN CLIENTES
