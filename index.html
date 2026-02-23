@@ -3,585 +3,1070 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Presupuesto // CIBORG347</title>
-
-  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@300;400;600&display=swap" rel="stylesheet" />
-
+  <title>Generador de Presupuesto 1 Hoja A4 - CIBORG347</title>
   <style>
-    :root {
-      --bg: #05070a;
-      --card-bg: #0d1117;
-      --surface-2: #0a0f15;
-      --line: #30363d;
-      --line-soft: #161b22;
-
-      --neon-blue: #00d2ff;
-      --neon-purple: #9d50bb;
-      --text-main: #e6edf3;
-      --text-dim: #8b949e;
-      --accent: #3fb950;
-
-      --shadow: 0 0 30px rgba(0, 210, 255, 0.15);
-      --radius: 10px;
-      --radius-sm: 6px;
-      --transition: 0.2s ease;
+    :root{
+      --bg:#0b1220;
+      --panel:#111827;
+      --panel-2:#0f172a;
+      --line:#233148;
+      --line-soft:#2b3b57;
+      --txt:#e5eef8;
+      --muted:#9fb0c6;
+      --cyan:#38bdf8;
+      --violet:#a855f7;
+      --green:#86efac;
+      --white:#ffffff;
+      --danger:#fb7185;
+      --a4-w:210mm;
+      --a4-h:297mm;
+      --radius:12px;
+      --shadow: 0 20px 40px rgba(0,0,0,.28);
+      --mono: Consolas, "Courier New", monospace;
+      --sans: "Segoe UI", Arial, sans-serif;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; min-width: 0; }
-    html, body { width: 100%; overflow-x: hidden; }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    html,body{ background:var(--bg); color:var(--txt); font-family:var(--sans); }
+    body{ padding:16px; }
 
-    body {
-      background:
-        radial-gradient(900px 400px at 15% 0%, rgba(0, 210, 255, 0.07), transparent 60%),
-        radial-gradient(800px 350px at 100% 0%, rgba(157, 80, 187, 0.08), transparent 55%),
-        #121417;
-      font-family: 'Roboto Mono', monospace;
-      color: var(--text-main);
-      padding: 40px 20px 90px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
+    .app{
+      max-width:1400px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns: 380px 1fr;
+      gap:16px;
+      align-items:start;
     }
 
-    .invoice-box {
-      width: 100%;
-      max-width: 850px;
-      background-color: var(--bg);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
+    .panel{
+      background: linear-gradient(180deg, #0f172a, #0b1220);
+      border:1px solid #1f2b3f;
+      border-radius:14px;
+      padding:14px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.2);
+      position: sticky;
+      top: 10px;
+    }
+
+    .panel h2{
+      font-size:1rem;
+      margin-bottom:8px;
+      color:#fff;
+      letter-spacing:.2px;
+    }
+
+    .panel p.note{
+      color:#aebdd0;
+      font-size:.84rem;
+      line-height:1.35;
+      margin-bottom:12px;
+    }
+
+    .field{ margin-bottom:10px; }
+    .field label{
+      display:block;
+      margin-bottom:5px;
+      color:#c6d3e3;
+      font-size:.78rem;
+      font-weight:700;
+      letter-spacing:.25px;
+    }
+
+    .field input, .field textarea{
+      width:100%;
+      background:#0b1322;
+      color:#edf4ff;
+      border:1px solid #26344a;
+      border-radius:10px;
+      padding:10px 11px;
+      font-size:.9rem;
+      outline:none;
+      font-family:var(--sans);
+    }
+
+    .field textarea{
+      min-height:86px;
+      resize:vertical;
+      line-height:1.35;
+    }
+
+    .field input:focus, .field textarea:focus{
+      border-color:#3b82f6;
+      box-shadow:0 0 0 3px rgba(59,130,246,.15);
+    }
+
+    .row{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .row-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+
+    .btns{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      margin-top:12px;
+    }
+    .btns-3{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:8px;
+      margin-top:8px;
+    }
+
+    button{
+      border:none;
+      cursor:pointer;
+      border-radius:10px;
+      padding:10px 12px;
+      font-weight:700;
+      font-size:.88rem;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+    button:hover{ opacity:.95; }
+    button:active{ transform:scale(.98); }
+
+    .btn-primary{
+      background: linear-gradient(90deg, #0ea5e9, #8b5cf6);
+      color:#fff;
+    }
+    .btn-dark{
+      background:#141d2b;
+      color:#d8e5f5;
+      border:1px solid #27364e;
+    }
+    .btn-green{
+      background: linear-gradient(90deg, #16a34a, #22c55e);
+      color:#fff;
+    }
+
+    .status{
+      margin-top:10px;
+      font-size:.82rem;
+      color:#9fb0c6;
+      line-height:1.35;
+      min-height:18px;
+    }
+
+    .preview-wrap{
+      background: linear-gradient(180deg, #0f172a, #0b1220);
+      border:1px solid #1f2b3f;
+      border-radius:14px;
+      padding:14px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.2);
+      overflow:auto;
+    }
+
+    .preview-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:8px;
+      color:#95a8bf;
+      font-family:var(--mono);
+      font-size:11px;
+    }
+
+    /* HOJA A4 */
+    .sheet{
+      width: var(--a4-w);
+      min-height: var(--a4-h);
+      margin:0 auto;
+      background: #060b14;
+      color: var(--txt);
+      border: 1px solid #102036;
+      box-shadow: var(--shadow);
       position: relative;
       overflow: hidden;
-      box-shadow: var(--shadow);
       isolation: isolate;
     }
 
-    .invoice-box::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
-      z-index: 2;
+    .sheet::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 15% 0%, rgba(56,189,248,.12), transparent 35%),
+        radial-gradient(circle at 100% 0%, rgba(168,85,247,.10), transparent 32%),
+        linear-gradient(180deg, rgba(255,255,255,.015), rgba(255,255,255,0));
+      z-index:0;
+      pointer-events:none;
     }
 
-    .invoice-box::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.02), transparent 120px);
-      z-index: 0;
+    .top-line{
+      height:4px;
+      background: linear-gradient(90deg, #22d3ee, #3b82f6, #8b5cf6, #ec4899);
+      opacity:.95;
+      position:relative;
+      z-index:2;
     }
 
-    .header, .content, .footer-notes { position: relative; z-index: 1; }
-
-    .header {
-      padding: 38px 40px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 24px;
-      border-bottom: 1px solid var(--line);
+    /* MARCA DE AGUA */
+    .watermark{
+      position:absolute;
+      inset:0;
+      z-index:1;
+      pointer-events:none;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      opacity:.08; /* clave para que no moleste */
+      filter: grayscale(100%) contrast(120%);
+      transform: rotate(-14deg) scale(1.05);
     }
 
-    .logo-area { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
-
-    .logo-area img {
-      width: 180px;
-      max-width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 4px;
-      object-fit: contain;
-      background: #0b0f14;
+    .watermark img{
+      width:68%;
+      max-width:520px;
+      height:auto;
+      object-fit:contain;
     }
 
-    .system-tag {
-      font-size: 0.72rem;
-      color: var(--text-dim);
-      letter-spacing: 0.4px;
+    .sheet-inner{
+      position:relative;
+      z-index:2;
+      padding: 9mm 9mm 8mm;
+      min-height: calc(var(--a4-h) - 4px);
+      display:flex;
+      flex-direction:column;
+      gap:8px;
     }
 
-    .header-info {
-      text-align: right;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: flex-end;
+    .header{
+      display:grid;
+      grid-template-columns: 92px 1fr;
+      gap:12px;
+      align-items:start;
+      border-bottom:1px solid rgba(43,59,87,.7);
+      padding-bottom:8px;
     }
 
-    .header-info h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.15rem;
-      color: var(--neon-blue);
-      letter-spacing: 2px;
-      line-height: 1.2;
-      text-transform: uppercase;
+    .logo-box{
+      width:92px;
+      height:92px;
+      border-radius:10px;
+      border:1px solid rgba(43,59,87,.75);
+      background: rgba(11,19,34,.9);
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
 
-    .header-info .meta-row {
-      font-size: 0.9rem;
-      color: var(--text-main);
+    .logo-box img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
     }
 
-    .content { padding: 34px 40px 24px; }
+    .header-right{
+      min-height:92px;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      gap:5px;
+    }
 
-    .client-grid {
-      display: grid;
+    .micro{
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:.9px;
+      color:#94a8bf;
+      text-transform:uppercase;
+    }
+
+    .title{
+      font-family:var(--mono);
+      font-size:29px;
+      color:var(--cyan);
+      font-weight:800;
+      line-height:1;
+      letter-spacing:.7px;
+      text-transform:uppercase;
+      text-shadow: 0 0 12px rgba(56,189,248,.16);
+    }
+
+    .subline{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px 14px;
+      color:#b9c9d9;
+      font-family:var(--mono);
+      font-size:12px;
+      text-transform:uppercase;
+    }
+
+    .subline span strong{
+      color:#fff;
+      font-weight:700;
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(11,19,34,.92), rgba(8,14,26,.92));
+      border:1px solid rgba(43,59,87,.78);
+      border-radius:12px;
+      padding:10px 12px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.01);
+    }
+
+    .card .label{
+      color: var(--violet);
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:1px;
+      text-transform:uppercase;
+      margin-bottom:6px;
+      font-weight:700;
+    }
+
+    .card .value{
+      font-family:var(--mono);
+      color:#f4f8fd;
+      font-size:18px;
+      line-height:1.2;
+      word-break:break-word;
+      text-transform:uppercase;
+    }
+
+    .card .value.total{
+      color: var(--green);
+      font-size:22px;
+      font-weight:800;
+    }
+
+    .service-box{
+      background: linear-gradient(180deg, rgba(8,14,26,.95), rgba(6,11,21,.95));
+      border:1px solid rgba(43,59,87,.8);
+      border-radius:12px;
+      overflow:hidden;
+    }
+
+    .service-head{
+      display:grid;
+      grid-template-columns:1fr 120px;
+      align-items:center;
+      gap:8px;
+      padding:9px 12px;
+      border-bottom:1px solid rgba(43,59,87,.75);
+      color:#9bb0c7;
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:1px;
+      text-transform:uppercase;
+    }
+
+    .service-row{
+      display:grid;
+      grid-template-columns:1fr 120px;
+      gap:8px;
+      align-items:start;
+    }
+
+    .service-main{
+      padding:10px 12px 8px;
+      border-right:1px solid rgba(43,59,87,.65);
+    }
+
+    .service-title{
+      color:var(--cyan);
+      font-family:var(--mono);
+      font-weight:800;
+      font-size:14px;
+      line-height:1.2;
+      letter-spacing:.4px;
+      margin-bottom:6px;
+      text-transform:uppercase;
+    }
+
+    .bullets{
+      margin:0;
+      padding-left:16px;
+      color:#cad7e5;
+      font-family:var(--mono);
+      font-size:11.5px;
+      line-height:1.22;
+    }
+
+    .bullets li{ margin:2px 0; }
+
+    .service-price{
+      padding:10px 10px;
+      text-align:right;
+      color:#eef4fb;
+      font-family:var(--mono);
+      font-size:14px;
+      font-weight:700;
+      white-space:nowrap;
+    }
+
+    .compact-grid{
+      display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 34px;
+      gap:8px;
     }
 
-    .info-block {
-      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0));
-      border: 1px solid var(--line-soft);
-      border-radius: var(--radius-sm);
-      padding: 14px 14px 12px;
+    .mini-box{
+      background: linear-gradient(180deg, rgba(11,19,34,.92), rgba(8,14,26,.92));
+      border:1px solid rgba(43,59,87,.78);
+      border-radius:12px;
+      padding:9px 12px;
     }
 
-    .info-block label {
-      display: block;
-      font-size: 0.7rem;
-      color: var(--neon-purple);
-      text-transform: uppercase;
-      margin-bottom: 8px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
+    .mini-title{
+      color:#cfe0f3;
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:.9px;
+      text-transform:uppercase;
+      margin-bottom:6px;
+      font-weight:700;
     }
 
-    .editable {
-      display: inline-block;
-      outline: none;
-      border-bottom: 1px solid transparent;
-      transition: border-color var(--transition), background-color var(--transition);
-      padding: 2px 3px;
-      border-radius: 3px;
-      line-height: 1.35;
-      word-break: break-word;
+    .mini-text{
+      color:#c0cfdf;
+      font-family:var(--mono);
+      font-size:11.3px;
+      line-height:1.25;
+      word-break:break-word;
     }
 
-    .editable:hover, .editable:focus {
-      border-bottom-color: var(--neon-blue);
-      background-color: rgba(0, 210, 255, 0.04);
+    .obs-box{
+      background: linear-gradient(180deg, rgba(9,16,29,.95), rgba(7,12,22,.95));
+      border:1px solid rgba(43,59,87,.8);
+      border-radius:12px;
+      padding:10px 12px;
     }
 
-    .editable.block {
-      display: block;
-      width: 100%;
-      min-height: 22px;
+    .obs-title{
+      color:#d4e3f4;
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:1px;
+      text-transform:uppercase;
+      font-weight:700;
+      margin-bottom:6px;
     }
 
-    .info-value { font-size: 1rem; color: var(--text-main); }
-    .info-value.accent { color: var(--accent); font-weight: 700; }
-
-    .tech-table-wrap {
-      border: 1px solid var(--line);
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-      background: var(--surface-2);
-      margin-bottom: 28px;
+    .obs-lines{
+      display:grid;
+      gap:4px;
     }
 
-    .tech-table {
-      width: 100%;
-      border-collapse: collapse;
-      table-layout: fixed;
+    .obs-line{
+      min-height:17px;
+      border-bottom:1px dashed rgba(159,176,198,.33);
+      color:#9fb0c6;
+      font-family:var(--mono);
+      font-size:10.8px;
+      line-height:1.2;
+      display:flex;
+      align-items:flex-end;
+      padding-bottom:1px;
     }
 
-    .tech-table th {
-      text-align: left;
-      padding: 12px 14px;
-      font-size: 0.78rem;
-      color: var(--text-dim);
-      border-bottom: 1px solid var(--line);
-      background: rgba(255,255,255,0.01);
-      letter-spacing: 0.4px;
+    .footer{
+      margin-top:auto;
+      border-top:1px solid rgba(43,59,87,.75);
+      padding-top:8px;
+      display:grid;
+      gap:7px;
     }
 
-    .tech-table th:last-child { width: 145px; text-align: right; }
-
-    .tech-table td {
-      padding: 15px 14px;
-      border-bottom: 1px solid var(--line-soft);
-      vertical-align: top;
+    .footer-row{
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap:8px;
+      align-items:center;
     }
 
-    .tech-table tr:last-child td { border-bottom: none; }
-    .tech-table td:last-child { text-align: right; white-space: nowrap; }
-
-    .item-title {
-      font-weight: 600;
-      color: var(--neon-blue);
-      margin-bottom: 7px;
-      line-height: 1.3;
+    .footer-text{
+      color:#c0d0e1;
+      font-family:var(--mono);
+      font-size:11px;
+      line-height:1.25;
+      word-break:break-word;
     }
 
-    .item-desc {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      line-height: 1.5;
+    .footer-text .tag{
+      color:var(--violet);
+      font-weight:800;
+      text-transform:uppercase;
     }
 
-    .total-section {
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)), var(--card-bg);
-      padding: 22px 24px;
-      border-radius: var(--radius-sm);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 18px;
-      border: 1px solid var(--line);
-      margin-bottom: 8px;
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      justify-content:flex-end;
     }
 
-    .total-label {
-      font-family: 'Orbitron', sans-serif;
-      color: var(--text-main);
-      font-size: 0.9rem;
-      letter-spacing: 0.6px;
-      line-height: 1.3;
-      word-break: break-word;
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:5px 9px;
+      border-radius:999px;
+      border:1px solid rgba(43,59,87,.7);
+      background:#f8fafc;
+      color:#111827;
+      font-size:11px;
+      font-weight:700;
+      min-height:26px;
+      white-space:nowrap;
     }
 
-    .total-amount {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.7rem;
-      color: var(--accent);
-      text-align: right;
-      line-height: 1.1;
-      white-space: nowrap;
-      text-shadow: 0 0 10px rgba(63, 185, 80, 0.15);
+    .dot{
+      width:14px;
+      height:14px;
+      border-radius:50%;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-size:9px;
+      font-weight:900;
+      flex-shrink:0;
+    }
+    .dot-wa{ background:#22c55e; }
+    .dot-ig{ background:#ec4899; }
+
+    .signature{
+      text-align:center;
+      border-top:1px solid rgba(43,59,87,.45);
+      padding-top:6px;
+      color:#8fa4bc;
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:.9px;
+      text-transform:uppercase;
     }
 
-    .footer-notes {
-      padding: 0 40px 36px;
-      font-size: 0.82rem;
-      color: var(--text-dim);
+    .legal{
+      color:#8ea3bb;
+      font-family:var(--mono);
+      font-size:9.8px;
+      line-height:1.2;
     }
 
-    .footer-notes p { line-height: 1.5; word-break: break-word; }
-    .footer-notes strong { color: var(--neon-purple); letter-spacing: 0.3px; }
-
-    .contact-strip {
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px solid var(--line-soft);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px 18px;
-      align-items: center;
-      justify-content: center;
+    /* IMPRESION */
+    @page{
+      size: A4 portrait;
+      margin: 6mm;
     }
 
-    .contact-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--text-main);
-      text-decoration: none;
-      font-size: 0.78rem;
-      line-height: 1.2;
-      border: 1px solid rgba(255,255,255,0.04);
-      background: rgba(255,255,255,0.015);
-      padding: 7px 10px;
-      border-radius: 999px;
-    }
-
-    .contact-item svg {
-      width: 15px;
-      height: 15px;
-      flex: 0 0 15px;
-      display: block;
-    }
-
-    .contact-item.whatsapp svg { fill: #25D366; }
-    .contact-item.instagram svg { fill: #E1306C; }
-
-    .footer-line {
-      margin-top: 16px;
-      text-align: center;
-      border-top: 1px solid var(--line-soft);
-      padding-top: 16px;
-      font-size: 0.72rem;
-      letter-spacing: 0.5px;
-      color: #98a6b3;
-    }
-
-    .btn-print {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      z-index: 50;
-      padding: 14px 22px;
-      background: linear-gradient(180deg, #18dcff, #00c6ef);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 999px;
-      color: #031018;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: 'Orbitron', sans-serif;
-      letter-spacing: 0.6px;
-      box-shadow: 0 8px 24px rgba(0, 210, 255, 0.28), 0 0 0 1px rgba(0, 210, 255, 0.15) inset;
-      transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .btn-print:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 28px rgba(0, 210, 255, 0.35), 0 0 0 1px rgba(0, 210, 255, 0.22) inset;
-    }
-
-    .btn-print:active { transform: translateY(0); }
-    .btn-print:focus-visible { outline: 2px solid rgba(0, 210, 255, 0.7); outline-offset: 3px; }
-
-    [contenteditable="true"] { cursor: text; }
-    [contenteditable="true"]:empty::before {
-      content: attr(data-placeholder);
-      color: #6e7681;
-      pointer-events: none;
-    }
-
-    @media (max-width: 760px) {
-      body { padding: 18px 12px 88px; }
-      .invoice-box { border-radius: 8px; }
-      .header, .content, .footer-notes { padding-left: 14px; padding-right: 14px; }
-
-      .header {
-        padding-top: 18px;
-        padding-bottom: 18px;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 16px;
+    @media print{
+      html, body{
+        background:#fff !important;
+        margin:0 !important;
+        padding:0 !important;
       }
 
-      .logo-area img { width: 150px; }
-
-      .header-info {
-        text-align: left;
-        align-items: flex-start;
+      .app{
+        display:block !important;
+        max-width:none !important;
       }
 
-      .header-info h1 { font-size: 1rem; letter-spacing: 1.4px; }
-
-      .content { padding-top: 18px; padding-bottom: 18px; }
-
-      .client-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        margin-bottom: 18px;
+      .panel{
+        display:none !important;
       }
 
-      .tech-table th, .tech-table td { padding: 10px 10px; }
-      .tech-table th:last-child, .tech-table td:last-child { width: 100px; }
-
-      .item-title { font-size: 0.9rem; }
-      .item-desc { font-size: 0.78rem; line-height: 1.45; }
-
-      .total-section {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-        padding: 16px 14px;
+      .preview-wrap{
+        border:none !important;
+        box-shadow:none !important;
+        background:transparent !important;
+        padding:0 !important;
+        overflow:visible !important;
       }
 
-      .total-amount {
-        font-size: 1.35rem;
-        white-space: normal;
-        text-align: left;
+      .preview-top{
+        display:none !important;
       }
 
-      .total-label { font-size: 0.8rem; }
-      .footer-notes { padding-bottom: 22px; font-size: 0.76rem; }
-      .footer-line { font-size: 0.66rem; }
-
-      .contact-strip {
-        justify-content: flex-start;
-        gap: 10px;
+      .sheet{
+        width: 198mm !important;      /* A4 - margenes @page */
+        min-height: 285mm !important; /* A4 - margenes @page */
+        margin:0 auto !important;
+        box-shadow:none !important;
+        border:1px solid #102036 !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
       }
 
-      .contact-item {
-        font-size: 0.72rem;
-        padding: 6px 9px;
+      .sheet-inner{
+        padding: 8mm 8mm 7mm !important;
+        min-height: calc(285mm - 4px) !important;
+        gap:7px !important;
       }
 
-      .btn-print {
-        right: 12px;
-        left: 12px;
-        bottom: 12px;
-        width: auto;
-        text-align: center;
-        padding: 13px 18px;
-        font-size: 0.85rem;
+      .header, .grid-2, .service-box, .compact-grid, .obs-box, .footer{
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
       }
+
+      .watermark{
+        opacity:.07 !important;
+      }
+
+      .title{ font-size:26px !important; }
+      .card .value.total{ font-size:20px !important; }
+      .service-title{ font-size:13px !important; }
+      .bullets{ font-size:11px !important; line-height:1.18 !important; }
+      .obs-line{ min-height:16px !important; }
     }
 
-    @page {
-      size: A4;
-      margin: 12mm;
-    }
-
-    @media print {
-      html, body {
-        background: #ffffff !important;
-        overflow: visible !important;
-      }
-
-      body {
-        padding: 0 !important;
-        display: block !important;
-        color: #111 !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .btn-print { display: none !important; }
-
-      .invoice-box {
-        max-width: 100% !important;
-        width: 100% !important;
-        margin: 0 !important;
-        box-shadow: none !important;
-        border: 1px solid #d0d7de !important;
-        border-radius: 0 !important;
-        overflow: visible !important;
-        break-inside: avoid;
-        page-break-inside: avoid;
-      }
-
-      .invoice-box::after { display: none !important; }
-
-      .header,
-      .client-grid,
-      .tech-table-wrap,
-      .total-section,
-      .footer-notes {
-        break-inside: avoid;
-        page-break-inside: avoid;
-      }
-
-      .editable:hover,
-      .editable:focus {
-        background: transparent !important;
-        border-bottom-color: transparent !important;
-      }
-
-      .contact-item {
-        border-color: #d0d7de !important;
-        background: #fff !important;
-        color: #111 !important;
-      }
+    /* MOBILE */
+    @media (max-width: 1100px){
+      .app{ grid-template-columns:1fr; }
+      .panel{ position:static; }
     }
   </style>
 </head>
 <body>
+  <div class="app">
+    <aside class="panel">
+      <h2>Generador PDF 1 hoja A4 (marca de agua)</h2>
+      <p class="note">
+        Esta version deja el logo como fondo (watermark), mantiene espacio para observaciones
+        y compacta el footer para evitar que se corte en 2 paginas.
+      </p>
 
-  <button class="btn-print" onclick="window.print()" aria-label="Generar PDF del presupuesto">
-    GENERAR PDF
-  </button>
-
-  <main class="invoice-box" role="main" aria-label="Plantilla de presupuesto editable">
-    <header class="header">
-      <div class="logo-area">
-        <img
-          src="https://iili.io/qFQyNae.png"
-          alt="Logo CIBORG347"
-          onerror="this.style.display='none'; this.nextElementSibling.textContent='CIBORG347 // LOGO NO DISPONIBLE';"
-        />
-        <p class="system-tag">SYSTEM_PRESET: HIGH_CONVERSION</p>
+      <div class="field">
+        <label for="logoUrl">Logo URL (tambien se usa como marca de agua)</label>
+        <input id="logoUrl" type="text" value="https://iili.io/qFelkJt.jpg" />
       </div>
 
-      <div class="header-info">
-        <h1>PRESUPUESTO</h1>
-        <p class="meta-row">
-          <span class="editable" contenteditable="true" data-placeholder="FECHA: DD/MM/AAAA"></span>
-        </p>
-      </div>
-    </header>
-
-    <section class="content">
-      <div class="client-grid">
-        <div class="info-block">
-          <label>Cliente</label>
-          <p class="info-value">
-            <span class="editable block" contenteditable="true" data-placeholder="Nombre del cliente"></span>
-          </p>
+      <div class="row">
+        <div class="field">
+          <label for="tituloDoc">Titulo documento</label>
+          <input id="tituloDoc" type="text" value="PRESUPUESTO" />
         </div>
-
-        <div class="info-block">
-          <label>Inversion Final</label>
-          <p class="info-value accent">
-            <span class="editable block" contenteditable="true" data-placeholder="ARS 0"></span>
-          </p>
+        <div class="field">
+          <label for="fecha">Fecha</label>
+          <input id="fecha" type="text" value="23/02/2026" />
         </div>
       </div>
 
-      <div class="tech-table-wrap">
-        <table class="tech-table" aria-label="Modulos del trabajo y valor">
-          <thead>
-            <tr>
-              <th>MODULOS DEL TRABAJO</th>
-              <th style="text-align: right;">VALOR</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div class="item-title">
-                  <span class="editable block" contenteditable="true" data-placeholder="Titulo del modulo"></span>
-                </div>
-                <div class="item-desc">
-                  <div class="editable block" contenteditable="true" data-placeholder="Descripcion del trabajo (podes usar Enter o pegar texto con saltos de linea)"></div>
-                </div>
-              </td>
-              <td>
-                <span class="editable" contenteditable="true" data-placeholder="Valor"></span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="row">
+        <div class="field">
+          <label for="cliente">Cliente</label>
+          <input id="cliente" type="text" value="GERMAN MARTIN" />
+        </div>
+        <div class="field">
+          <label for="presupuestoNro">Nro presupuesto</label>
+          <input id="presupuestoNro" type="text" value="C347-001" />
+        </div>
       </div>
 
-      <div class="total-section">
-        <div class="total-label">
-          <span class="editable" contenteditable="true" data-placeholder="ESTADO: PENDIENTE_RESERVA"></span>
+      <div class="row">
+        <div class="field">
+          <label for="inversion">Inversion final</label>
+          <input id="inversion" type="text" value="$ 1.150.000" />
         </div>
-        <div class="total-amount">
-          <span class="editable" contenteditable="true" data-placeholder="$0"></span>
+        <div class="field">
+          <label for="valorServicio">Valor servicio</label>
+          <input id="valorServicio" type="text" value="$ 1.150.000" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="servicioTitulo">Detalle del servicio (titulo)</label>
+        <input id="servicioTitulo" type="text" value="CREACION DE SITIO WEB FULL RESPONSIVE" />
+      </div>
+
+      <div class="field">
+        <label for="bullets">Alcance / mejoras (una linea por item)</label>
+        <textarea id="bullets">Diseño personalizado adaptado a la identidad de la marca
+Estructura completa (hero, secciones, CTA, contacto)
+Boton flotante de WhatsApp
+Version responsive (celular y PC)
+Carga inicial de textos e imagenes
+Ajustes finos de presentacion y conversion
+Entrega final lista para usar</textarea>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="tiempoEntrega">Tiempo estimado</label>
+          <input id="tiempoEntrega" type="text" value="A coordinar segun contenido final" />
+        </div>
+        <div class="field">
+          <label for="vigencia">Vigencia</label>
+          <input id="vigencia" type="text" value="7 dias" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="modalidadPago">Modalidad de pago</label>
+        <input id="modalidadPago" type="text" value="Se abona una vez entregado el sitio / transferencia o MP" />
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="whatsapp">WhatsApp</label>
+          <input id="whatsapp" type="text" value="11 6449-9481" />
+        </div>
+        <div class="field">
+          <label for="instagram">Instagram</label>
+          <input id="instagram" type="text" value="@ciborg347" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="observTitulo">Titulo observaciones</label>
+        <input id="observTitulo" type="text" value="OBSERVACIONES / DETALLES ADICIONALES" />
+      </div>
+
+      <div class="row-3">
+        <div class="field">
+          <label for="obs1">Observacion 1</label>
+          <input id="obs1" type="text" value="" />
+        </div>
+        <div class="field">
+          <label for="obs2">Observacion 2</label>
+          <input id="obs2" type="text" value="" />
+        </div>
+        <div class="field">
+          <label for="obs3">Observacion 3</label>
+          <input id="obs3" type="text" value="" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="firma">Firma / frase final</label>
+        <input id="firma" type="text" value="CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES" />
+      </div>
+
+      <div class="btns">
+        <button type="button" class="btn-primary" id="btnPrint">Imprimir / Guardar PDF</button>
+        <button type="button" class="btn-dark" id="btnShare">Compartir</button>
+      </div>
+      <div class="btns-3">
+        <button type="button" class="btn-dark" id="btnDownloadHtml">Descargar HTML</button>
+        <button type="button" class="btn-dark" id="btnReset">Reset</button>
+        <button type="button" class="btn-green" id="btnToggleWM">Marca de agua ON</button>
+      </div>
+
+      <div class="status" id="statusMsg"></div>
+    </aside>
+
+    <section class="preview-wrap">
+      <div class="preview-top">
+        <span id="metaTime">--/--/---- --:--</span>
+        <span>Vista previa A4 // 1 pagina</span>
+      </div>
+
+      <div class="sheet" id="sheet">
+        <div class="top-line"></div>
+
+        <!-- Marca de agua -->
+        <div class="watermark" id="watermark">
+          <img id="wmImg" src="https://iili.io/qFelkJt.jpg" alt="" />
+        </div>
+
+        <div class="sheet-inner">
+          <header class="header">
+            <div class="logo-box">
+              <img id="pvLogo" src="https://iili.io/qFelkJt.jpg" alt="Logo" />
+            </div>
+
+            <div class="header-right">
+              <div class="micro">PROPUESTA COMERCIAL / PRESUPUESTO FORMAL</div>
+              <div class="title" id="pvTituloDoc">PRESUPUESTO</div>
+              <div class="subline">
+                <span>FECHA: <strong id="pvFecha">23/02/2026</strong></span>
+                <span>NRO: <strong id="pvNro">C347-001</strong></span>
+              </div>
+            </div>
+          </header>
+
+          <section class="grid-2">
+            <div class="card">
+              <div class="label">CLIENTE</div>
+              <div class="value" id="pvCliente">GERMAN MARTIN</div>
+            </div>
+            <div class="card">
+              <div class="label">INVERSION FINAL</div>
+              <div class="value total" id="pvInversion">$ 1.150.000</div>
+            </div>
+          </section>
+
+          <section class="service-box">
+            <div class="service-head">
+              <div>DETALLE DEL SERVICIO / ALCANCE</div>
+              <div style="text-align:right;">VALOR</div>
+            </div>
+
+            <div class="service-row">
+              <div class="service-main">
+                <div class="service-title" id="pvServicioTitulo">CREACION DE SITIO WEB FULL RESPONSIVE</div>
+                <ul class="bullets" id="pvBullets"></ul>
+              </div>
+              <div class="service-price" id="pvValorServicio">$ 1.150.000</div>
+            </div>
+          </section>
+
+          <section class="compact-grid">
+            <div class="mini-box">
+              <div class="mini-title">TIEMPO ESTIMADO</div>
+              <div class="mini-text" id="pvTiempoEntrega">A coordinar segun contenido final</div>
+            </div>
+            <div class="mini-box">
+              <div class="mini-title">VIGENCIA DEL PRESUPUESTO</div>
+              <div class="mini-text" id="pvVigencia">7 dias</div>
+            </div>
+          </section>
+
+          <section class="obs-box">
+            <div class="obs-title" id="pvObservTitulo">OBSERVACIONES / DETALLES ADICIONALES</div>
+            <div class="obs-lines">
+              <div class="obs-line" id="pvObs1"></div>
+              <div class="obs-line" id="pvObs2"></div>
+              <div class="obs-line" id="pvObs3"></div>
+            </div>
+          </section>
+
+          <footer class="footer">
+            <div class="footer-row">
+              <div class="footer-text">
+                <span class="tag">MODALIDAD:</span>
+                <span id="pvModalidadPago">Se abona una vez entregado el sitio / transferencia o MP</span>
+              </div>
+              <div class="chips">
+                <div class="chip"><span class="dot dot-wa">W</span><span id="pvWhatsapp">11 6449-9481</span></div>
+                <div class="chip"><span class="dot dot-ig">IG</span><span id="pvInstagram">@ciborg347</span></div>
+              </div>
+            </div>
+
+            <div class="legal">
+              Esta propuesta puede ajustarse segun cambios de alcance, contenido o funcionalidades solicitadas.
+            </div>
+
+            <div class="signature" id="pvFirma">
+              CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES
+            </div>
+          </footer>
         </div>
       </div>
     </section>
+  </div>
 
-    <footer class="footer-notes">
-      <p>
-        <strong>MODALIDAD:</strong>
-        <span class="editable" contenteditable="true" data-placeholder="Detalle de modalidad de pago"></span>
-      </p>
+  <script>
+    (function(){
+      const $ = (id) => document.getElementById(id);
 
-      <div class="contact-strip" aria-label="Datos de contacto de CIBORG347">
-        <span class="contact-item whatsapp">
-          <svg viewBox="0 0 16 16" aria-hidden="true">
-            <path d="M13.601 2.326A7.854 7.854 0 0 0 8.02 0C3.672 0 .137 3.534.137 7.883c0 1.39.363 2.747 1.052 3.944L0 16l4.296-1.125a7.84 7.84 0 0 0 3.723.949h.003c4.347 0 7.882-3.535 7.884-7.884a7.83 7.83 0 0 0-2.305-5.614zM8.022 14.49h-.002a6.5 6.5 0 0 1-3.31-.907l-.237-.14-2.55.668.681-2.488-.154-.255a6.49 6.49 0 0 1-.995-3.48c.002-3.588 2.922-6.508 6.516-6.508a6.47 6.47 0 0 1 4.634 1.92 6.47 6.47 0 0 1 1.905 4.64c-.002 3.59-2.922 6.51-6.508 6.51zm3.57-4.87c-.195-.098-1.152-.568-1.331-.633-.178-.065-.308-.098-.438.098-.13.195-.503.633-.617.763-.113.13-.227.146-.422.049-.195-.098-.825-.304-1.571-.97-.58-.517-.97-1.155-1.084-1.35-.113-.195-.012-.3.086-.397.088-.088.195-.227.292-.34.098-.114.13-.195.195-.325.065-.13.033-.244-.016-.341-.049-.098-.438-1.055-.6-1.445-.158-.38-.32-.328-.438-.334-.113-.006-.243-.007-.373-.007a.72.72 0 0 0-.52.243c-.178.195-.681.665-.681 1.62 0 .958.697 1.883.795 2.013.098.13 1.373 2.097 3.327 2.94.465.2.828.32 1.111.41.467.148.892.127 1.228.077.375-.056 1.152-.47 1.315-.925.163-.454.163-.844.114-.925-.049-.082-.179-.13-.373-.228z"/>
+      const fields = {
+        logoUrl: $("logoUrl"),
+        tituloDoc: $("tituloDoc"),
+        fecha: $("fecha"),
+        cliente: $("cliente"),
+        presupuestoNro: $("presupuestoNro"),
+        inversion: $("inversion"),
+        valorServicio: $("valorServicio"),
+        servicioTitulo: $("servicioTitulo"),
+        bullets: $("bullets"),
+        tiempoEntrega: $("tiempoEntrega"),
+        vigencia: $("vigencia"),
+        modalidadPago: $("modalidadPago"),
+        whatsapp: $("whatsapp"),
+        instagram: $("instagram"),
+        observTitulo: $("observTitulo"),
+        obs1: $("obs1"),
+        obs2: $("obs2"),
+        obs3: $("obs3"),
+        firma: $("firma")
+      };
+
+      const defaults = {};
+      Object.keys(fields).forEach(k => defaults[k] = fields[k].value);
+
+      const pv = {
+        metaTime: $("metaTime"),
+        logo: $("pvLogo"),
+        wmImg: $("wmImg"),
+        tituloDoc: $("pvTituloDoc"),
+        fecha: $("pvFecha"),
+        nro: $("pvNro"),
+        cliente: $("pvCliente"),
+        inversion: $("pvInversion"),
+        servicioTitulo: $("pvServicioTitulo"),
+        bullets: $("pvBullets"),
+        valorServicio: $("pvValorServicio"),
+        tiempoEntrega: $("pvTiempoEntrega"),
+        vigencia: $("pvVigencia"),
+        modalidadPago: $("pvModalidadPago"),
+        whatsapp: $("pvWhatsapp"),
+        instagram: $("pvInstagram"),
+        observTitulo: $("pvObservTitulo"),
+        obs1: $("pvObs1"),
+        obs2: $("pvObs2"),
+        obs3: $("pvObs3"),
+        firma: $("pvFirma"),
+        watermark: $("watermark")
+      };
+
+      const statusMsg = $("statusMsg");
+      const btnPrint = $("btnPrint");
+      const btnShare = $("btnShare");
+      const btnDownloadHtml = $("btnDownloadHtml");
+      const btnReset = $("btnReset");
+      const btnToggleWM = $("btnToggleWM");
+
+      let watermarkEnabled = true;
+
+      function setStatus(msg){
+        statusMsg.textContent = msg || "";
+      }
+
+      function escapeHtml(str){
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
+
+      function nowLabel(){
+        const d = new Date();
+        const p = n => String(n).padStart(2, "0");
+        return `${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
+      }
+
+      function renderBullets(text){
+        const items = String(text || "")
+          .split(/\n+/)
+          .map(s => s.trim())
+          .filter(Boolean)
+          .slice(0, 8); // limite para mantener 1 hoja
+
+        pv.bullets.innerHTML = items.length
+          ? items.map(item => `<li>${escapeHtml(item)}</li>`).join("")
+          : `<li>Detalle del servicio a definir.</li>`;
+      }
+
+      function setLine(node, value){
+        node.textContent = (value || "").trim();
+      }
+
+      function applyLogo(url){
+        const safeUrl = (url || "").trim();
+        pv.logo.src = safeUrl || "";
+        pv.wmImg.src = safeUrl || "";
+
+        const fallback = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`
+          <svg xmlns='http://www.w3.org/2000/svg' width='500' height='500'>
+            <rect width='100%' height='100%' fill='#0b1322'/>
+            <text x='50%' y='50%' text-anchor='middle' dominant-baseline='middle'
+              fill='#93a9c1' font-family='Arial' font-size='32'>LOGO</text>
           </svg>
-          <span>1164499481</span>
-        </span>
+        `);
 
-        <span class="contact-item instagram">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M7 2C4.239 2 2 4.239 2 7v10c0 2.761 2.239 5 5 5h10c2.761 0 5-2.239 5-5V7c0-2.761-2.239-5-5-5H7zm0 2h10c1.657 0 3 1.343 3 3v10c0 1.657-1.343 3-3 3H7c-1.657 0-3-1.343-3-3V7c0-1.657 1.343-3 3-3zm11.5 1.5a1.5 1.5 0 1 0 .001 3.001A1.5 1.5 0 0 0 18.5 5.5zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/>
-          </svg>
-          <span>@ciborg347</span>
-        </span>
-      </div>
+        pv.logo.onerror = () => pv.logo.src = fallback;
+        pv.wmImg.onerror = () => pv.wmImg.src = fallback;
+      }
 
-      <p class="footer-line">
-        CIBORG347 // DISEÑO QUE CONVIERTE VISITAS EN CLIENTES
-      </p>
-    </footer>
-  </main>
+      function render(){
+        pv.metaTime.textContent = nowLabel();
 
+        applyLogo(fields.logoUrl.value);
+
+        pv.tituloDoc.textContent = fields.tituloDoc.value || "PRESUPUESTO";
+        pv.fecha.textContent = fields.fecha.value || "DD/MM/AAAA";
+        pv.nro.textContent = fields.presupuestoNro.value || "-";
+        pv.cliente.textContent = (fields.cliente.value || "CLIENTE").toUpperCase();
+        pv.inversion.textContent = fields.inversion.value || "$ 0";
+        pv.servicioTitulo.textContent = (fields.servicioTitulo.value || "SERVICIO").toUpperCase();
+        pv.valorServicio.textContent = fields.valorServicio.value || "$ 0";
+        pv.tiempoEntrega.textContent = fields.tiempoEntrega.value || "-";
+        pv.vigencia.textContent = fields.vigencia.value || "-";
+        pv.modalidadPago.textContent = fields.modalidadPago.value || "-";
+        pv.whatsapp.textContent = fields.whatsapp.value || "-";
+        pv.instagram.textContent = fields.instagram.value || "-";
+        pv.observTitulo.textContent = fields.observTitulo.value || "OBSERVACIONES / DETALLES ADICIONALES";
+        setLine(pv.obs1, fields.obs1.value);
+        setLine(pv.obs2, fields.obs2.value);
+        setLine(pv.obs3, fields.obs3.value);
+        pv.firma.textContent = fields.firma.value || "";
+
+        renderBullets(fields.bullets.value);
+
+        // marca de agua on/off
+        pv.watermark.style.display = watermarkEnabled ? "flex" : "none";
+        btnToggleWM.textContent = watermarkEnabled ? "Marca de agua ON" : "Marca de agua OFF";
+      }
+
+      // Bind inputs
+      Object.values(fields).forEach(input => {
+        input.addEventListener("input", render);
+        input.addEventListener("change", render);
+      });
+
+      btnPrint.addEventListener("click", () => {
+        render();
+        setStatus("Abriendo impresion... (usa Guardar como PDF)");
+        window.print();
+      });
+
+      btnToggleWM.addEventListener("click", () => {
+        watermarkEnabled = !watermarkEnabled;
+        render();
+        setStatus(watermarkEnabled ? "Marca de agua activada." : "Marca de agua desactivada.");
+      });
+
+      btnReset.addEventListener("click", () => {
+        Object.keys(fields).forEach(k => fields[k].value = defaults[k]);
+        watermarkEnabled = true;
+        render();
+        setStatus("Campos restablecidos.");
+      });
+
+      btnDownloadHtml.addEventListener("click", () => {
+        try {
+          const html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+          const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "generador-presupuesto-ciborg347.html";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+          setStatus("HTML descargado.");
+        } catch (e) {
+          setStatus("No se pudo descargar el HTML.");
+        }
+      });
+
+      btnShare.addEventListener("click", async () => {
+        try {
+          if (!navigator.share) {
+            setStatus("Tu navegador no soporta compartir directo. Podes usar Imprimir/Guardar PDF.");
+            return;
+          }
+
+          await navigator.share({
+            title: "Generador de Presupuesto CIBORG347",
+            text: "Te comparto el generador de presupuesto (vista HTML local). Para PDF usa Imprimir/Guardar PDF."
+          });
+
+          setStatus("Compartido correctamente.");
+        } catch (err) {
+          if (err && err.name === "AbortError") {
+            setStatus("Compartir cancelado.");
+          } else {
+            setStatus("No se pudo compartir desde este dispositivo/navegador.");
+          }
+        }
+      });
+
+      render();
+      setStatus("Listo. Si queres PDF, toca 'Imprimir / Guardar PDF'.");
+    })();
+  </script>
 </body>
 </html>
