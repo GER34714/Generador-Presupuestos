@@ -3,109 +3,108 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Generador de Presupuesto 1 Hoja A4 - CIBORG347</title>
+  <title>CIBORG347 | Generador de Presupuestos PDF</title>
   <style>
     :root{
-      --bg:#0b1220;
-      --panel:#111827;
-      --panel-2:#0f172a;
-      --line:#233148;
-      --line-soft:#2b3b57;
-      --txt:#e5eef8;
-      --muted:#9fb0c6;
-      --cyan:#38bdf8;
-      --violet:#a855f7;
-      --green:#86efac;
-      --white:#ffffff;
-      --danger:#fb7185;
-      --a4-w:210mm;
-      --a4-h:297mm;
-      --radius:12px;
-      --shadow: 0 20px 40px rgba(0,0,0,.28);
+      --bg:#07090f;
+      --panel:#0e1320;
+      --panel2:#121a2b;
+      --line:#273149;
+      --text:#ecf2fb;
+      --muted:#9fb0c8;
+      --c1:#00d4ff;
+      --c2:#7c3aed;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --white:#fff;
+      --a4w:210mm;
+      --a4h:297mm;
+      --radius:14px;
       --mono: Consolas, "Courier New", monospace;
-      --sans: "Segoe UI", Arial, sans-serif;
+      --sans: Inter, system-ui, -apple-system, Segoe UI, Arial, sans-serif;
     }
 
-    *{ box-sizing:border-box; margin:0; padding:0; }
-    html,body{ background:var(--bg); color:var(--txt); font-family:var(--sans); }
-    body{ padding:16px; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{background:var(--bg);color:var(--text);font-family:var(--sans)}
+    body{padding:14px}
+    a{color:inherit}
 
     .app{
-      max-width:1400px;
+      max-width:1480px;
       margin:0 auto;
       display:grid;
       grid-template-columns: 380px 1fr;
-      gap:16px;
+      gap:14px;
       align-items:start;
     }
 
     .panel{
-      background: linear-gradient(180deg, #0f172a, #0b1220);
-      border:1px solid #1f2b3f;
-      border-radius:14px;
-      padding:14px;
-      box-shadow: 0 10px 25px rgba(0,0,0,.2);
-      position: sticky;
-      top: 10px;
+      background:linear-gradient(180deg,var(--panel2),var(--panel));
+      border:1px solid #1f2740;
+      border-radius:16px;
+      padding:12px;
+      position:sticky;
+      top:10px;
+      box-shadow:0 12px 26px rgba(0,0,0,.22);
     }
 
-    .panel h2{
-      font-size:1rem;
-      margin-bottom:8px;
-      color:#fff;
-      letter-spacing:.2px;
+    .brand-mini{
+      display:flex;gap:10px;align-items:center;
+      background:#0b1020;border:1px solid #202942;border-radius:12px;padding:8px 10px;
+      margin-bottom:10px;
+    }
+    .brand-mini img{
+      width:38px;height:38px;border-radius:10px;object-fit:cover;background:#0b1220;border:1px solid #25304a;
+    }
+    .brand-mini .t1{font-weight:800;font-size:.95rem;letter-spacing:.2px}
+    .brand-mini .t2{color:var(--muted);font-size:.75rem}
+
+    .panel h1{
+      font-size:1rem; line-height:1.2; margin-bottom:4px; color:#fff;
+    }
+    .panel .sub{
+      color:var(--muted); font-size:.82rem; line-height:1.3; margin-bottom:10px;
     }
 
-    .panel p.note{
-      color:#aebdd0;
-      font-size:.84rem;
-      line-height:1.35;
-      margin-bottom:12px;
-    }
+    .quick-grid{display:grid;gap:8px}
+    .row-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 
-    .field{ margin-bottom:10px; }
+    .field{display:grid;gap:4px}
     .field label{
-      display:block;
-      margin-bottom:5px;
-      color:#c6d3e3;
-      font-size:.78rem;
+      font-size:.75rem;
+      color:#c6d4e6;
       font-weight:700;
-      letter-spacing:.25px;
+      letter-spacing:.3px;
     }
-
-    .field input, .field textarea{
+    .field input,.field textarea,.field select{
       width:100%;
-      background:#0b1322;
-      color:#edf4ff;
-      border:1px solid #26344a;
       border-radius:10px;
+      border:1px solid #28324b;
+      background:#0a1020;
+      color:#eef4ff;
       padding:10px 11px;
       font-size:.9rem;
       outline:none;
-      font-family:var(--sans);
     }
-
     .field textarea{
-      min-height:86px;
+      min-height:82px;
       resize:vertical;
       line-height:1.35;
     }
-
-    .field input:focus, .field textarea:focus{
+    .field input:focus,.field textarea:focus,.field select:focus{
       border-color:#3b82f6;
-      box-shadow:0 0 0 3px rgba(59,130,246,.15);
+      box-shadow:0 0 0 3px rgba(59,130,246,.14);
     }
 
-    .row{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-    .row-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
-
-    .btns{
+    .actions{
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:8px;
-      margin-top:12px;
+      margin-top:10px;
     }
-    .btns-3{
+    .actions-3{
       display:grid;
       grid-template-columns:1fr 1fr 1fr;
       gap:8px;
@@ -114,813 +113,885 @@
 
     button{
       border:none;
-      cursor:pointer;
       border-radius:10px;
+      padding:10px 10px;
+      font-weight:800;
+      font-size:.86rem;
+      cursor:pointer;
+      transition:transform .12s ease, opacity .12s ease;
+    }
+    button:hover{opacity:.95}
+    button:active{transform:scale(.985)}
+
+    .btn-primary{color:#fff;background:linear-gradient(90deg,var(--c1),var(--c2))}
+    .btn-dark{color:#d8e5f5;background:#121a2b;border:1px solid #29344f}
+    .btn-green{color:#fff;background:linear-gradient(90deg,#16a34a,#22c55e)}
+    .btn-orange{color:#111827;background:linear-gradient(90deg,#fbbf24,#f59e0b)}
+
+    details.advanced{
+      margin-top:10px;
+      border:1px solid #202a43;
+      border-radius:12px;
+      background:#0b1020;
+      overflow:hidden;
+    }
+    details.advanced summary{
+      list-style:none;
+      cursor:pointer;
       padding:10px 12px;
-      font-weight:700;
+      font-weight:800;
       font-size:.88rem;
-      transition: transform .15s ease, opacity .15s ease;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      color:#eaf1fb;
+      background:linear-gradient(180deg,#101829,#0c1220);
+      border-bottom:1px solid transparent;
     }
-    button:hover{ opacity:.95; }
-    button:active{ transform:scale(.98); }
-
-    .btn-primary{
-      background: linear-gradient(90deg, #0ea5e9, #8b5cf6);
-      color:#fff;
+    details.advanced[open] summary{
+      border-bottom-color:#1d2740;
     }
-    .btn-dark{
-      background:#141d2b;
-      color:#d8e5f5;
-      border:1px solid #27364e;
-    }
-    .btn-green{
-      background: linear-gradient(90deg, #16a34a, #22c55e);
-      color:#fff;
-    }
-
+    details.advanced summary::-webkit-details-marker{display:none}
+    .adv-content{padding:10px;display:grid;gap:8px}
+    .hint{color:var(--muted);font-size:.76rem;line-height:1.25}
     .status{
       margin-top:10px;
-      font-size:.82rem;
-      color:#9fb0c6;
-      line-height:1.35;
       min-height:18px;
+      font-size:.82rem;
+      color:#c6d4e6;
+      line-height:1.3;
     }
+    .status.ok{color:#a7f3d0}
+    .status.warn{color:#fde68a}
+    .status.err{color:#fecaca}
 
-    .preview-wrap{
-      background: linear-gradient(180deg, #0f172a, #0b1220);
-      border:1px solid #1f2b3f;
-      border-radius:14px;
-      padding:14px;
-      box-shadow: 0 10px 25px rgba(0,0,0,.2);
+    .preview-shell{
+      background:linear-gradient(180deg,var(--panel2),var(--panel));
+      border:1px solid #1f2740;
+      border-radius:16px;
+      padding:12px;
+      box-shadow:0 12px 26px rgba(0,0,0,.22);
       overflow:auto;
     }
 
-    .preview-top{
+    .preview-head{
       display:flex;
       justify-content:space-between;
       align-items:center;
-      gap:12px;
+      gap:8px;
       margin-bottom:8px;
-      color:#95a8bf;
+      color:var(--muted);
       font-family:var(--mono);
       font-size:11px;
     }
+    .pill{
+      display:inline-flex;align-items:center;gap:6px;
+      border:1px solid #2a3552;background:#0b1220;border-radius:999px;
+      padding:4px 8px;font-size:11px;color:#dbe7f6;
+    }
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}
 
-    /* HOJA A4 */
+    /* ===== DOCUMENTO / HOJAS ===== */
+    .doc-wrap{
+      display:grid;
+      gap:10px;
+      justify-items:center;
+    }
+
     .sheet{
-      width: var(--a4-w);
-      min-height: var(--a4-h);
-      margin:0 auto;
-      background: #060b14;
-      color: var(--txt);
-      border: 1px solid #102036;
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-      isolation: isolate;
+      width:var(--a4w);
+      min-height:var(--a4h);
+      background:#070b14;
+      border:1px solid #13203a;
+      box-shadow:0 18px 40px rgba(0,0,0,.28);
+      position:relative;
+      overflow:hidden;
+      isolation:isolate;
+      color:#edf4fd;
+      page-break-inside:avoid;
+      break-inside:avoid;
     }
 
     .sheet::before{
       content:"";
-      position:absolute;
-      inset:0;
+      position:absolute; inset:0; z-index:0; pointer-events:none;
       background:
-        radial-gradient(circle at 15% 0%, rgba(56,189,248,.12), transparent 35%),
-        radial-gradient(circle at 100% 0%, rgba(168,85,247,.10), transparent 32%),
+        radial-gradient(circle at 12% 0%, rgba(0,212,255,.13), transparent 36%),
+        radial-gradient(circle at 100% 0%, rgba(124,58,237,.10), transparent 34%),
         linear-gradient(180deg, rgba(255,255,255,.015), rgba(255,255,255,0));
-      z-index:0;
-      pointer-events:none;
     }
 
-    .top-line{
+    .topbar{
       height:4px;
-      background: linear-gradient(90deg, #22d3ee, #3b82f6, #8b5cf6, #ec4899);
-      opacity:.95;
-      position:relative;
-      z-index:2;
+      background:linear-gradient(90deg,var(--c1),#2563eb,var(--c2),#ec4899);
+      position:relative; z-index:2;
     }
 
-    /* MARCA DE AGUA */
     .watermark{
-      position:absolute;
-      inset:0;
-      z-index:1;
-      pointer-events:none;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      opacity:.08; /* clave para que no moleste */
-      filter: grayscale(100%) contrast(120%);
-      transform: rotate(-14deg) scale(1.05);
+      position:absolute; inset:0; z-index:1; pointer-events:none;
+      display:flex; align-items:center; justify-content:center;
+      opacity:.08; transform:rotate(-14deg) scale(1.05);
+      filter:grayscale(100%) contrast(115%);
     }
-
     .watermark img{
-      width:68%;
-      max-width:520px;
-      height:auto;
-      object-fit:contain;
+      width:70%; max-width:540px; height:auto; object-fit:contain;
     }
 
     .sheet-inner{
-      position:relative;
-      z-index:2;
-      padding: 9mm 9mm 8mm;
-      min-height: calc(var(--a4-h) - 4px);
-      display:flex;
-      flex-direction:column;
-      gap:8px;
+      position:relative; z-index:2;
+      padding:8mm 8mm 7mm;
+      min-height:calc(var(--a4h) - 4px);
+      display:flex; flex-direction:column; gap:7px;
     }
 
     .header{
-      display:grid;
-      grid-template-columns: 92px 1fr;
-      gap:12px;
+      display:grid; grid-template-columns:86px 1fr; gap:10px;
+      border-bottom:1px solid rgba(39,49,73,.9);
+      padding-bottom:7px;
       align-items:start;
-      border-bottom:1px solid rgba(43,59,87,.7);
-      padding-bottom:8px;
     }
-
-    .logo-box{
-      width:92px;
-      height:92px;
-      border-radius:10px;
-      border:1px solid rgba(43,59,87,.75);
-      background: rgba(11,19,34,.9);
-      overflow:hidden;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+    .logoBox{
+      width:86px;height:86px;border-radius:10px;
+      border:1px solid #273149;background:#0b1020;overflow:hidden;
     }
-
-    .logo-box img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
+    .logoBox img{width:100%;height:100%;object-fit:cover}
+    .headerText{
+      min-height:86px;
+      display:flex; flex-direction:column; justify-content:flex-end; gap:4px;
     }
-
-    .header-right{
-      min-height:92px;
-      display:flex;
-      flex-direction:column;
-      justify-content:flex-end;
-      gap:5px;
-    }
-
     .micro{
-      font-family:var(--mono);
-      font-size:10px;
-      letter-spacing:.9px;
-      color:#94a8bf;
-      text-transform:uppercase;
+      font-family:var(--mono); font-size:10px; color:#91a6bf; letter-spacing:.9px; text-transform:uppercase;
     }
-
     .title{
-      font-family:var(--mono);
-      font-size:29px;
-      color:var(--cyan);
-      font-weight:800;
-      line-height:1;
-      letter-spacing:.7px;
-      text-transform:uppercase;
-      text-shadow: 0 0 12px rgba(56,189,248,.16);
+      font-family:var(--mono); font-weight:900; font-size:27px; line-height:1;
+      color:#89e5ff; text-transform:uppercase; letter-spacing:.7px;
+      text-shadow:0 0 14px rgba(0,212,255,.14);
     }
-
-    .subline{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px 14px;
-      color:#b9c9d9;
-      font-family:var(--mono);
-      font-size:12px;
-      text-transform:uppercase;
+    .metaRow{
+      display:flex; flex-wrap:wrap; gap:8px 14px;
+      font-family:var(--mono); font-size:11px; color:#b6c8dd; text-transform:uppercase;
     }
+    .metaRow strong{color:#fff}
 
-    .subline span strong{
-      color:#fff;
-      font-weight:700;
+    .cards2{
+      display:grid; grid-template-columns:1fr 1fr; gap:7px;
     }
-
-    .grid-2{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:8px;
-    }
-
     .card{
-      background: linear-gradient(180deg, rgba(11,19,34,.92), rgba(8,14,26,.92));
-      border:1px solid rgba(43,59,87,.78);
-      border-radius:12px;
-      padding:10px 12px;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.01);
+      border:1px solid #273149;
+      background:linear-gradient(180deg,rgba(10,16,32,.95),rgba(7,12,23,.95));
+      border-radius:12px; padding:9px 11px;
     }
-
-    .card .label{
-      color: var(--violet);
+    .card .lab{
+      color:#b79cff;
       font-family:var(--mono);
-      font-size:10px;
-      letter-spacing:1px;
-      text-transform:uppercase;
-      margin-bottom:6px;
-      font-weight:700;
+      font-size:10px; letter-spacing:1px; text-transform:uppercase; font-weight:800;
+      margin-bottom:5px;
     }
-
-    .card .value{
+    .card .val{
       font-family:var(--mono);
-      color:#f4f8fd;
-      font-size:18px;
-      line-height:1.2;
+      color:#f1f6fc;
+      font-size:16px;
+      line-height:1.15;
       word-break:break-word;
       text-transform:uppercase;
     }
-
-    .card .value.total{
-      color: var(--green);
-      font-size:22px;
-      font-weight:800;
+    .card .val.total{
+      color:#98f5b2; font-weight:900; font-size:20px;
     }
 
-    .service-box{
-      background: linear-gradient(180deg, rgba(8,14,26,.95), rgba(6,11,21,.95));
-      border:1px solid rgba(43,59,87,.8);
+    .serviceBox{
+      border:1px solid #273149;
       border-radius:12px;
       overflow:hidden;
+      background:linear-gradient(180deg,rgba(9,15,28,.96),rgba(6,10,20,.96));
     }
-
-    .service-head{
-      display:grid;
-      grid-template-columns:1fr 120px;
-      align-items:center;
-      gap:8px;
-      padding:9px 12px;
-      border-bottom:1px solid rgba(43,59,87,.75);
-      color:#9bb0c7;
-      font-family:var(--mono);
-      font-size:10px;
-      letter-spacing:1px;
-      text-transform:uppercase;
+    .serviceHead{
+      display:grid; grid-template-columns:1fr 110px; gap:8px;
+      padding:8px 11px;
+      border-bottom:1px solid #273149;
+      font-family:var(--mono); font-size:10px; color:#97acc4; text-transform:uppercase; letter-spacing:1px;
     }
-
-    .service-row{
-      display:grid;
-      grid-template-columns:1fr 120px;
-      gap:8px;
+    .serviceRow{
+      display:grid; grid-template-columns:1fr 110px; gap:0;
       align-items:start;
     }
-
-    .service-main{
-      padding:10px 12px 8px;
-      border-right:1px solid rgba(43,59,87,.65);
+    .serviceMain{
+      padding:8px 11px 7px;
+      border-right:1px solid #273149;
     }
-
-    .service-title{
-      color:var(--cyan);
-      font-family:var(--mono);
-      font-weight:800;
-      font-size:14px;
-      line-height:1.2;
-      letter-spacing:.4px;
-      margin-bottom:6px;
-      text-transform:uppercase;
+    .serviceTitle{
+      color:#85e7ff;
+      font-family:var(--mono); font-size:13px; font-weight:900;
+      letter-spacing:.35px; text-transform:uppercase; line-height:1.15;
+      margin-bottom:5px;
     }
-
     .bullets{
-      margin:0;
-      padding-left:16px;
-      color:#cad7e5;
-      font-family:var(--mono);
-      font-size:11.5px;
-      line-height:1.22;
+      padding-left:15px;
+      color:#c7d5e6;
+      font-family:var(--mono); font-size:10.6px; line-height:1.16;
     }
-
-    .bullets li{ margin:2px 0; }
-
-    .service-price{
-      padding:10px 10px;
+    .bullets li{margin:1px 0}
+    .servicePrice{
+      padding:9px 10px;
       text-align:right;
-      color:#eef4fb;
       font-family:var(--mono);
-      font-size:14px;
-      font-weight:700;
+      font-size:12px;
+      color:#eef4fb;
+      font-weight:800;
       white-space:nowrap;
     }
 
-    .compact-grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:8px;
+    .miniGrid{
+      display:grid; grid-template-columns:1fr 1fr; gap:7px;
     }
-
-    .mini-box{
-      background: linear-gradient(180deg, rgba(11,19,34,.92), rgba(8,14,26,.92));
-      border:1px solid rgba(43,59,87,.78);
+    .mini{
+      border:1px solid #273149;
       border-radius:12px;
-      padding:9px 12px;
+      padding:8px 10px;
+      background:linear-gradient(180deg,rgba(10,16,32,.95),rgba(7,12,23,.95));
+    }
+    .mini .mLab{
+      color:#cddcf0;
+      font-family:var(--mono); font-size:10px; letter-spacing:1px; text-transform:uppercase; font-weight:800;
+      margin-bottom:5px;
+    }
+    .mini .mVal{
+      color:#becfe2;
+      font-family:var(--mono); font-size:10.6px; line-height:1.15; word-break:break-word;
     }
 
-    .mini-title{
-      color:#cfe0f3;
-      font-family:var(--mono);
-      font-size:10px;
-      letter-spacing:.9px;
-      text-transform:uppercase;
-      margin-bottom:6px;
-      font-weight:700;
+    .obsBox{
+      border:1px solid #273149;
+      border-radius:12px;
+      padding:8px 10px;
+      background:linear-gradient(180deg,rgba(9,15,28,.95),rgba(7,11,21,.95));
     }
-
-    .mini-text{
-      color:#c0cfdf;
-      font-family:var(--mono);
-      font-size:11.3px;
-      line-height:1.25;
+    .obsTitle{
+      color:#dde9f7;
+      font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:1px; font-weight:800;
+      margin-bottom:5px;
+    }
+    .obsLines{display:grid;gap:3px}
+    .obsLine{
+      min-height:15px;
+      border-bottom:1px dashed rgba(159,176,198,.33);
+      color:#b9c9da;
+      font-family:var(--mono); font-size:10px; line-height:1.1;
+      display:flex; align-items:flex-end; padding-bottom:1px;
       word-break:break-word;
     }
 
-    .obs-box{
-      background: linear-gradient(180deg, rgba(9,16,29,.95), rgba(7,12,22,.95));
-      border:1px solid rgba(43,59,87,.8);
-      border-radius:12px;
-      padding:10px 12px;
-    }
-
-    .obs-title{
-      color:#d4e3f4;
-      font-family:var(--mono);
-      font-size:10px;
-      letter-spacing:1px;
-      text-transform:uppercase;
-      font-weight:700;
-      margin-bottom:6px;
-    }
-
-    .obs-lines{
-      display:grid;
-      gap:4px;
-    }
-
-    .obs-line{
-      min-height:17px;
-      border-bottom:1px dashed rgba(159,176,198,.33);
-      color:#9fb0c6;
-      font-family:var(--mono);
-      font-size:10.8px;
-      line-height:1.2;
-      display:flex;
-      align-items:flex-end;
-      padding-bottom:1px;
-    }
-
-    .footer{
+    /* ===== cierre fijo de boleta ===== */
+    .footerClose{
       margin-top:auto;
-      border-top:1px solid rgba(43,59,87,.75);
-      padding-top:8px;
+      border-top:1px solid #273149;
+      padding-top:6px;
       display:grid;
-      gap:7px;
+      gap:5px;
+      page-break-inside:avoid;
+      break-inside:avoid;
     }
-
-    .footer-row{
+    .fRow{
       display:grid;
       grid-template-columns: 1fr auto;
       gap:8px;
       align-items:center;
     }
+    .fText{
+      color:#c4d4e5;
+      font-family:var(--mono);
+      font-size:10px;
+      line-height:1.12;
+    }
+    .fText .tag{
+      color:#c49bff;
+      font-weight:900;
+      text-transform:uppercase;
+    }
+    .chips{
+      display:flex; flex-wrap:wrap; gap:5px; justify-content:flex-end;
+      max-width:40%;
+    }
+    .chip{
+      border:1px solid #dbe6f6;
+      background:#ffffff;
+      color:#0f172a;
+      border-radius:999px;
+      padding:3px 7px;
+      font-size:10px;
+      font-weight:800;
+      display:inline-flex; align-items:center; gap:5px;
+      min-height:22px;
+      white-space:nowrap;
+    }
+    .chipDot{
+      width:12px;height:12px;border-radius:50%;display:inline-grid;place-items:center;
+      color:#fff;font-size:8px;font-weight:900;
+    }
+    .chipDot.wa{background:#22c55e}
+    .chipDot.ig{background:#ec4899}
 
-    .footer-text{
-      color:#c0d0e1;
+    .legal{
+      color:#8fa5bf;
+      font-family:var(--mono);
+      font-size:9px;
+      line-height:1.1;
+    }
+
+    .signature{
+      border-top:1px solid rgba(39,49,73,.55);
+      padding-top:4px;
+      text-align:center;
+      color:#8ea3bc;
+      font-family:var(--mono);
+      font-size:9.4px;
+      letter-spacing:.8px;
+      text-transform:uppercase;
+    }
+
+    /* segunda pagina contenido extendido */
+    .sheet.extended .header .title::after{
+      content:" / CONTINUACION";
+      font-size:13px;
+      color:#d0c2ff;
+    }
+    .ext-block{
+      border:1px solid #273149; border-radius:12px; overflow:hidden;
+      background:linear-gradient(180deg,rgba(9,15,28,.95),rgba(6,10,20,.95));
+    }
+    .ext-head{
+      padding:8px 10px; border-bottom:1px solid #273149;
+      font-family:var(--mono); font-size:10px; color:#97acc4; letter-spacing:1px; text-transform:uppercase;
+    }
+    .ext-body{
+      padding:10px;
+      color:#c8d6e8;
       font-family:var(--mono);
       font-size:11px;
-      line-height:1.25;
+      line-height:1.3;
+      white-space:pre-wrap;
       word-break:break-word;
     }
 
-    .footer-text .tag{
-      color:var(--violet);
-      font-weight:800;
-      text-transform:uppercase;
+    @media (max-width:1100px){
+      .app{grid-template-columns:1fr}
+      .panel{position:static}
     }
 
-    .chips{
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-      justify-content:flex-end;
+    @media (max-width:720px){
+      body{padding:10px}
+      .cards2,.miniGrid,.row-2,.row-3,.actions,.actions-3{grid-template-columns:1fr}
+      .preview-head{flex-wrap:wrap}
     }
 
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:5px 9px;
-      border-radius:999px;
-      border:1px solid rgba(43,59,87,.7);
-      background:#f8fafc;
-      color:#111827;
-      font-size:11px;
-      font-weight:700;
-      min-height:26px;
-      white-space:nowrap;
-    }
-
-    .dot{
-      width:14px;
-      height:14px;
-      border-radius:50%;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      color:#fff;
-      font-size:9px;
-      font-weight:900;
-      flex-shrink:0;
-    }
-    .dot-wa{ background:#22c55e; }
-    .dot-ig{ background:#ec4899; }
-
-    .signature{
-      text-align:center;
-      border-top:1px solid rgba(43,59,87,.45);
-      padding-top:6px;
-      color:#8fa4bc;
-      font-family:var(--mono);
-      font-size:10px;
-      letter-spacing:.9px;
-      text-transform:uppercase;
-    }
-
-    .legal{
-      color:#8ea3bb;
-      font-family:var(--mono);
-      font-size:9.8px;
-      line-height:1.2;
-    }
-
-    /* IMPRESION */
+    /* PRINT */
     @page{
-      size: A4 portrait;
-      margin: 6mm;
+      size:A4 portrait;
+      margin:6mm;
     }
-
     @media print{
-      html, body{
+      html,body{
         background:#fff !important;
         margin:0 !important;
         padding:0 !important;
       }
-
-      .app{
-        display:block !important;
-        max-width:none !important;
-      }
-
-      .panel{
-        display:none !important;
-      }
-
-      .preview-wrap{
+      .app{display:block !important; max-width:none !important;}
+      .panel{display:none !important}
+      .preview-shell{
+        background:transparent !important;
         border:none !important;
         box-shadow:none !important;
-        background:transparent !important;
         padding:0 !important;
         overflow:visible !important;
       }
-
-      .preview-top{
-        display:none !important;
-      }
-
+      .preview-head{display:none !important}
+      .doc-wrap{gap:8mm !important}
       .sheet{
-        width: 198mm !important;      /* A4 - margenes @page */
-        min-height: 285mm !important; /* A4 - margenes @page */
-        margin:0 auto !important;
+        width:198mm !important;
+        min-height:285mm !important;
         box-shadow:none !important;
-        border:1px solid #102036 !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
+        margin:0 auto !important;
       }
-
       .sheet-inner{
-        padding: 8mm 8mm 7mm !important;
-        min-height: calc(285mm - 4px) !important;
-        gap:7px !important;
+        min-height:calc(285mm - 4px) !important;
+        padding:7.5mm 7.5mm 6.5mm !important;
       }
-
-      .header, .grid-2, .service-box, .compact-grid, .obs-box, .footer{
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
+      .sheet, .header, .cards2, .serviceBox, .miniGrid, .obsBox, .footerClose{
+        page-break-inside:avoid !important;
+        break-inside:avoid !important;
       }
-
-      .watermark{
-        opacity:.07 !important;
-      }
-
-      .title{ font-size:26px !important; }
-      .card .value.total{ font-size:20px !important; }
-      .service-title{ font-size:13px !important; }
-      .bullets{ font-size:11px !important; line-height:1.18 !important; }
-      .obs-line{ min-height:16px !important; }
-    }
-
-    /* MOBILE */
-    @media (max-width: 1100px){
-      .app{ grid-template-columns:1fr; }
-      .panel{ position:static; }
+      .watermark{opacity:.07 !important}
     }
   </style>
 </head>
 <body>
   <div class="app">
+    <!-- PANEL SIMPLE -->
     <aside class="panel">
-      <h2>Generador PDF 1 hoja A4 (marca de agua)</h2>
-      <p class="note">
-        Esta version deja el logo como fondo (watermark), mantiene espacio para observaciones
-        y compacta el footer para evitar que se corte en 2 paginas.
+      <div class="brand-mini">
+        <img id="miniBrandLogo" src="https://iili.io/qFelkJt.jpg" alt="CIBORG" />
+        <div>
+          <div class="t1">CIBORG347 | Generador PDF</div>
+          <div class="t2">Modo CIBORG (simple + pro)</div>
+        </div>
+      </div>
+
+      <h1>Presupuesto rapido (Modo CIBORG)</h1>
+      <p class="sub">
+        Carga lo basico y genera PDF. Si necesitas mas detalle, abri <strong>Opciones avanzadas</strong>.
       </p>
 
-      <div class="field">
-        <label for="logoUrl">Logo URL (tambien se usa como marca de agua)</label>
-        <input id="logoUrl" type="text" value="https://iili.io/qFelkJt.jpg" />
-      </div>
-
-      <div class="row">
+      <div class="quick-grid">
         <div class="field">
-          <label for="tituloDoc">Titulo documento</label>
-          <input id="tituloDoc" type="text" value="PRESUPUESTO" />
+          <label for="docTypeFriendly">Tipo de documento</label>
+          <select id="docTypeFriendly">
+            <option value="simple">Presupuesto simple</option>
+            <option value="tecnico">Boleta tecnica / detallada</option>
+          </select>
         </div>
-        <div class="field">
-          <label for="fecha">Fecha</label>
-          <input id="fecha" type="text" value="23/02/2026" />
-        </div>
-      </div>
 
-      <div class="row">
+        <div class="row-2">
+          <div class="field">
+            <label for="fecha">Fecha</label>
+            <input id="fecha" type="text" value="23/02/2026" />
+          </div>
+          <div class="field">
+            <label for="nro">Nro</label>
+            <input id="nro" type="text" value="C347-001" />
+          </div>
+        </div>
+
         <div class="field">
           <label for="cliente">Cliente</label>
-          <input id="cliente" type="text" value="GERMAN MARTIN" />
+          <input id="cliente" type="text" value="Nombre del cliente" />
         </div>
-        <div class="field">
-          <label for="presupuestoNro">Nro presupuesto</label>
-          <input id="presupuestoNro" type="text" value="C347-001" />
-        </div>
-      </div>
 
-      <div class="row">
         <div class="field">
-          <label for="inversion">Inversion final</label>
-          <input id="inversion" type="text" value="$ 1.150.000" />
+          <label for="servicioTitulo">Servicio / trabajo</label>
+          <input id="servicioTitulo" type="text" value="Creacion de sitio web full responsive" />
         </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="inversion">Inversion final</label>
+            <input id="inversion" type="text" value="$ 120.000 ARS" />
+          </div>
+          <div class="field">
+            <label for="valorServicio">Valor servicio</label>
+            <input id="valorServicio" type="text" value="$ 120.000 ARS" />
+          </div>
+        </div>
+
         <div class="field">
-          <label for="valorServicio">Valor servicio</label>
-          <input id="valorServicio" type="text" value="$ 1.150.000" />
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="servicioTitulo">Detalle del servicio (titulo)</label>
-        <input id="servicioTitulo" type="text" value="CREACION DE SITIO WEB FULL RESPONSIVE" />
-      </div>
-
-      <div class="field">
-        <label for="bullets">Alcance / mejoras (una linea por item)</label>
-        <textarea id="bullets">Diseño personalizado adaptado a la identidad de la marca
-Estructura completa (hero, secciones, CTA, contacto)
-Boton flotante de WhatsApp
+          <label for="bullets">Que incluye (1 linea por item)</label>
+          <textarea id="bullets">Diseño personalizado de la web
 Version responsive (celular y PC)
+Boton flotante de WhatsApp
 Carga inicial de textos e imagenes
-Ajustes finos de presentacion y conversion
-Entrega final lista para usar</textarea>
-      </div>
-
-      <div class="row">
-        <div class="field">
-          <label for="tiempoEntrega">Tiempo estimado</label>
-          <input id="tiempoEntrega" type="text" value="A coordinar segun contenido final" />
+Ajustes finales de presentacion
+Entrega lista para usar</textarea>
         </div>
-        <div class="field">
-          <label for="vigencia">Vigencia</label>
-          <input id="vigencia" type="text" value="7 dias" />
-        </div>
-      </div>
 
-      <div class="field">
-        <label for="modalidadPago">Modalidad de pago</label>
-        <input id="modalidadPago" type="text" value="Se abona una vez entregado el sitio / transferencia o MP" />
-      </div>
-
-      <div class="row">
         <div class="field">
-          <label for="whatsapp">WhatsApp</label>
-          <input id="whatsapp" type="text" value="11 6449-9481" />
+          <label for="obsResumen">Observaciones (resumen corto)</label>
+          <textarea id="obsResumen">Se abona una vez entregado el sitio. Se puede ajustar contenido o secciones segun necesidad final.</textarea>
         </div>
-        <div class="field">
-          <label for="instagram">Instagram</label>
-          <input id="instagram" type="text" value="@ciborg347" />
+
+        <div class="actions">
+          <button class="btn-primary" id="btnPrint">Imprimir / Guardar PDF</button>
+          <button class="btn-dark" id="btnShare">Compartir</button>
+        </div>
+        <div class="actions-3">
+          <button class="btn-dark" id="btnDownloadHtml">Descargar HTML</button>
+          <button class="btn-dark" id="btnReset">Reset</button>
+          <button class="btn-orange" id="btnLoadCiborg">Modo CIBORG</button>
         </div>
       </div>
 
-      <div class="field">
-        <label for="observTitulo">Titulo observaciones</label>
-        <input id="observTitulo" type="text" value="OBSERVACIONES / DETALLES ADICIONALES" />
-      </div>
+      <!-- OPCIONES AVANZADAS -->
+      <details class="advanced" id="advPanel">
+        <summary>
+          <span>Opciones avanzadas</span>
+          <span id="advLabel">abrir</span>
+        </summary>
+        <div class="adv-content">
+          <div class="hint">
+            Aca podes convertirlo en una boleta mas tecnica, controlar hojas, marca de agua y datos de cierre.
+          </div>
 
-      <div class="row-3">
-        <div class="field">
-          <label for="obs1">Observacion 1</label>
-          <input id="obs1" type="text" value="" />
+          <div class="field">
+            <label for="logoUrl">Imagen CIBORG / logo (tambien marca de agua)</label>
+            <input id="logoUrl" type="text" value="https://iili.io/qFelkJt.jpg" />
+          </div>
+
+          <div class="row-2">
+            <div class="field">
+              <label for="tituloDoc">Titulo visible</label>
+              <input id="tituloDoc" type="text" value="Presupuesto" />
+            </div>
+            <div class="field">
+              <label for="sheetMode">Modo de hojas</label>
+              <select id="sheetMode">
+                <option value="auto" selected>Auto (1 pagina si entra)</option>
+                <option value="one">Forzar 1 pagina</option>
+                <option value="two">Permitir 2 paginas</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row-2">
+            <div class="field">
+              <label for="compactMode">Compactacion</label>
+              <select id="compactMode">
+                <option value="smart" selected>Inteligente (recomendado)</option>
+                <option value="compact">Mas compacta</option>
+                <option value="normal">Normal</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="watermarkToggle">Marca de agua</label>
+              <select id="watermarkToggle">
+                <option value="on" selected>Mostrar</option>
+                <option value="off">Ocultar</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row-2">
+            <div class="field">
+              <label for="tiempo">Tiempo estimado</label>
+              <input id="tiempo" type="text" value="A coordinar segun contenido final" />
+            </div>
+            <div class="field">
+              <label for="vigencia">Vigencia</label>
+              <input id="vigencia" type="text" value="7 dias" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="modalidad">Modalidad de pago</label>
+            <input id="modalidad" type="text" value="Se abona una vez entregado el sitio / transferencia o MP" />
+          </div>
+
+          <div class="row-2">
+            <div class="field">
+              <label for="whatsapp">WhatsApp</label>
+              <input id="whatsapp" type="text" value="11 6449-9481" />
+            </div>
+            <div class="field">
+              <label for="instagram">Instagram</label>
+              <input id="instagram" type="text" value="@ciborg347" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="legal">Texto legal</label>
+            <input id="legal" type="text" value="Esta propuesta puede ajustarse segun cambios de alcance, contenido o funcionalidades solicitadas." />
+          </div>
+
+          <div class="field">
+            <label for="firma">Firma de cierre</label>
+            <input id="firma" type="text" value="CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES" />
+          </div>
+
+          <div class="field">
+            <label for="extraDetalle">Detalle tecnico extra (si queres 2da hoja)</label>
+            <textarea id="extraDetalle" placeholder="Aca podes poner detalle largo, condiciones, lista de extras, direccion de envio, quien recibe, etc. Si no entra en 1 hoja y esta en Auto, te avisa. Si permitis 2 paginas, lo manda a hoja 2."></textarea>
+          </div>
+
+          <div class="row-3">
+            <div class="field">
+              <label for="obs1">Observacion 1</label>
+              <input id="obs1" type="text" value="" />
+            </div>
+            <div class="field">
+              <label for="obs2">Observacion 2</label>
+              <input id="obs2" type="text" value="" />
+            </div>
+            <div class="field">
+              <label for="obs3">Observacion 3</label>
+              <input id="obs3" type="text" value="" />
+            </div>
+          </div>
         </div>
-        <div class="field">
-          <label for="obs2">Observacion 2</label>
-          <input id="obs2" type="text" value="" />
-        </div>
-        <div class="field">
-          <label for="obs3">Observacion 3</label>
-          <input id="obs3" type="text" value="" />
-        </div>
-      </div>
+      </details>
 
-      <div class="field">
-        <label for="firma">Firma / frase final</label>
-        <input id="firma" type="text" value="CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES" />
-      </div>
-
-      <div class="btns">
-        <button type="button" class="btn-primary" id="btnPrint">Imprimir / Guardar PDF</button>
-        <button type="button" class="btn-dark" id="btnShare">Compartir</button>
-      </div>
-      <div class="btns-3">
-        <button type="button" class="btn-dark" id="btnDownloadHtml">Descargar HTML</button>
-        <button type="button" class="btn-dark" id="btnReset">Reset</button>
-        <button type="button" class="btn-green" id="btnToggleWM">Marca de agua ON</button>
-      </div>
-
-      <div class="status" id="statusMsg"></div>
+      <div id="status" class="status">Listo. Genera PDF cuando quieras.</div>
     </aside>
 
-    <section class="preview-wrap">
-      <div class="preview-top">
-        <span id="metaTime">--/--/---- --:--</span>
-        <span>Vista previa A4 // 1 pagina</span>
+    <!-- VISTA PREVIA -->
+    <section class="preview-shell">
+      <div class="preview-head">
+        <div class="pill"><span class="dot" id="dotMode"></span><span id="badgeMode">1 pagina (auto)</span></div>
+        <div id="previewMeta">Vista previa A4 | Modo CIBORG</div>
       </div>
 
-      <div class="sheet" id="sheet">
-        <div class="top-line"></div>
+      <div class="doc-wrap" id="docWrap">
+        <!-- Hoja 1 -->
+        <div class="sheet" id="sheet1">
+          <div class="topbar"></div>
 
-        <!-- Marca de agua -->
-        <div class="watermark" id="watermark">
-          <img id="wmImg" src="https://iili.io/qFelkJt.jpg" alt="" />
+          <div class="watermark" id="watermark1">
+            <img id="wmImg1" src="https://iili.io/qFelkJt.jpg" alt="" />
+          </div>
+
+          <div class="sheet-inner" id="sheetInner1">
+            <header class="header">
+              <div class="logoBox">
+                <img id="pvLogo1" src="https://iili.io/qFelkJt.jpg" alt="Logo" />
+              </div>
+              <div class="headerText">
+                <div class="micro" id="pvMicro">PROPUESTA COMERCIAL / PRESUPUESTO FORMAL</div>
+                <div class="title" id="pvTituloDoc">PRESUPUESTO</div>
+                <div class="metaRow">
+                  <span>FECHA: <strong id="pvFecha">23/02/2026</strong></span>
+                  <span>NRO: <strong id="pvNro">C347-001</strong></span>
+                </div>
+              </div>
+            </header>
+
+            <section class="cards2">
+              <div class="card">
+                <div class="lab">Cliente</div>
+                <div class="val" id="pvCliente">NOMBRE DEL CLIENTE</div>
+              </div>
+              <div class="card">
+                <div class="lab">Inversion final</div>
+                <div class="val total" id="pvInversion">$ 120.000 ARS</div>
+              </div>
+            </section>
+
+            <section class="serviceBox">
+              <div class="serviceHead">
+                <div id="serviceHeadText">DETALLE DEL SERVICIO / ALCANCE</div>
+                <div style="text-align:right">VALOR</div>
+              </div>
+              <div class="serviceRow">
+                <div class="serviceMain">
+                  <div class="serviceTitle" id="pvServicioTitulo">CREACION DE SITIO WEB FULL RESPONSIVE</div>
+                  <ul class="bullets" id="pvBullets"></ul>
+                </div>
+                <div class="servicePrice" id="pvValorServicio">$ 120.000 ARS</div>
+              </div>
+            </section>
+
+            <section class="miniGrid">
+              <div class="mini">
+                <div class="mLab">Tiempo estimado</div>
+                <div class="mVal" id="pvTiempo">A coordinar segun contenido final</div>
+              </div>
+              <div class="mini">
+                <div class="mLab">Vigencia</div>
+                <div class="mVal" id="pvVigencia">7 dias</div>
+              </div>
+            </section>
+
+            <section class="obsBox">
+              <div class="obsTitle" id="pvObsTitle">OBSERVACIONES / DETALLES</div>
+              <div class="obsLines">
+                <div class="obsLine" id="pvObsLine1"></div>
+                <div class="obsLine" id="pvObsLine2"></div>
+                <div class="obsLine" id="pvObsLine3"></div>
+              </div>
+            </section>
+
+            <!-- CIERRE DE BOLETA -->
+            <footer class="footerClose" id="footerClose1">
+              <div class="fRow">
+                <div class="fText"><span class="tag">MODALIDAD:</span> <span id="pvModalidad">Se abona una vez entregado el sitio / transferencia o MP</span></div>
+                <div class="chips">
+                  <div class="chip"><span class="chipDot wa">W</span><span id="pvWhatsapp">11 6449-9481</span></div>
+                  <div class="chip"><span class="chipDot ig">IG</span><span id="pvInstagram">@ciborg347</span></div>
+                </div>
+              </div>
+              <div class="legal" id="pvLegal">Esta propuesta puede ajustarse segun cambios de alcance, contenido o funcionalidades solicitadas.</div>
+              <div class="signature" id="pvFirma">CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES</div>
+            </footer>
+          </div>
         </div>
 
-        <div class="sheet-inner">
-          <header class="header">
-            <div class="logo-box">
-              <img id="pvLogo" src="https://iili.io/qFelkJt.jpg" alt="Logo" />
-            </div>
-
-            <div class="header-right">
-              <div class="micro">PROPUESTA COMERCIAL / PRESUPUESTO FORMAL</div>
-              <div class="title" id="pvTituloDoc">PRESUPUESTO</div>
-              <div class="subline">
-                <span>FECHA: <strong id="pvFecha">23/02/2026</strong></span>
-                <span>NRO: <strong id="pvNro">C347-001</strong></span>
+        <!-- Hoja 2 (oculta por defecto) -->
+        <div class="sheet extended" id="sheet2" style="display:none;">
+          <div class="topbar"></div>
+          <div class="watermark" id="watermark2">
+            <img id="wmImg2" src="https://iili.io/qFelkJt.jpg" alt="" />
+          </div>
+          <div class="sheet-inner">
+            <header class="header">
+              <div class="logoBox">
+                <img id="pvLogo2" src="https://iili.io/qFelkJt.jpg" alt="Logo" />
               </div>
-            </div>
-          </header>
-
-          <section class="grid-2">
-            <div class="card">
-              <div class="label">CLIENTE</div>
-              <div class="value" id="pvCliente">GERMAN MARTIN</div>
-            </div>
-            <div class="card">
-              <div class="label">INVERSION FINAL</div>
-              <div class="value total" id="pvInversion">$ 1.150.000</div>
-            </div>
-          </section>
-
-          <section class="service-box">
-            <div class="service-head">
-              <div>DETALLE DEL SERVICIO / ALCANCE</div>
-              <div style="text-align:right;">VALOR</div>
-            </div>
-
-            <div class="service-row">
-              <div class="service-main">
-                <div class="service-title" id="pvServicioTitulo">CREACION DE SITIO WEB FULL RESPONSIVE</div>
-                <ul class="bullets" id="pvBullets"></ul>
+              <div class="headerText">
+                <div class="micro">DOCUMENTO COMPLEMENTARIO / DETALLE TECNICO</div>
+                <div class="title" id="pvTituloDoc2">PRESUPUESTO</div>
+                <div class="metaRow">
+                  <span>CLIENTE: <strong id="pvCliente2">NOMBRE DEL CLIENTE</strong></span>
+                  <span>NRO: <strong id="pvNro2">C347-001</strong></span>
+                </div>
               </div>
-              <div class="service-price" id="pvValorServicio">$ 1.150.000</div>
-            </div>
-          </section>
+            </header>
 
-          <section class="compact-grid">
-            <div class="mini-box">
-              <div class="mini-title">TIEMPO ESTIMADO</div>
-              <div class="mini-text" id="pvTiempoEntrega">A coordinar segun contenido final</div>
-            </div>
-            <div class="mini-box">
-              <div class="mini-title">VIGENCIA DEL PRESUPUESTO</div>
-              <div class="mini-text" id="pvVigencia">7 dias</div>
-            </div>
-          </section>
+            <section class="ext-block">
+              <div class="ext-head">DETALLE TECNICO / CONDICIONES / CAMPOS ADICIONALES</div>
+              <div class="ext-body" id="pvExtraDetalle"></div>
+            </section>
 
-          <section class="obs-box">
-            <div class="obs-title" id="pvObservTitulo">OBSERVACIONES / DETALLES ADICIONALES</div>
-            <div class="obs-lines">
-              <div class="obs-line" id="pvObs1"></div>
-              <div class="obs-line" id="pvObs2"></div>
-              <div class="obs-line" id="pvObs3"></div>
-            </div>
-          </section>
-
-          <footer class="footer">
-            <div class="footer-row">
-              <div class="footer-text">
-                <span class="tag">MODALIDAD:</span>
-                <span id="pvModalidadPago">Se abona una vez entregado el sitio / transferencia o MP</span>
+            <footer class="footerClose">
+              <div class="fRow">
+                <div class="fText"><span class="tag">MODALIDAD:</span> <span id="pvModalidad2">Se abona una vez entregado el sitio / transferencia o MP</span></div>
+                <div class="chips">
+                  <div class="chip"><span class="chipDot wa">W</span><span id="pvWhatsapp2">11 6449-9481</span></div>
+                  <div class="chip"><span class="chipDot ig">IG</span><span id="pvInstagram2">@ciborg347</span></div>
+                </div>
               </div>
-              <div class="chips">
-                <div class="chip"><span class="dot dot-wa">W</span><span id="pvWhatsapp">11 6449-9481</span></div>
-                <div class="chip"><span class="dot dot-ig">IG</span><span id="pvInstagram">@ciborg347</span></div>
-              </div>
-            </div>
-
-            <div class="legal">
-              Esta propuesta puede ajustarse segun cambios de alcance, contenido o funcionalidades solicitadas.
-            </div>
-
-            <div class="signature" id="pvFirma">
-              CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES
-            </div>
-          </footer>
+              <div class="legal" id="pvLegal2">Esta propuesta puede ajustarse segun cambios de alcance, contenido o funcionalidades solicitadas.</div>
+              <div class="signature" id="pvFirma2">CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES</div>
+            </footer>
+          </div>
         </div>
       </div>
     </section>
   </div>
 
   <script>
-    (function(){
+    (() => {
       const $ = (id) => document.getElementById(id);
 
+      // Campos principales
       const fields = {
-        logoUrl: $("logoUrl"),
-        tituloDoc: $("tituloDoc"),
+        docTypeFriendly: $("docTypeFriendly"),
         fecha: $("fecha"),
+        nro: $("nro"),
         cliente: $("cliente"),
-        presupuestoNro: $("presupuestoNro"),
+        servicioTitulo: $("servicioTitulo"),
         inversion: $("inversion"),
         valorServicio: $("valorServicio"),
-        servicioTitulo: $("servicioTitulo"),
         bullets: $("bullets"),
-        tiempoEntrega: $("tiempoEntrega"),
+        obsResumen: $("obsResumen"),
+
+        // avanzados
+        logoUrl: $("logoUrl"),
+        tituloDoc: $("tituloDoc"),
+        sheetMode: $("sheetMode"),
+        compactMode: $("compactMode"),
+        watermarkToggle: $("watermarkToggle"),
+        tiempo: $("tiempo"),
         vigencia: $("vigencia"),
-        modalidadPago: $("modalidadPago"),
+        modalidad: $("modalidad"),
         whatsapp: $("whatsapp"),
         instagram: $("instagram"),
-        observTitulo: $("observTitulo"),
+        legal: $("legal"),
+        firma: $("firma"),
+        extraDetalle: $("extraDetalle"),
         obs1: $("obs1"),
         obs2: $("obs2"),
         obs3: $("obs3"),
-        firma: $("firma")
       };
 
       const defaults = {};
       Object.keys(fields).forEach(k => defaults[k] = fields[k].value);
 
+      // Vista previa refs
       const pv = {
-        metaTime: $("metaTime"),
-        logo: $("pvLogo"),
-        wmImg: $("wmImg"),
-        tituloDoc: $("pvTituloDoc"),
+        miniBrandLogo: $("miniBrandLogo"),
+        logo1: $("pvLogo1"),
+        logo2: $("pvLogo2"),
+        wm1: $("wmImg1"),
+        wm2: $("wmImg2"),
+        watermark1: $("watermark1"),
+        watermark2: $("watermark2"),
+
+        titulo1: $("pvTituloDoc"),
+        titulo2: $("pvTituloDoc2"),
         fecha: $("pvFecha"),
         nro: $("pvNro"),
+        nro2: $("pvNro2"),
         cliente: $("pvCliente"),
+        cliente2: $("pvCliente2"),
         inversion: $("pvInversion"),
         servicioTitulo: $("pvServicioTitulo"),
         bullets: $("pvBullets"),
         valorServicio: $("pvValorServicio"),
-        tiempoEntrega: $("pvTiempoEntrega"),
+        tiempo: $("pvTiempo"),
         vigencia: $("pvVigencia"),
-        modalidadPago: $("pvModalidadPago"),
+
+        obsLine1: $("pvObsLine1"),
+        obsLine2: $("pvObsLine2"),
+        obsLine3: $("pvObsLine3"),
+
+        modalidad: $("pvModalidad"),
+        modalidad2: $("pvModalidad2"),
         whatsapp: $("pvWhatsapp"),
+        whatsapp2: $("pvWhatsapp2"),
         instagram: $("pvInstagram"),
-        observTitulo: $("pvObservTitulo"),
-        obs1: $("pvObs1"),
-        obs2: $("pvObs2"),
-        obs3: $("pvObs3"),
+        instagram2: $("pvInstagram2"),
+        legal: $("pvLegal"),
+        legal2: $("pvLegal2"),
         firma: $("pvFirma"),
-        watermark: $("watermark")
+        firma2: $("pvFirma2"),
+        extraDetalle: $("pvExtraDetalle"),
+
+        badgeMode: $("badgeMode"),
+        dotMode: $("dotMode"),
+        previewMeta: $("previewMeta"),
+        serviceHeadText: $("serviceHeadText"),
+
+        sheet1: $("sheet1"),
+        sheet2: $("sheet2"),
+        sheetInner1: $("sheetInner1"),
+        footerClose1: $("footerClose1"),
+
+        status: $("status"),
+        advPanel: $("advPanel"),
+        advLabel: $("advLabel"),
       };
 
-      const statusMsg = $("statusMsg");
+      // botones
       const btnPrint = $("btnPrint");
       const btnShare = $("btnShare");
       const btnDownloadHtml = $("btnDownloadHtml");
       const btnReset = $("btnReset");
-      const btnToggleWM = $("btnToggleWM");
+      const btnLoadCiborg = $("btnLoadCiborg");
 
-      let watermarkEnabled = true;
+      function setStatus(msg, type=""){
+        pv.status.className = "status" + (type ? " " + type : "");
+        pv.status.textContent = msg || "";
+      }
 
-      function setStatus(msg){
-        statusMsg.textContent = msg || "";
+      function upperSafe(v){
+        return String(v || "").toUpperCase();
+      }
+
+      function safeText(v, fallback="-"){
+        const s = String(v ?? "").trim();
+        return s || fallback;
+      }
+
+      function splitLines(txt){
+        return String(txt || "")
+          .split(/\n+/)
+          .map(s => s.trim())
+          .filter(Boolean);
+      }
+
+      function applyBullets(){
+        const mode = fields.compactMode.value;
+        const type = fields.docTypeFriendly.value;
+        let maxItems = 6;
+        if (mode === "compact") maxItems = 5;
+        if (mode === "normal") maxItems = 8;
+        if (type === "tecnico" && mode !== "compact") maxItems = 9;
+
+        let items = splitLines(fields.bullets.value);
+        if (!items.length) items = ["Detalle del servicio a definir"];
+        const visible = items.slice(0, maxItems);
+        pv.bullets.innerHTML = visible.map(i => `<li>${escapeHtml(i)}</li>`).join("");
+
+        // si habia mas items, mandar a extra detalle automaticamente
+        const overflowItems = items.slice(maxItems);
+        if (overflowItems.length && !fields.extraDetalle.value.trim()) {
+          fields.extraDetalle.value = "Items adicionales:\n- " + overflowItems.join("\n- ");
+        }
       }
 
       function escapeHtml(str){
@@ -930,142 +1001,272 @@ Entrega final lista para usar</textarea>
           .replace(/>/g, "&gt;");
       }
 
-      function nowLabel(){
-        const d = new Date();
-        const p = n => String(n).padStart(2, "0");
-        return `${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
-      }
-
-      function renderBullets(text){
-        const items = String(text || "")
-          .split(/\n+/)
-          .map(s => s.trim())
-          .filter(Boolean)
-          .slice(0, 8); // limite para mantener 1 hoja
-
-        pv.bullets.innerHTML = items.length
-          ? items.map(item => `<li>${escapeHtml(item)}</li>`).join("")
-          : `<li>Detalle del servicio a definir.</li>`;
-      }
-
-      function setLine(node, value){
-        node.textContent = (value || "").trim();
-      }
-
       function applyLogo(url){
-        const safeUrl = (url || "").trim();
-        pv.logo.src = safeUrl || "";
-        pv.wmImg.src = safeUrl || "";
-
-        const fallback = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`
-          <svg xmlns='http://www.w3.org/2000/svg' width='500' height='500'>
-            <rect width='100%' height='100%' fill='#0b1322'/>
-            <text x='50%' y='50%' text-anchor='middle' dominant-baseline='middle'
-              fill='#93a9c1' font-family='Arial' font-size='32'>LOGO</text>
-          </svg>
-        `);
-
-        pv.logo.onerror = () => pv.logo.src = fallback;
-        pv.wmImg.onerror = () => pv.wmImg.src = fallback;
+        const finalUrl = String(url || "").trim();
+        [pv.logo1,pv.logo2,pv.wm1,pv.wm2,pv.miniBrandLogo].forEach(img=>{
+          img.src = finalUrl || "https://iili.io/qFelkJt.jpg";
+        });
       }
 
-      function render(){
-        pv.metaTime.textContent = nowLabel();
+      function setObsLines(){
+        // prioridad: obs1/2/3; si faltan, usa resumen partido
+        const o1 = fields.obs1.value.trim();
+        const o2 = fields.obs2.value.trim();
+        const o3 = fields.obs3.value.trim();
 
+        if (o1 || o2 || o3){
+          pv.obsLine1.textContent = o1;
+          pv.obsLine2.textContent = o2;
+          pv.obsLine3.textContent = o3;
+          return;
+        }
+
+        const lines = splitLines(fields.obsResumen.value);
+        pv.obsLine1.textContent = lines[0] || "";
+        pv.obsLine2.textContent = lines[1] || "";
+        pv.obsLine3.textContent = lines[2] || "";
+      }
+
+      function applyDocType(){
+        const isTec = fields.docTypeFriendly.value === "tecnico";
+        $("serviceHeadText").textContent = isTec
+          ? "DETALLE TECNICO / ALCANCE / ITEMS"
+          : "DETALLE DEL SERVICIO / ALCANCE";
+
+        // microcopy en encabezado
+        $("pvMicro").textContent = isTec
+          ? "PROPUESTA COMERCIAL / BOLETA TECNICA"
+          : "PROPUESTA COMERCIAL / PRESUPUESTO FORMAL";
+      }
+
+      function applyCompactVisual(){
+        const mode = fields.compactMode.value;
+        // ajustes suaves sobre hoja 1 para forzar 1 pagina sin romper diseño
+        if (mode === "compact"){
+          pv.sheetInner1.style.gap = "5px";
+          pv.sheet1.querySelector(".sheet-inner").style.padding = "7mm 7mm 6mm";
+          pv.footerClose1.style.gap = "4px";
+        } else if (mode === "normal"){
+          pv.sheetInner1.style.gap = "8px";
+          pv.sheet1.querySelector(".sheet-inner").style.padding = "8.5mm 8.5mm 7.5mm";
+          pv.footerClose1.style.gap = "6px";
+        } else {
+          pv.sheetInner1.style.gap = "7px";
+          pv.sheet1.querySelector(".sheet-inner").style.padding = "8mm 8mm 7mm";
+          pv.footerClose1.style.gap = "5px";
+        }
+      }
+
+      function applyWatermark(){
+        const show = fields.watermarkToggle.value === "on";
+        pv.watermark1.style.display = show ? "flex" : "none";
+        pv.watermark2.style.display = show ? "flex" : "none";
+      }
+
+      function renderMain(){
         applyLogo(fields.logoUrl.value);
+        applyDocType();
+        applyCompactVisual();
+        applyWatermark();
 
-        pv.tituloDoc.textContent = fields.tituloDoc.value || "PRESUPUESTO";
-        pv.fecha.textContent = fields.fecha.value || "DD/MM/AAAA";
-        pv.nro.textContent = fields.presupuestoNro.value || "-";
-        pv.cliente.textContent = (fields.cliente.value || "CLIENTE").toUpperCase();
-        pv.inversion.textContent = fields.inversion.value || "$ 0";
-        pv.servicioTitulo.textContent = (fields.servicioTitulo.value || "SERVICIO").toUpperCase();
-        pv.valorServicio.textContent = fields.valorServicio.value || "$ 0";
-        pv.tiempoEntrega.textContent = fields.tiempoEntrega.value || "-";
-        pv.vigencia.textContent = fields.vigencia.value || "-";
-        pv.modalidadPago.textContent = fields.modalidadPago.value || "-";
-        pv.whatsapp.textContent = fields.whatsapp.value || "-";
-        pv.instagram.textContent = fields.instagram.value || "-";
-        pv.observTitulo.textContent = fields.observTitulo.value || "OBSERVACIONES / DETALLES ADICIONALES";
-        setLine(pv.obs1, fields.obs1.value);
-        setLine(pv.obs2, fields.obs2.value);
-        setLine(pv.obs3, fields.obs3.value);
-        pv.firma.textContent = fields.firma.value || "";
+        const t = safeText(fields.tituloDoc.value, "Presupuesto");
+        pv.titulo1.textContent = upperSafe(t);
+        pv.titulo2.textContent = upperSafe(t);
 
-        renderBullets(fields.bullets.value);
+        pv.fecha.textContent = safeText(fields.fecha.value, "DD/MM/AAAA");
+        pv.nro.textContent = safeText(fields.nro.value, "-");
+        pv.nro2.textContent = safeText(fields.nro.value, "-");
+        pv.cliente.textContent = upperSafe(safeText(fields.cliente.value, "Cliente"));
+        pv.cliente2.textContent = upperSafe(safeText(fields.cliente.value, "Cliente"));
+        pv.inversion.textContent = safeText(fields.inversion.value, "$ 0");
+        pv.servicioTitulo.textContent = upperSafe(safeText(fields.servicioTitulo.value, "Servicio"));
+        pv.valorServicio.textContent = safeText(fields.valorServicio.value, "$ 0");
 
-        // marca de agua on/off
-        pv.watermark.style.display = watermarkEnabled ? "flex" : "none";
-        btnToggleWM.textContent = watermarkEnabled ? "Marca de agua ON" : "Marca de agua OFF";
+        pv.tiempo.textContent = safeText(fields.tiempo.value, "-");
+        pv.vigencia.textContent = safeText(fields.vigencia.value, "-");
+
+        pv.modalidad.textContent = safeText(fields.modalidad.value, "-");
+        pv.modalidad2.textContent = safeText(fields.modalidad.value, "-");
+        pv.whatsapp.textContent = safeText(fields.whatsapp.value, "-");
+        pv.whatsapp2.textContent = safeText(fields.whatsapp.value, "-");
+        pv.instagram.textContent = safeText(fields.instagram.value, "-");
+        pv.instagram2.textContent = safeText(fields.instagram.value, "-");
+        pv.legal.textContent = safeText(fields.legal.value, "-");
+        pv.legal2.textContent = safeText(fields.legal.value, "-");
+        pv.firma.textContent = safeText(fields.firma.value, "");
+        pv.firma2.textContent = safeText(fields.firma.value, "");
+
+        applyBullets();
+        setObsLines();
+
+        const extra = fields.extraDetalle.value.trim();
+        pv.extraDetalle.textContent = extra || "Sin detalle extra.";
       }
 
-      // Bind inputs
-      Object.values(fields).forEach(input => {
-        input.addEventListener("input", render);
-        input.addEventListener("change", render);
-      });
+      function estimateOverflow() {
+        // chequeo simple y practico (sin volverse tecnico)
+        const inner = pv.sheetInner1;
+        const total = inner.scrollHeight;
+        const visible = inner.clientHeight;
+        return total > visible + 2;
+      }
 
-      btnPrint.addEventListener("click", () => {
-        render();
-        setStatus("Abriendo impresion... (usa Guardar como PDF)");
-        window.print();
-      });
+      function updatePagesMode() {
+        const mode = fields.sheetMode.value; // auto | one | two
+        const extra = fields.extraDetalle.value.trim();
+        const hasExtra = !!extra;
+        const overflow = estimateOverflow();
 
-      btnToggleWM.addEventListener("click", () => {
-        watermarkEnabled = !watermarkEnabled;
-        render();
-        setStatus(watermarkEnabled ? "Marca de agua activada." : "Marca de agua desactivada.");
-      });
+        let showSecond = false;
+        let badge = "";
+        let status = "";
+        let statusType = "ok";
 
-      btnReset.addEventListener("click", () => {
-        Object.keys(fields).forEach(k => fields[k].value = defaults[k]);
-        watermarkEnabled = true;
-        render();
-        setStatus("Campos restablecidos.");
-      });
-
-      btnDownloadHtml.addEventListener("click", () => {
-        try {
-          const html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-          const blob = new Blob([html], { type: "text/html;charset=utf-8" });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "generador-presupuesto-ciborg347.html";
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          URL.revokeObjectURL(url);
-          setStatus("HTML descargado.");
-        } catch (e) {
-          setStatus("No se pudo descargar el HTML.");
-        }
-      });
-
-      btnShare.addEventListener("click", async () => {
-        try {
-          if (!navigator.share) {
-            setStatus("Tu navegador no soporta compartir directo. Podes usar Imprimir/Guardar PDF.");
-            return;
-          }
-
-          await navigator.share({
-            title: "Generador de Presupuesto CIBORG347",
-            text: "Te comparto el generador de presupuesto (vista HTML local). Para PDF usa Imprimir/Guardar PDF."
-          });
-
-          setStatus("Compartido correctamente.");
-        } catch (err) {
-          if (err && err.name === "AbortError") {
-            setStatus("Compartir cancelado.");
+        if (mode === "two") {
+          showSecond = hasExtra;
+          badge = showSecond ? "2 paginas (manual)" : "1 pagina (manual 2, sin extra)";
+          status = showSecond
+            ? "Modo 2 paginas activo. Se muestra hoja 2 con detalle tecnico."
+            : "Modo 2 paginas activo, pero no hay detalle tecnico extra. Solo sale 1 hoja.";
+          statusType = "ok";
+        } else if (mode === "one") {
+          showSecond = false;
+          badge = "1 pagina (forzada)";
+          if (overflow) {
+            status = "Atencion: el contenido excede 1 hoja. Resumi texto o usa 'Permitir 2 paginas'.";
+            statusType = "warn";
           } else {
-            setStatus("No se pudo compartir desde este dispositivo/navegador.");
+            status = "1 pagina forzada OK.";
+            statusType = "ok";
+          }
+        } else {
+          // auto
+          if (overflow) {
+            if (hasExtra) {
+              showSecond = true;
+              badge = "2 paginas (auto)";
+              status = "El contenido excede 1 hoja. Se habilito hoja 2 automaticamente.";
+              statusType = "warn";
+            } else {
+              showSecond = false;
+              badge = "1 pagina (auto, excedida)";
+              status = "El contenido esta largo para 1 hoja. Agrega detalle extra y cambia a 2 paginas, o resume.";
+              statusType = "warn";
+            }
+          } else {
+            showSecond = false;
+            badge = "1 pagina (auto)";
+            status = "Todo entra en 1 hoja correctamente.";
+            statusType = "ok";
           }
         }
-      });
 
-      render();
-      setStatus("Listo. Si queres PDF, toca 'Imprimir / Guardar PDF'.");
+        pv.sheet2.style.display = showSecond ? "" : "none";
+        pv.badgeMode.textContent = badge;
+        pv.dotMode.style.background = statusType === "warn" ? "var(--warn)" : "var(--ok)";
+        setStatus(status, statusType);
+      }
+
+      function renderAll(){
+        renderMain();
+        // doble render por layout / fuentes / imágenes
+        requestAnimationFrame(() => {
+          updatePagesMode();
+        });
+      }
+
+      function bindAll(){
+        Object.values(fields).forEach(el => {
+          el.addEventListener("input", renderAll);
+          el.addEventListener("change", renderAll);
+        });
+
+        pv.advPanel.addEventListener("toggle", () => {
+          pv.advLabel.textContent = pv.advPanel.open ? "cerrar" : "abrir";
+        });
+
+        btnPrint.addEventListener("click", () => {
+          renderAll();
+          setTimeout(() => window.print(), 120);
+        });
+
+        btnShare.addEventListener("click", async () => {
+          try{
+            if (!navigator.share){
+              setStatus("Tu navegador no soporta compartir directo. Usa 'Imprimir / Guardar PDF'.", "warn");
+              return;
+            }
+            await navigator.share({
+              title: "Generador de Presupuesto CIBORG347",
+              text: "Te comparto el generador de presupuesto / boleta PDF (Modo CIBORG)."
+            });
+            setStatus("Compartido correctamente.", "ok");
+          }catch(err){
+            if (err && err.name === "AbortError") {
+              setStatus("Compartir cancelado.", "warn");
+            } else {
+              setStatus("No se pudo compartir desde este dispositivo.", "warn");
+            }
+          }
+        });
+
+        btnDownloadHtml.addEventListener("click", () => {
+          try{
+            const html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+            const blob = new Blob([html], {type:"text/html;charset=utf-8"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "ciborg347-generador-presupuestos.html";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            setStatus("HTML descargado.", "ok");
+          }catch(e){
+            setStatus("No se pudo descargar el HTML.", "err");
+          }
+        });
+
+        btnReset.addEventListener("click", () => {
+          Object.keys(fields).forEach(k => fields[k].value = defaults[k]);
+          renderAll();
+          setStatus("Campos restablecidos.", "ok");
+        });
+
+        btnLoadCiborg.addEventListener("click", () => {
+          // plantilla base CIBORG (deja lista una boleta pro)
+          fields.docTypeFriendly.value = "tecnico";
+          fields.tituloDoc.value = "Presupuesto";
+          fields.sheetMode.value = "auto";
+          fields.compactMode.value = "smart";
+          fields.watermarkToggle.value = "on";
+          fields.modalidad.value = "Se abona una vez entregado el sitio / transferencia o MP";
+          fields.whatsapp.value = "11 6449-9481";
+          fields.instagram.value = "@ciborg347";
+          fields.legal.value = "Esta propuesta puede ajustarse segun cambios de alcance, contenido o funcionalidades solicitadas.";
+          fields.firma.value = "CIBORG347 // DISENO QUE CONVIERTE VISITAS EN CLIENTES";
+          renderAll();
+          setStatus("Plantilla Modo CIBORG aplicada.", "ok");
+        });
+
+        // si carga imagen tarde, recalcula
+        [pv.logo1,pv.wm1,pv.logo2,pv.wm2].forEach(img=>{
+          img.addEventListener("load", () => renderAll());
+          img.addEventListener("error", () => setStatus("No se pudo cargar la imagen/logo. Revisa la URL.", "warn"));
+        });
+
+        // recalcular en resize
+        window.addEventListener("resize", () => {
+          clearTimeout(window.__rzTimer);
+          window.__rzTimer = setTimeout(renderAll, 120);
+        });
+      }
+
+      // init
+      bindAll();
+      renderAll();
+      setTimeout(renderAll, 500); // por fonts/layout
     })();
   </script>
 </body>
