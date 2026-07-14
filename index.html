@@ -177,107 +177,99 @@
       border:1px solid var(--line);
       border-radius:12px;
       background:var(--sheet-bg);
-      padding:20px;
+      padding:16px;
       display:grid;
-      gap:12px;
+      gap:10px;
       position:relative;
       overflow:hidden;
-      max-width:100%;
     }
     .sheet::before{
       content:"";
       position:absolute;inset:0;
-      background:url("https://iili.io/qFQyNae.png") center/50% no-repeat;
-      opacity:.08;
+      background:url("https://iili.io/qFQyNae.png") center/58% no-repeat;
+      opacity:.11;
       pointer-events:none;
       filter:saturate(1.15) contrast(1.05);
+    }
+    .sheet::after{
+      content:"";
+      position:absolute; inset:0;
+      background:linear-gradient(180deg, rgba(5,9,16,.18), rgba(5,9,16,.08));
+      pointer-events:none;
     }
     .sheet > *{position:relative}
     .s-top{
       display:grid;
-      grid-template-columns:70px 1fr;
-      gap:14px;
+      grid-template-columns:64px 1fr;
+      gap:12px;
       align-items:center;
-      border-bottom:2px solid var(--line);
-      padding-bottom:12px;
+      border-bottom:1px solid var(--line);
+      padding-bottom:10px;
     }
     .s-top img{
-      width:70px;height:70px;border-radius:12px;object-fit:cover;border:2px solid var(--line);background:var(--bg);
+      width:64px;height:64px;border-radius:10px;object-fit:cover;border:1px solid var(--line);background:var(--bg);
     }
     .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-    .s-top .k{font-size:.85rem;color:var(--muted);font-weight:700}
-    .s-top .v{font-size:1.4rem;color:#8feaff;font-weight:900;line-height:1.1}
-    .s-meta{font-size:.9rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:12px;margin-top:4px}
+    .s-top .k{font-size:.78rem;color:var(--muted)}
+    .s-top .v{font-size:1.25rem;color:#8feaff;font-weight:900;line-height:1.1}
+    .s-meta{font-size:.82rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
     .box{
       border:1px solid var(--line);
       border-radius:10px;
       background:var(--box-bg);
-      padding:12px;
+      padding:10px;
     }
     .box .lab{
-      font-size:.8rem;
+      font-size:.78rem;
       color:#cba1ff;
       font-weight:800;
-      margin-bottom:5px;
+      margin-bottom:4px;
       text-transform:uppercase;
       letter-spacing:.5px;
     }
     .box .val{
-      font-size:1.05rem;
+      font-size:1rem;
       color:var(--text);
       word-break:break-word;
-      line-height:1.4;
     }
-    .box .total{color:#9df3bb;font-weight:900;font-size:1.2rem}
+    .box .total{color:#9df3bb;font-weight:900}
     .preview-list{
-      padding-left:20px;
+      padding-left:16px;
       display:grid;
-      gap:4px;
-      color:var(--text);
-      font-size:.95rem;
-      list-style-type:disc;
-    }
-    .preview-list li{margin-bottom:2px}
-    .foot-note{
-      border-top:2px solid var(--line);
+      gap:3px;
       color:var(--text);
       font-size:.9rem;
-      line-height:1.5;
-      background:rgba(9,14,24,.15);
+    }
+    .foot-note{
+      border-top:1px solid var(--line);
+      color:var(--text);
+      font-size:.85rem;
+      line-height:1.4;
+      background:rgba(9,14,24,.22);
       border-radius:8px;
-      padding:12px;
-      margin-top:4px;
+      padding:10px;
     }
-    .foot-note .payment-line{
-      padding:3px 0;
-      border-bottom:1px solid rgba(255,255,255,.05);
-    }
-    .foot-note .payment-line:last-child{border-bottom:none}
     .contact-row{
       display:flex;
       align-items:center;
-      gap:8px;
-      margin-top:6px;
+      gap:6px;
+      margin-top:4px;
       flex-wrap:wrap;
-      padding:2px 0;
     }
     .contact-row .ico{
-      width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;
+      width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;
       opacity:.95; flex:0 0 auto;
     }
     .contact-row img{
-      width:20px;height:20px;object-fit:contain;display:block;
+      width:18px;height:18px;object-fit:contain;display:block;
     }
     .signature{
-      margin-top:10px;
+      margin-top:8px;
       text-align:center;
       color:var(--muted);
-      font-size:.85rem;
-      letter-spacing:.5px;
+      font-size:.82rem;
+      letter-spacing:.35px;
       text-transform:uppercase;
-      font-weight:700;
-      padding-top:8px;
-      border-top:1px solid var(--line);
     }
 
     @media (max-width:700px){
@@ -399,13 +391,13 @@ Entrega lista para usar</textarea>
 
           <div class="box">
             <div class="lab mono">Detalle / observaciones</div>
-            <div class="val mono" id="pvDetalle" style="font-size:.95rem;line-height:1.6">-</div>
+            <div class="val mono" id="pvDetalle">-</div>
           </div>
 
           <div class="foot-note mono">
-            <div class="payment-line"><b>SEÑA MÍNIMA:</b> Se requiere seña mínima para comenzar el trabajo</div>
-            <div class="payment-line"><b>MODALIDAD DE PAGO:</b> Se abona una vez entregado el sitio / transferencia o MP</div>
-            <div class="payment-line"><b>MODALIDAD DE PAGO:</b> Pago contra entrega del sitio final</div>
+            <div><b>SEÑA MÍNIMA:</b> Se requiere seña mínima para comenzar el trabajo</div>
+            <div><b>MODALIDAD DE PAGO:</b> Se abona una vez entregado el sitio / transferencia o MP</div>
+            <div><b>MODALIDAD DE PAGO:</b> Pago contra entrega del sitio final</div>
             
             <div class="contact-row"><span class="ico"><img src="https://cdn.simpleicons.org/whatsapp/25D366" alt="WhatsApp"></span><span><b>WHATSAPP:</b> <span id="pvWa">1164499481</span></span></div>
             <div class="contact-row"><span class="ico"><img src="https://cdn.simpleicons.org/instagram/E4405F" alt="Instagram"></span><span><b>INSTAGRAM:</b> <span id="pvIg">@ciborg347</span></span></div>
@@ -524,7 +516,7 @@ Entrega lista para usar</textarea>
 
         els.pvIncluye.innerHTML = "";
         const items = d.incluye.length ? d.incluye : ["Detalle a definir"];
-        items.slice(0, 10).forEach(item => {
+        items.slice(0, 8).forEach(item => {
           const li = document.createElement("li");
           li.textContent = item;
           els.pvIncluye.appendChild(li);
@@ -564,6 +556,83 @@ Entrega lista para usar</textarea>
         };
       }
 
+      function mmTextBox(doc, x, y, w, h, label, value, opts = {}) {
+        const {
+          labelColor = [196,155,255],
+          valueColor = [238,244,251],
+          boldValue = false,
+          maxLines = 2,
+          fillColor = [11,16,32],
+          fillOpacity = 0.28,
+          borderColor = [39,49,73]
+        } = opts;
+
+        try {
+          doc.saveGraphicsState();
+          doc.setGState(new doc.GState({ opacity: fillOpacity }));
+          doc.setFillColor(...fillColor);
+          doc.setDrawColor(...borderColor);
+          doc.roundedRect(x, y, w, h, 3, 3, "FD");
+          doc.restoreGraphicsState();
+        } catch (_) {
+          doc.setFillColor(...fillColor);
+          doc.setDrawColor(...borderColor);
+          doc.roundedRect(x, y, w, h, 3, 3, "FD");
+        }
+
+        doc.setFont("courier", "bold");
+        doc.setFontSize(7);
+        doc.setTextColor(...labelColor);
+        doc.text(label.toUpperCase(), x + 3, y + 5);
+
+        doc.setFont("courier", boldValue ? "bold" : "normal");
+        doc.setFontSize(8.2);
+        doc.setTextColor(...valueColor);
+
+        const lines = doc.splitTextToSize(String(value || "-"), w - 6).slice(0, maxLines);
+        let yy = y + 10;
+        lines.forEach(line => {
+          doc.text(line, x + 3, yy);
+          yy += 4.4;
+        });
+      }
+
+      function drawIconTextRow(doc, x, y, iconDataUrl, label, value, columnsWidth) {
+        const iconSize = 4.2;
+        let textX = x;
+
+        if (iconDataUrl) {
+          try {
+            const format = iconDataUrl.includes("image/png") ? "PNG" : "JPEG";
+            doc.addImage(iconDataUrl, format, x, y - 3.5, iconSize, iconSize, undefined, "FAST");
+            textX = x + 5.5;
+          } catch (_) {
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(8);
+            doc.setTextColor(198,214,232);
+            doc.text("•", x, y);
+            textX = x + 4.5;
+          }
+        } else {
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(8);
+          doc.setTextColor(198,214,232);
+          doc.text("•", x, y);
+          textX = x + 4.5;
+        }
+
+        doc.setFont("courier", "normal");
+        doc.setFontSize(6.8);
+        doc.setTextColor(198,214,232);
+        const text = `${label}: ${value}`;
+        const lines = doc.splitTextToSize(text, columnsWidth || 52).slice(0, 2);
+        let ty = y;
+        lines.forEach(line => {
+          doc.text(line, textX, ty);
+          ty += 3.7;
+        });
+      }
+
       async function buildPdfBlob() {
         const d = getData();
         setStatus("Generando PDF...", "warn");
@@ -571,228 +640,208 @@ Entrega lista para usar</textarea>
         const doc = new jsPDF({ unit: "mm", format: "a4", compress: true });
         const assets = await loadBrandAssetsOnce();
 
-        // Fondo negro
         doc.setFillColor(8, 11, 18);
         doc.rect(0, 0, 210, 297, "F");
 
-        // Banda superior de colores
-        doc.setFillColor(0, 212, 255); doc.rect(0, 0, 70, 4, "F");
-        doc.setFillColor(124, 58, 237); doc.rect(70, 0, 70, 4, "F");
-        doc.setFillColor(236, 72, 153); doc.rect(140, 0, 70, 4, "F");
+        doc.setFillColor(0, 212, 255); doc.rect(0, 0, 70, 3, "F");
+        doc.setFillColor(124, 58, 237); doc.rect(70, 0, 70, 3, "F");
+        doc.setFillColor(236, 72, 153); doc.rect(140, 0, 70, 3, "F");
 
-        // Logo de fondo sutil
         if (assets.logo) {
           try {
             doc.saveGraphicsState();
-            doc.setGState(new doc.GState({ opacity: 0.12 }));
-            doc.addImage(assets.logo, "PNG", 30, 70, 150, 150, undefined, "FAST");
+            doc.setGState(new doc.GState({ opacity: 0.20 }));
+            doc.addImage(assets.logo, "PNG", 23, 66, 164, 164, undefined, "FAST");
+            doc.restoreGraphicsState();
+
+            doc.saveGraphicsState();
+            doc.setGState(new doc.GState({ opacity: 0.08 }));
+            doc.addImage(assets.logo, "PNG", 78, 6, 54, 54, undefined, "FAST");
             doc.restoreGraphicsState();
           } catch (_) {}
         }
 
-        // Borde del documento
-        doc.setDrawColor(39, 49, 73);
-        doc.setLineWidth(0.5);
-        doc.roundedRect(10, 10, 190, 277, 4, 4, "S");
+        try {
+          doc.saveGraphicsState();
+          doc.setGState(new doc.GState({ opacity: 0.16 }));
+          doc.setFillColor(9, 14, 24);
+          doc.roundedRect(8, 8, 194, 281, 6, 6, "F");
+          doc.restoreGraphicsState();
+        } catch (_) {}
 
-        const m = 16;
-        let y = 18;
+        const m = 12;
+        let y = 10;
 
-        // === CABECERA ===
-        // Fondo de cabecera
-        doc.setFillColor(11, 16, 32);
-        doc.setDrawColor(39, 49, 73);
-        doc.roundedRect(m, y, 178, 28, 3, 3, "FD");
+        try {
+          doc.saveGraphicsState();
+          doc.setGState(new doc.GState({ opacity: 0.20 }));
+          doc.setFillColor(11,16,32);
+          doc.setDrawColor(39,49,73);
+          doc.roundedRect(m, y, 186, 24, 3, 3, "FD");
+          doc.restoreGraphicsState();
+        } catch (_) {}
 
-        // Logo
+        const logoBoxX = 81;
+        const logoBoxW = 48;
+        try {
+          doc.saveGraphicsState();
+          doc.setGState(new doc.GState({ opacity: 0.28 }));
+          doc.setFillColor(11,16,32);
+          doc.setDrawColor(39,49,73);
+          doc.roundedRect(logoBoxX, y + 1, logoBoxW, 22, 3, 3, "FD");
+          doc.restoreGraphicsState();
+        } catch (_) {}
+
         if (assets.logo) {
-          try { 
-            doc.addImage(assets.logo, "PNG", m + 4, y + 2, 32, 24, undefined, "FAST"); 
-          } catch (_) {}
+          try { doc.addImage(assets.logo, "PNG", logoBoxX + 10, y + 2.2, 28, 19, undefined, "FAST"); } catch (_) {}
         }
 
-        // Título
-        doc.setFont("courier", "bold");
-        doc.setFontSize(10);
-        doc.setTextColor(147, 167, 194);
-        doc.text("PRESUPUESTO FORMAL", m + 40, y + 8);
-
-        // Fecha y número
         doc.setFont("courier", "normal");
-        doc.setFontSize(9);
-        doc.setTextColor(191, 208, 226);
-        doc.text(`FECHA: ${d.fecha}`, m + 40, y + 15);
-        doc.text(`NRO: ${d.numero}`, m + 40, y + 22);
-
-        // Marca a la derecha
-        doc.setFont("courier", "bold");
-        doc.setFontSize(14);
-        doc.setTextColor(140, 231, 255);
-        doc.text("CIBORG347", 200 - m, y + 10, { align: "right" });
-
-        doc.setFont("courier", "normal");
-        doc.setFontSize(7.5);
-        doc.setTextColor(185, 206, 231);
-        doc.text(BRAND_WEB, 200 - m, y + 19, { align: "right" });
-
-        y += 34;
-
-        // Línea separadora
-        doc.setDrawColor(39, 49, 73);
-        doc.line(m, y, 210 - m, y);
-        y += 6;
-
-        // === DATOS PRINCIPALES ===
-        // Nombre
-        doc.setFillColor(11, 16, 32);
-        doc.setDrawColor(39, 49, 73);
-        doc.roundedRect(m, y, 178, 18, 3, 3, "FD");
-        doc.setFont("courier", "bold");
-        doc.setFontSize(7.5);
-        doc.setTextColor(196, 155, 255);
-        doc.text("NOMBRE", m + 4, y + 5);
-        doc.setFont("courier", "normal");
-        doc.setFontSize(10);
-        doc.setTextColor(238, 244, 251);
-        const nombreLines = doc.splitTextToSize(d.cliente, 170);
-        doc.text(nombreLines[0] || "-", m + 4, y + 13);
-        y += 22;
-
-        // Servicio
-        doc.roundedRect(m, y, 178, 18, 3, 3, "FD");
-        doc.setFont("courier", "bold");
-        doc.setFontSize(7.5);
-        doc.setTextColor(196, 155, 255);
-        doc.text("SERVICIO / PRESUPUESTO", m + 4, y + 5);
-        doc.setFont("courier", "normal");
-        doc.setFontSize(10);
-        doc.setTextColor(238, 244, 251);
-        const servicioLines = doc.splitTextToSize(d.servicio, 170);
-        doc.text(servicioLines[0] || "-", m + 4, y + 13);
-        y += 22;
-
-        // Inversión y Tiempo (2 columnas)
-        const colW = (178 - 4) / 2;
-        doc.roundedRect(m, y, colW, 18, 3, 3, "FD");
-        doc.setFont("courier", "bold");
-        doc.setFontSize(7.5);
-        doc.setTextColor(196, 155, 255);
-        doc.text("INVERSIÓN", m + 4, y + 5);
-        doc.setFont("courier", "bold");
-        doc.setFontSize(11);
-        doc.setTextColor(152, 245, 178);
-        const precioLines = doc.splitTextToSize(d.precio, colW - 8);
-        doc.text(precioLines[0] || "$ 0", m + 4, y + 14);
-
-        doc.roundedRect(m + colW + 4, y, colW, 18, 3, 3, "FD");
-        doc.setFont("courier", "bold");
-        doc.setFontSize(7.5);
-        doc.setTextColor(196, 155, 255);
-        doc.text("TIEMPO ESTIMADO", m + colW + 8, y + 5);
-        doc.setFont("courier", "normal");
-        doc.setFontSize(9);
-        doc.setTextColor(238, 244, 251);
-        const entregaLines = doc.splitTextToSize(d.entrega, colW - 8);
-        doc.text(entregaLines[0] || "-", m + colW + 8, y + 14);
-        y += 24;
-
-        // === QUÉ INCLUYE ===
-        const incluyeH = Math.min(55, 20 + (d.incluye.length * 5.5));
-        doc.roundedRect(m, y, 178, incluyeH, 3, 3, "FD");
-        doc.setFont("courier", "bold");
         doc.setFontSize(8);
-        doc.setTextColor(196, 155, 255);
-        doc.text("QUÉ INCLUYE", m + 4, y + 5);
+        doc.setTextColor(147,167,194);
+        doc.text("PRESUPUESTO FORMAL", 12, y + 7);
 
         doc.setFont("courier", "normal");
-        doc.setFontSize(9);
-        doc.setTextColor(221, 233, 247);
-        const bullets = d.incluye.length ? d.incluye : ["Detalle a definir"];
-        let by = y + 12;
-        const maxItems = Math.min(bullets.length, 8);
-        for (let i = 0; i < maxItems; i++) {
-          const item = bullets[i];
-          const lines = doc.splitTextToSize("• " + item, 170);
-          for (const line of lines) {
-            if (by > y + incluyeH - 4) break;
-            doc.text(line, m + 6, by);
-            by += 5;
-          }
-        }
-        y += incluyeH + 6;
-
-        // === DETALLE ===
-        const detH = 30;
-        doc.roundedRect(m, y, 178, detH, 3, 3, "FD");
-        doc.setFont("courier", "bold");
         doc.setFontSize(8);
-        doc.setTextColor(196, 155, 255);
-        doc.text("DETALLE / OBSERVACIONES", m + 4, y + 5);
+        doc.setTextColor(191,208,226);
+        doc.text(`FECHA: ${d.fecha}`, 12, y + 13);
+        doc.text(`NRO: ${d.numero}`, 12, y + 19);
+
+        doc.setFont("courier", "bold");
+        doc.setFontSize(10.5);
+        doc.setTextColor(140,231,255);
+        doc.text("CIBORG347", 198, y + 9, { align: "right" });
 
         doc.setFont("courier", "normal");
-        doc.setFontSize(8.5);
-        doc.setTextColor(214, 227, 242);
-        const detLines = doc.splitTextToSize(d.detalle, 170).slice(0, 4);
-        let dy = y + 11;
-        detLines.forEach(line => {
-          doc.text(line, m + 4, dy);
-          dy += 5;
-        });
-        y += detH + 6;
+        doc.setFontSize(6.9);
+        doc.setTextColor(185,206,231);
+        doc.text(BRAND_WEB, 198, y + 16.3, { align: "right" });
 
-        // === INFORMACIÓN DE PAGO ===
-        doc.setDrawColor(39, 49, 73);
+        y += 30;
+        doc.setDrawColor(39,49,73);
         doc.line(m, y, 210 - m, y);
         y += 4;
 
-        doc.setFont("courier", "bold");
-        doc.setFontSize(8);
-        doc.setTextColor(198, 214, 232);
-        doc.text("SEÑA MÍNIMA: Se requiere seña mínima para comenzar el trabajo", m, y + 4);
-        doc.text("MODALIDAD DE PAGO: Se abona una vez entregado el sitio / transferencia o MP", m, y + 9.5);
-        doc.text("MODALIDAD DE PAGO: Pago contra entrega del sitio final", m, y + 15);
-
-        const footerY = y + 24;
-
-        // === FOOTER CONTACTOS ===
-        doc.setFillColor(11, 16, 32);
-        doc.setDrawColor(39, 49, 73);
-        doc.roundedRect(m, footerY - 2, 178, 20, 3, 3, "FD");
-
-        const icons = [
-          { icon: assets.wa, label: "WHATSAPP", value: BRAND_WA, x: m + 4 },
-          { icon: assets.ig, label: "INSTAGRAM", value: BRAND_IG, x: m + 4 + 44 },
-          { icon: assets.mail, label: "EMAIL", value: BRAND_MAIL, x: m + 4 + 88 },
-          { icon: assets.web, label: "WEB", value: BRAND_WEB, x: m + 4 + 132 }
-        ];
-
-        icons.forEach((item, idx) => {
-          const x = item.x;
-          // Icono
-          if (item.icon) {
-            try {
-              doc.addImage(item.icon, "PNG", x, footerY + 1, 5, 5, undefined, "FAST");
-            } catch (_) {}
-          }
-          // Texto
-          doc.setFont("courier", "normal");
-          doc.setFontSize(6.5);
-          doc.setTextColor(198, 214, 232);
-          const text = `${item.label}: ${item.value}`;
-          const lines = doc.splitTextToSize(text, 40);
-          doc.text(lines[0] || "", x + 6.5, footerY + 5.5);
+        const gap = 4;
+        const half = (210 - m * 2 - gap) / 2;
+        mmTextBox(doc, m, y, half, 17, "Nombre", d.cliente, { maxLines: 2, fillOpacity: 0.26 });
+        mmTextBox(doc, m + half + gap, y, half, 17, "Inversión", d.precio, {
+          valueColor: [152,245,178],
+          boldValue: true,
+          maxLines: 2,
+          fillOpacity: 0.26
         });
+        y += 20;
 
-        // Firma
-        doc.setDrawColor(39, 49, 73);
-        doc.line(m, footerY + 19, 210 - m, footerY + 19);
-        
+        mmTextBox(doc, m, y, 210 - m * 2, 17, "Servicio / Presupuesto", d.servicio, { maxLines: 2, fillOpacity: 0.22 });
+        y += 20;
+
+        mmTextBox(doc, m, y, 210 - m * 2, 15, "Tiempo estimado", d.entrega, { maxLines: 2, fillOpacity: 0.18 });
+        y += 18;
+
+        const incluyeH = 48;
+        try {
+          doc.saveGraphicsState();
+          doc.setGState(new doc.GState({ opacity: 0.16 }));
+          doc.setFillColor(11,16,32);
+          doc.setDrawColor(39,49,73);
+          doc.roundedRect(m, y, 210 - m * 2, incluyeH, 3, 3, "FD");
+          doc.restoreGraphicsState();
+        } catch (_) {
+          doc.setFillColor(11,16,32);
+          doc.setDrawColor(39,49,73);
+          doc.roundedRect(m, y, 210 - m * 2, incluyeH, 3, 3, "FD");
+        }
+
         doc.setFont("courier", "bold");
         doc.setFontSize(7);
-        doc.setTextColor(143, 165, 191);
-        doc.text(BRAND_FIRMA, 105, footerY + 23, { align: "center" });
+        doc.setTextColor(196,155,255);
+        doc.text("QUÉ INCLUYE", m + 3, y + 5);
 
-        // Nombre del archivo
+        doc.setFont("courier", "normal");
+        doc.setFontSize(7.7);
+        doc.setTextColor(221,233,247);
+        const bullets = d.incluye.length ? d.incluye : ["Detalle a definir"];
+        let by = y + 11;
+        const maxBulletLines = 7;
+        let used = 0;
+        for (const item of bullets) {
+          if (used >= maxBulletLines) break;
+          const lines = doc.splitTextToSize("• " + item, 210 - m * 2 - 8);
+          for (const line of lines) {
+            if (used >= maxBulletLines) break;
+            doc.text(line, m + 4, by);
+            by += 4.8;
+            used++;
+          }
+        }
+        y += incluyeH + 4;
+
+        const detH = 28;
+        try {
+          doc.saveGraphicsState();
+          doc.setGState(new doc.GState({ opacity: 0.10 }));
+          doc.setFillColor(11,16,32);
+          doc.roundedRect(m, y, 210 - m * 2, detH, 3, 3, "F");
+          doc.restoreGraphicsState();
+        } catch (_) {}
+        doc.setDrawColor(39,49,73);
+        doc.roundedRect(m, y, 210 - m * 2, detH, 3, 3, "S");
+
+        doc.setFont("courier", "bold");
+        doc.setFontSize(7);
+        doc.setTextColor(221,233,247);
+        doc.text("DETALLE / OBSERVACIONES", m + 3, y + 5);
+
+        doc.setFont("courier", "normal");
+        doc.setFontSize(7.3);
+        doc.setTextColor(214,227,242);
+        const detLines = doc.splitTextToSize(d.detalle, 210 - m * 2 - 6).slice(0, 4);
+        let dy = y + 10;
+        detLines.forEach(line => {
+          doc.text(line, m + 3, dy);
+          dy += 4.5;
+        });
+        y += detH + 5;
+
+        doc.setDrawColor(39,49,73);
+        doc.line(m, y, 210 - m, y);
+
+        // === SECCIÓN DE PAGO CORREGIDA (SIN EMOJIS) ===
+        doc.setFont("courier", "bold");
+        doc.setFontSize(7.1);
+        doc.setTextColor(198,214,232);
+        doc.text("SEÑA MÍNIMA: Se requiere seña mínima para comenzar el trabajo", m, y + 5);
+        doc.text("MODALIDAD DE PAGO: Se abona una vez entregado el sitio / transferencia o MP", m, y + 9.6);
+        doc.text("MODALIDAD DE PAGO: Pago contra entrega del sitio final", m, y + 14.2);
+
+        const footerY = y + 20;
+
+        try {
+          doc.saveGraphicsState();
+          doc.setGState(new doc.GState({ opacity: 0.12 }));
+          doc.setFillColor(11,16,32);
+          doc.setDrawColor(39,49,73);
+          doc.roundedRect(m, footerY - 4.5, 210 - (m * 2), 17.5, 3, 3, "FD");
+          doc.restoreGraphicsState();
+        } catch (_) {}
+
+        const totalW = 210 - (m * 2);
+        const colW = totalW / 4;
+
+        drawIconTextRow(doc, m + 2,            footerY, assets.wa,   "WHATSAPP", BRAND_WA,   colW - 7);
+        drawIconTextRow(doc, m + colW + 2,     footerY, assets.ig,   "INSTAGRAM", BRAND_IG,  colW - 7);
+        drawIconTextRow(doc, m + colW * 2 + 2, footerY, assets.mail, "EMAIL", BRAND_MAIL,    colW - 7);
+        drawIconTextRow(doc, m + colW * 3 + 2, footerY, assets.web,  "WEB", BRAND_WEB,       colW - 7);
+
+        doc.setDrawColor(39,49,73);
+        doc.line(m, footerY + 14.5, 210 - m, footerY + 14.5);
+
+        doc.setFont("courier", "normal");
+        doc.setFontSize(6.8);
+        doc.setTextColor(143,165,191);
+        doc.text(BRAND_FIRMA, 105, footerY + 19.2, { align: "center" });
+
         const cleanClient = d.cliente
           .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
           .replace(/ñ/gi, "n")
@@ -914,7 +963,7 @@ Entrega lista para usar</textarea>
       });
 
       updatePreview();
-      setStatus("Listo. PDF rediseñado: mejor espaciado, texto más grande y todo dentro de la página.", "ok");
+      setStatus("Listo. Solo eliminé los emojis del PDF. Todo lo demás queda igual.", "ok");
     })();
   </script>
 </body>
